@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CustomerProfile" format=3]
+
+[ext_resource type="Script" path="res://resources/customer_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"apressado"
+display_name = "Apressado"
+color = Color(0.95, 0.75, 0.2, 1)
+start_mood = 0.5
+flattery_reaction = -0.15
+discount_reaction = 0.1
+markup_reaction = -0.15
+patience_seconds = 18.0

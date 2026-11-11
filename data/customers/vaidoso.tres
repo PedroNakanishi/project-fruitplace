@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CustomerProfile" format=3]
+
+[ext_resource type="Script" path="res://resources/customer_profile.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"vaidoso"
+display_name = "Vaidoso"
+color = Color(0.95, 0.4, 0.75, 1)
+start_mood = 0.5
+flattery_reaction = 0.3
+discount_reaction = 0.05
+markup_reaction = -0.1
+patience_seconds = 35.0

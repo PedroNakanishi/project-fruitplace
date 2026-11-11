@@ -1,0 +1,47 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/props/garden_plot.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/components/interactable.gd" id="2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
+albedo_color = Color(0.3, 0.65, 0.25, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_2"]
+top_radius = 0.12
+bottom_radius = 0.3
+height = 0.9
+radial_segments = 6
+material = SubResource("StandardMaterial3D_1")
+
+[sub_resource type="SphereMesh" id="SphereMesh_3"]
+radius = 0.26
+height = 0.52
+radial_segments = 8
+rings = 4
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4"]
+size = Vector3(1.6, 1.5, 1.6)
+
+[node name="GardenPlot" type="Node3D"]
+script = ExtResource("1")
+
+[node name="Soil" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+size = Vector3(1.6, 0.2, 1.6)
+
+[node name="Plant" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+mesh = SubResource("CylinderMesh_2")
+
+[node name="Fruit" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+mesh = SubResource("SphereMesh_3")
+
+[node name="Interactable" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+script = ExtResource("2")
+prompt = "Plantar"
+
+[node name="Shape" type="CollisionShape3D" parent="Interactable"]
+shape = SubResource("BoxShape3D_4")

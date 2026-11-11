@@ -1,0 +1,83 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/player/player.gd" id="1"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1"]
+radius = 0.3
+height = 1.4
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2"]
+albedo_color = Color(0.98, 0.5, 0.2, 1)
+roughness = 0.9
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_3"]
+radius = 0.3
+height = 1.3
+radial_segments = 8
+rings = 2
+material = SubResource("StandardMaterial3D_2")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4"]
+albedo_color = Color(0.78, 0.55, 0.4, 1)
+roughness = 0.9
+
+[sub_resource type="SphereMesh" id="SphereMesh_5"]
+radius = 0.22
+height = 0.44
+radial_segments = 8
+rings = 4
+material = SubResource("StandardMaterial3D_4")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6"]
+albedo_color = Color(0.95, 0.82, 0.4, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_7"]
+top_radius = 0.42
+bottom_radius = 0.42
+height = 0.06
+radial_segments = 8
+material = SubResource("StandardMaterial3D_6")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8"]
+albedo_color = Color(0.7, 0.45, 0.32, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_9"]
+size = Vector3(0.08, 0.08, 0.08)
+material = SubResource("StandardMaterial3D_8")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_10"]
+radius = 1.3
+
+[node name="Player" type="CharacterBody3D"]
+script = ExtResource("1")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("CapsuleShape3D_1")
+
+[node name="Body" type="Node3D" parent="."]
+
+[node name="Torso" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("CapsuleMesh_3")
+
+[node name="Head" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0)
+mesh = SubResource("SphereMesh_5")
+
+[node name="Hat" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.78, 0)
+mesh = SubResource("CylinderMesh_7")
+
+[node name="Nose" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, 0.22)
+mesh = SubResource("BoxMesh_9")
+
+[node name="Reach" type="Area3D" parent="."]
+monitorable = false
+
+[node name="Shape" type="CollisionShape3D" parent="Reach"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("SphereShape3D_10")
