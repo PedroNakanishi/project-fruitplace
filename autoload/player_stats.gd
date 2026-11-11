@@ -10,10 +10,10 @@ const BASE_MAX_ENERGY := 100.0
 const FAINT_MAX_ENERGY := 80.0  ## Penalidade do dia seguinte ao desmaio.
 const ENERGY_DRAIN_PER_MIN := 0.05
 const HUNGER_DRAIN_PER_MIN := 0.08
-const RESTED_THRESHOLD := 0.10  ## Dormir acima de 10% dá "Bem descansada".
-const BUFF_RESTED := &"bem_descansada"
+const RESTED_THRESHOLD := 0.10  ## Dormir acima de 10% dá o buff "Bem descansado".
+const BUFF_RESTED := &"bem_descansado"
 
-const BUFF_NAMES := {BUFF_RESTED: "Bem descansada"}
+const BUFF_NAMES := {BUFF_RESTED: "Bem descansado"}
 
 var max_energy := BASE_MAX_ENERGY
 var energy := BASE_MAX_ENERGY

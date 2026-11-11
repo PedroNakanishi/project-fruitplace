@@ -16,6 +16,7 @@ const INPUT_KEYS := {
 	&"move_up": [KEY_W, KEY_UP],
 	&"move_down": [KEY_S, KEY_DOWN],
 	&"interact": [KEY_E, KEY_SPACE],
+	&"cycle_seed": [KEY_Q],
 }
 
 

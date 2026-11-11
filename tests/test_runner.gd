@@ -5,6 +5,7 @@ extends Node
 ## Sai com código 0 se tudo passou, 1 se algo falhou.
 
 var failures := 0
+var finished := false
 var main: Node
 
 
@@ -14,6 +15,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	TimeManager.running = false  # o teste controla o relógio
 	await _run()
+	check(finished, "o teste chegou ao fim (sem erro de script no meio)")
 	print("\nRESULTADO: %s (%d falha(s))" % ["OK" if failures == 0 else "FALHOU", failures])
 	get_tree().quit(1 if failures else 0)
 
@@ -79,20 +81,29 @@ func _run() -> void:
 	await wait_router()
 	check(SceneRouter.current_id == &"backyard", "foi para o Quintal")
 
+	var plot0: Interactable = map().get_node("Garden/Plot0/Interactable")
+	check(plot0.prompt.begins_with("Plantar tomate"), "prompt diz o próximo toque: plantar tomate")
+	t0 = TimeManager.minutes
 	map()._on_plot(0)
-	pick(0)  # tomate
-	check(GardenState.plots[0].crop == &"tomate", "plantou tomate no lote 0")
+	check(not MenuLayer.current.is_open, "plantar não abre menu")
+	check(GardenState.plots[0].crop == &"tomate", "plantou tomate no lote 0 com um toque")
+	check(TimeManager.minutes - t0 == 1, "ação no quintal leva 1 min")
 	check(Inventory.count(Inventory.BACKPACK, &"semente_tomate") == 5, "gastou 1 semente")
 
+	check(GardenState.cycle_seed().id == &"alface", "Q troca para alface")
+	map()._on_plot(1)
+	check(GardenState.plots[1].crop == &"alface", "plantou alface no lote 1")
+	check(GardenState.cycle_seed().id == &"tomate", "sem alface, Q volta para tomate")
+
 	var energy_before := PlayerStats.energy
+	check(plot0.prompt.begins_with("Regar"), "prompt: regar")
 	map()._on_plot(0)
-	pick(0)  # regar
-	check(GardenState.plots[0].watered, "lote regado")
+	check(GardenState.plots[0].watered, "lote regado com um toque")
 	check(Economy.water_charges == Economy.WATER_CHARGES_PER_DAY - 1, "gastou 1 rega")
 	check(PlayerStats.energy < energy_before - 2.5, "regar custa energia")
 
+	check(plot0.prompt.begins_with("Adubar com esterco"), "prompt: adubar")
 	map()._on_plot(0)
-	pick(0)  # adubar com esterco
 	check(GardenState.plots[0].fertilized and GardenState.plots[0].yield_bonus == 1, "adubado (+1 unidade)")
 
 	GardenState.grow(240)
@@ -114,15 +125,27 @@ func _run() -> void:
 	check(TimeManager.minutes - t0 >= 30, "viagem levou 30 min")
 
 	print("== Feira")
+	var market := map()
+	for n in market.get_node("Customers").get_children():
+		n.free()  # o teste controla os clientes
+	market.get_node("CustomerSpawner").stop()
+	var rolls := [0.99, 0.0]  # recusa a vizinha, aceita a barraca do jogador
+	market.roll = func() -> float: return rolls.pop_front() if not rolls.is_empty() else 0.0
 	map()._on_stock()
 	check(Inventory.total(Inventory.STALL) == 4 and Inventory.total(Inventory.TRUCK) == 0, "barraca abastecida")
 
 	var service: Node = map().get_node("ServiceController")
-	var c: Customer = load("res://scenes/npc/customer.tscn").instantiate()
-	c.setup(Catalog.CUSTOMERS[0], Vector3(0, 0, 2), 0.0, Vector3(16, 0, 2), true)  # vaidoso
-	map().get_node("Customers").add_child(c)
-	service.join(c)
-	c.state = Customer.State.WAITING
+	var c: Customer = market.spawn_customer(Catalog.CUSTOMERS[0], true)  # vaidoso, da esquerda
+	var saw: Array = []
+	c.evaluated.connect(func(_c: Customer, id: StringName) -> void: saw.append(id))
+	for f in 1200:
+		if c.state == Customer.State.WAITING:
+			break
+		await get_tree().physics_frame
+	check(saw.size() >= 1 and saw[0] == &"west", "cliente parou para analisar a barraca vizinha primeiro")
+	check(saw.has(&"player"), "cliente analisou a barraca do jogador")
+	check(c.state == Customer.State.WAITING and service.queue.has(c), "depois de analisar, entrou na fila")
+	check(market.player_stall_appeal(c) > 0.1, "barraca com estoque é atraente (%.2f)" % market.player_stall_appeal(c))
 	c.wants = &"tomate"
 	c.wants_qty = 2
 	var money_before := Economy.money
@@ -136,10 +159,8 @@ func _run() -> void:
 	check(Economy.happy_today == 1, "cliente feliz contado")
 	check(service.queue.is_empty(), "fila vazia depois da venda")
 
-	var c2: Customer = load("res://scenes/npc/customer.tscn").instantiate()
-	c2.setup(Catalog.CUSTOMERS[1], Vector3(0, 0, 2), 0.0, Vector3(16, 0, 2), true)  # pão-duro
-	map().get_node("Customers").add_child(c2)
-	service.join(c2)
+	var c2: Customer = market.spawn_customer(Catalog.CUSTOMERS[1], true)  # pão-duro
+	market._on_customer_evaluated(c2, &"player")
 	c2.state = Customer.State.WAITING
 	service.serve()
 	pick(2)  # sobrepreço: pão-duro odeia
@@ -147,6 +168,26 @@ func _run() -> void:
 	pick(2)  # vender → recusa
 	check(Economy.angry_today == 1, "cliente perdido contado")
 	check(Inventory.count(Inventory.STALL, &"tomate") == 2, "nada vendido ao cliente irritado")
+
+	var c3: Customer = market.spawn_customer(Catalog.CUSTOMERS[2], false)
+	market._on_customer_evaluated(c3, &"east")
+	check(c3.state == Customer.State.BROWSING, "cliente pode comprar na barraca vizinha")
+
+	map()._on_driver_door()
+	pick(1)  # voltar para casa com o dia aberto
+	await wait_router()
+	check(Economy.stall_away and Economy.work_day_open, "barraca fica com \"Volto logo\"")
+	map()._on_drive()
+	pick(0)
+	await wait_router()
+	market = map()
+	market.get_node("CustomerSpawner").stop()
+	check(market.get_node("Stalls/PlayerStall/StockLabel").text == "VOLTO LOGO", "placa Volto logo na barraca")
+	var c4: Customer = market.spawn_customer(Catalog.CUSTOMERS[0], true)
+	check(market.player_stall_appeal(c4) == 0.0, "ninguém compra com a placa")
+	market._on_stall()
+	check(not Economy.stall_away, "tocar na barraca reabre")
+	check(Inventory.total(Inventory.STALL) == 2, "estoque esperou na barraca")
 
 	map()._on_driver_door()
 	pick(0)  # encerrar o dia
@@ -157,8 +198,8 @@ func _run() -> void:
 	check(not Economy.work_day_open, "dia de trabalho encerrado")
 
 	print("== Noite: contas pagas")
-	check(GardenState.plant(1, Catalog.crop(&"alface")), "plantou alface no lote 1")
-	var stage_before := GardenState.stage(1)
+	check(GardenState.plant(2, Catalog.crop(&"tomate")), "plantou tomate no lote 2")
+	var stage_before := GardenState.stage(2)
 	TimeManager.minutes = 21 * 60
 	var money_night := Economy.money
 	main.run_night(false)
@@ -168,9 +209,11 @@ func _run() -> void:
 	pick(0)  # confirmar (todas marcadas)
 	TimeManager.running = false
 	check(TimeManager.day == 2 and TimeManager.clock_text() == "07:30", "dia 2 às 07:30")
-	check(Economy.money == money_night - Economy.bills_total(), "pagou R$ %d de contas" % Economy.bills_total())
-	check(PlayerStats.has_buff(PlayerStats.BUFF_RESTED), "buff Bem descansada")
-	check(GardenState.stage(1) > stage_before, "alface cresceu durante a noite")
+	check(Economy.money == money_night - 70, "pagou R$ 70 de contas no dia 1")
+	check(Economy.bills_total() > 70, "contas sobem no dia 2 (R$ %d)" % Economy.bills_total())
+	check(TimeManager.weekday_name() == "Terça" and Economy.auction_today() == 15 * 60, "dia 2 é terça, leilão às 15:00")
+	check(PlayerStats.has_buff(PlayerStats.BUFF_RESTED), "buff Bem descansado")
+	check(GardenState.stage(2) > stage_before, "tomate cresceu durante a noite")
 	check(SceneRouter.current_id == &"house", "acorda em casa")
 
 	print("== Noite: desmaio às 02:55 sem pagar")
@@ -195,5 +238,6 @@ func _run() -> void:
 	pick(0)  # recomeçar
 	TimeManager.running = false
 	check(TimeManager.day == 1 and Economy.money == Economy.START_MONEY and Economy.risk == 0, "recomeçou do dia 1")
-	check(GardenState.is_empty(1) and Inventory.total(Inventory.TRUCK) == 0, "estado zerado")
+	check(GardenState.is_empty(2) and Inventory.total(Inventory.TRUCK) == 0, "estado zerado")
 	check(not MenuLayer.current.is_open, "nenhum menu sobrando")
+	finished = true

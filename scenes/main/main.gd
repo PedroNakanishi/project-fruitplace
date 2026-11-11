@@ -25,6 +25,13 @@ func _unhandled_input(event: InputEvent) -> void:
 		if p:
 			p.try_interact()
 		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(&"cycle_seed") and not EventBus.input_locked():
+		var c := GardenState.cycle_seed()
+		if c:
+			EventBus.toast.emit("Semente: %s (%d)" % [c.display_name, Inventory.count(Inventory.BACKPACK, c.seed_id())])
+		else:
+			EventBus.toast.emit("Sem sementes na mochila.")
+		get_viewport().set_input_as_handled()
 
 
 ## Fluxo noturno: disparado ao dormir na cama ou desmaiar.
@@ -44,7 +51,7 @@ func run_night(fainted: bool) -> void:
 	if Economy.risk > 0:
 		note += "\n⚠ Ontem 2 contas ficaram sem pagar!"
 
-	var paid: Dictionary = await menu.bills(Economy.BILLS, Economy.money, note)
+	var paid: Dictionary = await menu.bills(Economy.bills_today(), Economy.money, note)
 	if Economy.settle_bills(paid):
 		await menu.choose("FALÊNCIA", "As dívidas chegaram. Você perdeu a barraca no dia %d." % TimeManager.day, ["Recomeçar"])
 		restart()
@@ -58,7 +65,7 @@ func run_night(fainted: bool) -> void:
 	SceneRouter.load_now(&"house", &"FromStart")
 	var msg := "Dia %d" % TimeManager.day
 	if rested:
-		msg += " — Bem descansada!"
+		msg += " — buff Bem descansado!"
 	elif fainted:
 		msg += " — energia máxima reduzida"
 	EventBus.toast.emit(msg)

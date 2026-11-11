@@ -2,7 +2,7 @@ extends CharacterBody3D
 ## Movimento relativo à câmera isométrica e foco no Interactable mais próximo.
 ## A tecla de interação é lida pela cena Main, que chama `try_interact()`.
 
-const SPEED := 4.5
+const SPEED := 5.5
 const GRAVITY := 20.0
 
 @onready var reach: Area3D = $Reach

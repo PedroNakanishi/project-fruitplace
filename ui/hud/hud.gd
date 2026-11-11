@@ -70,12 +70,19 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	_clock.text = "Dia %d  ·  %s" % [TimeManager.day, TimeManager.clock_text()]
+	_clock.text = "Dia %d  ·  %s  ·  %s" % [TimeManager.day, TimeManager.weekday_name(), TimeManager.clock_text()]
 	_money.text = "R$ %d" % Economy.money
 	var parts: PackedStringArray = []
 	for b: StringName in PlayerStats.buffs:
 		parts.append("★ " + PlayerStats.BUFF_NAMES.get(b, String(b)))
 	parts.append("Gasolina: %d viagens  ·  Água: %d regas" % [Economy.fuel_trips, Economy.water_charges])
+	var seed := GardenState.selected_crop()
+	if seed:
+		parts.append("Semente [Q]: %s (%d)" % [seed.display_name, Inventory.count(Inventory.BACKPACK, seed.seed_id())])
+	var auction := Economy.auction_today()
+	if auction >= 0 and TimeManager.minutes < auction:
+		parts.append("Leilão de lojas hoje às %02d:%02d" % [auction / 60, auction % 60])
+	parts.append("Contas hoje à noite: R$ %d" % Economy.bills_total())
 	if Economy.risk > 0:
 		parts.append("⚠ Contas atrasadas! Mais uma noite assim = falência")
 	_status.text = "\n".join(parts)

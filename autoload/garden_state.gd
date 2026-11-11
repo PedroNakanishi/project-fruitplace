@@ -3,12 +3,16 @@ extends Node
 ## as plantas cresçam enquanto o jogador está na Feira.
 
 signal plot_changed(index: int)
+signal seed_changed(seed: StringName)
 
 const PLOT_COUNT := 6
 const WATER_SPEED_BONUS := 0.35  ## Regado: ~25% menos tempo restante.
 const WATER_ENERGY_COST := 3.0
+const DEFAULT_SEED := &"semente_tomate"
 
 var plots: Array[Dictionary] = []
+## Semente usada ao tocar num lote vazio. Trocada com Q.
+var selected_seed: StringName = DEFAULT_SEED
 
 
 func _ready() -> void:
@@ -18,10 +22,76 @@ func _ready() -> void:
 
 
 func reset() -> void:
+	selected_seed = DEFAULT_SEED
 	plots.clear()
 	for i in PLOT_COUNT:
 		plots.append(_empty())
 		plot_changed.emit(i)
+	seed_changed.emit(selected_seed)
+
+
+## Culturas com semente na mochila, na ordem do catálogo.
+func available_seeds() -> Array[CropData]:
+	var out: Array[CropData] = []
+	for c: CropData in Catalog.CROPS:
+		if Inventory.count(Inventory.BACKPACK, c.seed_id()) > 0:
+			out.append(c)
+	return out
+
+
+## A semente selecionada; se acabou, a primeira disponível; ou null.
+func selected_crop() -> CropData:
+	var c := Catalog.crop_for_seed(selected_seed)
+	if c and Inventory.count(Inventory.BACKPACK, selected_seed) > 0:
+		return c
+	var avail := available_seeds()
+	return avail[0] if not avail.is_empty() else null
+
+
+## Passa para a próxima semente disponível. Devolve a nova, ou null.
+func cycle_seed() -> CropData:
+	var avail := available_seeds()
+	if avail.is_empty():
+		return null
+	var idx := -1
+	for i in avail.size():
+		if avail[i].seed_id() == selected_seed:
+			idx = i
+	var next := avail[(idx + 1) % avail.size()]
+	selected_seed = next.seed_id()
+	seed_changed.emit(selected_seed)
+	return next
+
+
+func first_fertilizer() -> FertilizerData:
+	for f: FertilizerData in Catalog.FERTILIZERS:
+		if Inventory.count(Inventory.BACKPACK, f.id) > 0:
+			return f
+	return null
+
+
+## A próxima ação de um toque no lote: &"plant", &"water", &"fertilize",
+## &"harvest", ou &"wait" (nada a fazer agora).
+func next_action(i: int) -> StringName:
+	if is_ready(i):
+		return &"harvest"
+	if is_empty(i):
+		return &"plant"
+	if not plots[i].watered and Economy.water_charges > 0:
+		return &"water"
+	if not plots[i].fertilized and first_fertilizer() != null:
+		return &"fertilize"
+	return &"wait"
+
+
+## Minutos de jogo até a colheita, com os buffs atuais.
+func minutes_left(i: int) -> int:
+	var c := crop_of(i)
+	if c == null:
+		return 0
+	var p := plots[i]
+	var speed: float = 1.0 + p.growth_bonus + (WATER_SPEED_BONUS if p.watered else 0.0)
+	return maxi(0, ceili((c.grow_minutes - p.progress) / speed))
 
 
 func _empty() -> Dictionary:

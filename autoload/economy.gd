@@ -10,6 +10,13 @@ const BILLS := [
 	{"id": &"agua", "name": "Água", "cost": 15, "effect": "regador cheio"},
 	{"id": &"gasolina", "name": "Gasolina", "cost": 25, "effect": "tanque cheio"},
 ]
+## As contas sobem um pouco a cada dia (inflação dos anos 90).
+const INFLATION_PER_DAY := 0.03
+## Leilões de lojas: dia da semana (0 = segunda) e minuto do dia.
+const AUCTIONS := [
+	{"weekday": 1, "minutes": 15 * 60},  # Terça 15:00
+	{"weekday": 5, "minutes": 11 * 60},  # Sábado 11:00
+]
 const WATER_CHARGES_PER_DAY := 12
 const TRIPS_PER_TANK := 4
 const PRICE_VARIANCE := 0.15
@@ -26,6 +33,8 @@ var price_multiplier := {}
 
 # Resumo do dia de trabalho
 var work_day_open := false
+## Jogador saiu sem encerrar o dia: placa "Volto logo", ninguém compra.
+var stall_away := false
 var sales_today := 0
 var units_today := 0
 var happy_today := 0
@@ -54,6 +63,7 @@ func start_day(day: int) -> void:
 	for c: CropData in Catalog.CROPS:
 		price_multiplier[c.id] = 1.0 + _rng.randf_range(-PRICE_VARIANCE, PRICE_VARIANCE)
 	work_day_open = false
+	stall_away = false
 	sales_today = 0
 	units_today = 0
 	happy_today = 0
@@ -106,11 +116,34 @@ func use_water() -> bool:
 	return true
 
 
+## Valor de uma conta no dia atual, com a inflação acumulada.
+func bill_cost(bill: Dictionary) -> int:
+	return roundi(bill.cost * pow(1.0 + INFLATION_PER_DAY, TimeManager.day - 1))
+
+
+## As contas desta noite, com os valores do dia.
+func bills_today() -> Array:
+	var out: Array = []
+	for b: Dictionary in BILLS:
+		var today := b.duplicate()
+		today.cost = bill_cost(b)
+		out.append(today)
+	return out
+
+
 func bills_total() -> int:
 	var t := 0
 	for b: Dictionary in BILLS:
-		t += b.cost
+		t += bill_cost(b)
 	return t
+
+
+## Próximo leilão no dia de hoje, em minutos do dia, ou -1.
+func auction_today() -> int:
+	for a: Dictionary in AUCTIONS:
+		if a.weekday == TimeManager.weekday():
+			return a.minutes
+	return -1
 
 
 ## Paga as contas marcadas em `paid` (id -> bool) e aplica os efeitos.
@@ -118,7 +151,7 @@ func bills_total() -> int:
 func settle_bills(paid: Dictionary) -> bool:
 	var unpaid := 0
 	for b: Dictionary in BILLS:
-		var ok: bool = paid.get(b.id, false) and spend(b.cost)
+		var ok: bool = paid.get(b.id, false) and spend(bill_cost(b))
 		if not ok:
 			unpaid += 1
 		match b.id:

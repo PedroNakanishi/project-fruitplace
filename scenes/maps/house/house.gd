@@ -22,7 +22,7 @@ func _on_bed() -> void:
 		return
 	var rested := PlayerStats.is_rested_for_sleep()
 	var body := "Dormir agora encerra o dia e abre as contas."
-	body += "\nVocê vai acordar Bem descansada." if rested else "\nEnergia baixa: sem bônus de descanso."
+	body += "\nVocê vai acordar com o buff Bem descansado." if rested else "\nEnergia baixa: sem bônus de descanso."
 	if await MenuLayer.current.choose("Cama", body, ["Dormir", "Ainda não"]) == 0:
 		EventBus.sleep_requested.emit()
 

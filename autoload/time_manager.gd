@@ -72,6 +72,18 @@ func start_new_day() -> void:
 	day_started.emit(day)
 
 
+const WEEKDAYS := ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"]
+
+
+## 0 = segunda. O dia 1 é uma segunda-feira.
+func weekday() -> int:
+	return (day - 1) % 7
+
+
+func weekday_name() -> String:
+	return WEEKDAYS[weekday()]
+
+
 func clock_text() -> String:
 	var m := minutes % (24 * 60)
 	return "%02d:%02d" % [m / 60, m % 60]

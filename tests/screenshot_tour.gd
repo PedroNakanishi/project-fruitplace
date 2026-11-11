@@ -21,9 +21,9 @@ func _ready() -> void:
 		var spawn: StringName = {&"house": &"FromStart", &"backyard": &"FromTruck", &"market": &"FromTruck"}[map_id]
 		SceneRouter.load_now(map_id, spawn)
 		if map_id == &"market":
-			for i in 3:
+			for i in 6:
 				map_ref()._on_spawn()
-		for f in 90:
+		for f in (420 if map_id == &"market" else 90):
 			await get_tree().process_frame
 		var img := get_viewport().get_texture().get_image()
 		img.save_png(out_dir.path_join("shot_%s.png" % map_id))

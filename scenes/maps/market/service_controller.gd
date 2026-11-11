@@ -11,7 +11,7 @@ const HAPPY_FROM := 0.6
 
 const OPTIONS := {
 	&"bajular": {"label": "Bajular (+10%, −2 energia)", "price": 0.10, "energy": -2.0},
-	&"desconto": {"label": "Dar desconto (−15%, +2 energia)", "price": -0.15, "energy": 2.0},
+	&"desconto": {"label": "Dar desconto (−15%, +2 energia: melhor não discutir)", "price": -0.15, "energy": 2.0},
 	&"sobrepreco": {"label": "Sobrepreço (+30%, −5 energia)", "price": 0.30, "energy": -5.0},
 }
 
