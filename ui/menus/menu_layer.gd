@@ -62,7 +62,9 @@ func choose(title: String, body: String, options: Array) -> int:
 		var b := Button.new()
 		b.text = options[i]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.pressed.connect(func() -> void: _picked.emit(i))
+		b.pressed.connect(func() -> void:
+			Sfx.play(&"ui_select")
+			_picked.emit(i))
 		_content.add_child(b)
 	_focus_first()
 	var result: int = await _picked
@@ -92,12 +94,16 @@ func bills(lines: Array, money: int, note: String) -> Dictionary:
 		cb.button_pressed = budget >= b.cost  # marca o que dá para pagar, em ordem
 		if cb.button_pressed:
 			budget -= b.cost
-		cb.toggled.connect(func(_on: bool) -> void: refresh.call())
+		cb.toggled.connect(func(_on: bool) -> void:
+			Sfx.play(&"ui_select")
+			refresh.call())
 		checks[b.id] = cb
 		_content.add_child(cb)
 	_content.add_child(total_label)
 	confirm.text = "Confirmar e dormir"
-	confirm.pressed.connect(func() -> void: _picked.emit(0))
+	confirm.pressed.connect(func() -> void:
+		Sfx.play(&"ui_select")
+		_picked.emit(0))
 	_content.add_child(confirm)
 	refresh.call()
 	_focus_first()
@@ -119,6 +125,7 @@ func close() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if is_open and _cancellable and event.is_action_pressed(&"ui_cancel"):
 		get_viewport().set_input_as_handled()
+		Sfx.play(&"ui_cancel")
 		close()
 
 
@@ -133,6 +140,7 @@ func _open(title: String, body: String, cancellable: bool) -> void:
 	is_open = true
 	EventBus.ui_blocking = true
 	EventBus.interaction_prompt.emit("")
+	Sfx.play(&"ui_open")
 
 
 func _close() -> void:

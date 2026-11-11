@@ -1,0 +1,102 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/wood.tres" id="1_esql8"]
+[ext_resource type="Material" path="res://assets/materials/fabric_white.tres" id="2_ycbdn"]
+[ext_resource type="Material" path="res://assets/materials/fabric_blue.tres" id="3_n67dg"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ukxig"]
+material = ExtResource("1_esql8")
+size = Vector3(2.2, 0.3, 3.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d0c0i"]
+material = ExtResource("1_esql8")
+size = Vector3(0.14, 0.12, 0.14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_c3b5y"]
+material = ExtResource("1_esql8")
+size = Vector3(0.14, 0.12, 0.14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_iew5i"]
+material = ExtResource("1_esql8")
+size = Vector3(0.14, 0.12, 0.14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d7k1g"]
+material = ExtResource("1_esql8")
+size = Vector3(0.14, 0.12, 0.14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rq8to"]
+material = ExtResource("1_esql8")
+size = Vector3(2.2, 1.15, 0.14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ir2x8"]
+material = ExtResource("1_esql8")
+size = Vector3(2.2, 0.55, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fhe7h"]
+material = ExtResource("2_ycbdn")
+size = Vector3(2, 0.24, 3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6oghx"]
+material = ExtResource("3_n67dg")
+size = Vector3(2.06, 0.26, 1.9)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0lf6m"]
+material = ExtResource("2_ycbdn")
+size = Vector3(2.06, 0.05, 0.3)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uyavq"]
+material = ExtResource("2_ycbdn")
+size = Vector3(1.2, 0.16, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_l7q3v"]
+size = Vector3(2.2, 0.8, 3.2)
+
+[node name="Bed" type="StaticBody3D" unique_id=1113716516]
+
+[node name="Base" type="MeshInstance3D" parent="." unique_id=600265835]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.27, 0)
+mesh = SubResource("BoxMesh_ukxig")
+
+[node name="Leg" type="MeshInstance3D" parent="." unique_id=1057733031]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.06, -1.5)
+mesh = SubResource("BoxMesh_d0c0i")
+
+[node name="Leg2" type="MeshInstance3D" parent="." unique_id=642916973]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.06, 1.5)
+mesh = SubResource("BoxMesh_c3b5y")
+
+[node name="Leg3" type="MeshInstance3D" parent="." unique_id=559083656]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.06, -1.5)
+mesh = SubResource("BoxMesh_iew5i")
+
+[node name="Leg4" type="MeshInstance3D" parent="." unique_id=1130134409]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.06, 1.5)
+mesh = SubResource("BoxMesh_d7k1g")
+
+[node name="Headboard" type="MeshInstance3D" parent="." unique_id=24574972]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, -1.56)
+mesh = SubResource("BoxMesh_rq8to")
+
+[node name="Footboard" type="MeshInstance3D" parent="." unique_id=1840847858]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 1.58)
+mesh = SubResource("BoxMesh_ir2x8")
+
+[node name="Mattress" type="MeshInstance3D" parent="." unique_id=89186485]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.54, 0)
+mesh = SubResource("BoxMesh_fhe7h")
+
+[node name="Blanket" type="MeshInstance3D" parent="." unique_id=1421897261]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0.52)
+mesh = SubResource("BoxMesh_6oghx")
+
+[node name="Fold" type="MeshInstance3D" parent="." unique_id=1435334454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -0.42)
+mesh = SubResource("BoxMesh_0lf6m")
+
+[node name="Pillow" type="MeshInstance3D" parent="." unique_id=1983328423]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.74, -1.1)
+mesh = SubResource("BoxMesh_uyavq")
+
+[node name="Hit" type="CollisionShape3D" parent="." unique_id=1568845299]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("BoxShape3D_l7q3v")

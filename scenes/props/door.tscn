@@ -1,0 +1,62 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/wood_light.tres" id="1_8dmq6"]
+[ext_resource type="Material" path="res://assets/materials/wood.tres" id="2_lbmyp"]
+[ext_resource type="Material" path="res://assets/materials/door.tres" id="3_vinnd"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_mctn1"]
+material = ExtResource("1_8dmq6")
+size = Vector3(0.12, 2.2, 0.22)
+
+[sub_resource type="BoxMesh" id="BoxMesh_t1sgj"]
+material = ExtResource("1_8dmq6")
+size = Vector3(0.12, 2.2, 0.22)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4i3ya"]
+material = ExtResource("1_8dmq6")
+size = Vector3(1.24, 0.12, 0.22)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d4kwg"]
+material = ExtResource("2_lbmyp")
+size = Vector3(1, 2.14, 0.06)
+
+[sub_resource type="QuadMesh" id="QuadMesh_jbe8o"]
+material = ExtResource("3_vinnd")
+size = Vector2(1, 2.14)
+
+[sub_resource type="QuadMesh" id="QuadMesh_csrs3"]
+material = ExtResource("3_vinnd")
+size = Vector2(1, 2.14)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_152w2"]
+size = Vector3(1.24, 2.3, 0.22)
+
+[node name="Door" type="StaticBody3D" unique_id=1770664327]
+
+[node name="Post" type="MeshInstance3D" parent="." unique_id=1226913383]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.56, 1.1, 0)
+mesh = SubResource("BoxMesh_mctn1")
+
+[node name="Post2" type="MeshInstance3D" parent="." unique_id=757394031]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.56, 1.1, 0)
+mesh = SubResource("BoxMesh_t1sgj")
+
+[node name="Lintel" type="MeshInstance3D" parent="." unique_id=1345161900]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.26, 0)
+mesh = SubResource("BoxMesh_4i3ya")
+
+[node name="Leaf" type="MeshInstance3D" parent="." unique_id=394953418]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07, 0)
+mesh = SubResource("BoxMesh_d4kwg")
+
+[node name="Front" type="MeshInstance3D" parent="." unique_id=1753336634]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07, 0.035)
+mesh = SubResource("QuadMesh_jbe8o")
+
+[node name="Back" type="MeshInstance3D" parent="." unique_id=825916083]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 1.07, -0.035)
+mesh = SubResource("QuadMesh_csrs3")
+
+[node name="Hit" type="CollisionShape3D" parent="." unique_id=540813968]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0)
+shape = SubResource("BoxShape3D_152w2")

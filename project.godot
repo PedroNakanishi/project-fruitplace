@@ -24,6 +24,7 @@ Inventory="*res://autoload/inventory.gd"
 Economy="*res://autoload/economy.gd"
 GardenState="*res://autoload/garden_state.gd"
 SceneRouter="*res://autoload/scene_router.gd"
+Sfx="*res://autoload/sfx.gd"
 
 [display]
 

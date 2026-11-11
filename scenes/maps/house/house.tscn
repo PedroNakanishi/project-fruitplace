@@ -1,67 +1,52 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/maps/house/house.gd" id="1"]
-[ext_resource type="Script" path="res://scenes/components/camera_rig.gd" id="2"]
-[ext_resource type="Script" path="res://scenes/components/interactable.gd" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="4"]
+[ext_resource type="Script" path="res://scenes/components/day_night.gd" id="2"]
+[ext_resource type="Script" path="res://scenes/components/camera_rig.gd" id="3"]
+[ext_resource type="Material" path="res://assets/materials/grass_far.tres" id="4"]
+[ext_resource type="Material" path="res://assets/materials/floor_planks.tres" id="5"]
+[ext_resource type="Material" path="res://assets/materials/floor_tile.tres" id="6"]
+[ext_resource type="Material" path="res://assets/materials/wall_mint.tres" id="7"]
+[ext_resource type="Material" path="res://assets/materials/wall_mint_dark.tres" id="8"]
+[ext_resource type="Material" path="res://assets/materials/wall_pink.tres" id="9"]
+[ext_resource type="Material" path="res://assets/materials/wall_pink_dark.tres" id="10"]
+[ext_resource type="PackedScene" path="res://scenes/props/bed.tscn" id="11"]
+[ext_resource type="PackedScene" path="res://scenes/props/nightstand.tscn" id="12"]
+[ext_resource type="PackedScene" path="res://scenes/props/window.tscn" id="13"]
+[ext_resource type="PackedScene" path="res://scenes/props/potted_plant.tscn" id="14"]
+[ext_resource type="PackedScene" path="res://scenes/props/picture.tscn" id="15"]
+[ext_resource type="PackedScene" path="res://scenes/props/tv.tscn" id="16"]
+[ext_resource type="PackedScene" path="res://scenes/props/rug.tscn" id="17"]
+[ext_resource type="PackedScene" path="res://scenes/props/sofa.tscn" id="18"]
+[ext_resource type="PackedScene" path="res://scenes/props/floor_lamp.tscn" id="19"]
+[ext_resource type="PackedScene" path="res://scenes/props/floor_fan.tscn" id="20"]
+[ext_resource type="PackedScene" path="res://scenes/props/phone_table.tscn" id="21"]
+[ext_resource type="PackedScene" path="res://scenes/props/wall_clock.tscn" id="22"]
+[ext_resource type="PackedScene" path="res://scenes/props/counter.tscn" id="23"]
+[ext_resource type="PackedScene" path="res://scenes/props/fridge.tscn" id="24"]
+[ext_resource type="PackedScene" path="res://scenes/props/stove.tscn" id="25"]
+[ext_resource type="PackedScene" path="res://scenes/props/dining_table.tscn" id="26"]
+[ext_resource type="PackedScene" path="res://scenes/props/door.tscn" id="27"]
+[ext_resource type="Script" path="res://scenes/components/interactable.gd" id="28"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="29"]
 
 [sub_resource type="Environment" id="Environment_1"]
 background_mode = 1
-background_color = Color(0.98, 0.7, 0.45, 1)
+background_color = Color(0.55, 0.82, 0.95, 1)
 ambient_light_source = 2
-ambient_light_color = Color(1, 0.9, 0.8, 1)
-ambient_light_energy = 0.65
+ambient_light_color = Color(1, 0.95, 0.85, 1)
+ambient_light_energy = 0.7
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2"]
-albedo_color = Color(0.82, 0.48, 0.32, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3"]
-albedo_color = Color(0.3, 0.6, 0.7, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4"]
-albedo_color = Color(0.55, 0.82, 0.68, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5"]
-albedo_color = Color(0.95, 0.55, 0.62, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6"]
-albedo_color = Color(0.85, 0.35, 0.4, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7"]
-albedo_color = Color(0.55, 0.36, 0.22, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8"]
-albedo_color = Color(0.2, 0.2, 0.22, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_9"]
-albedo_color = Color(0.97, 0.93, 0.82, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_10"]
-albedo_color = Color(0.35, 0.55, 0.9, 1)
-roughness = 0.9
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_11"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_2"]
 size = Vector3(2.6, 1.6, 3.6)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_12"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_3"]
 size = Vector3(1.6, 2, 1.4)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_13"]
-albedo_color = Color(0.85, 0.15, 0.15, 1)
-roughness = 0.9
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_14"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_4"]
 size = Vector3(1.4, 1.6, 1.4)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_15"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_5"]
 size = Vector3(2, 2, 1)
 
 [node name="House" type="Node3D"]
@@ -76,147 +61,168 @@ light_color = Color(1, 0.95, 0.85, 1)
 light_energy = 1.1
 shadow_enabled = true
 
-[node name="CameraRig" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+[node name="DayNight" type="Node" parent="."]
 script = ExtResource("2")
+
+[node name="CameraRig" type="Node3D" parent="."]
+script = ExtResource("3")
 ortho_size = 12.5
 
 [node name="Camera3D" type="Camera3D" parent="CameraRig"]
 
 [node name="Level" type="Node3D" parent="."]
 
+[node name="Ground" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.46, 0)
+size = Vector3(70, 0.4, 70)
+material = ExtResource("4")
+
 [node name="Floor" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
 size = Vector3(12, 0.5, 10)
-material = SubResource("StandardMaterial3D_2")
+material = ExtResource("5")
 use_collision = true
 
-[node name="Rug" type="CSGBox3D" parent="Level"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.01, 0.5)
-size = Vector3(3.5, 0.02, 2.5)
-material = SubResource("StandardMaterial3D_3")
+[node name="KitchenFloor" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8, 0.006, 1.7)
+size = Vector3(2.4, 0.02, 6.2)
+material = ExtResource("6")
 
 [node name="WallBack" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -5.15)
-size = Vector3(12, 3, 0.3)
-material = SubResource("StandardMaterial3D_4")
+size = Vector3(12.6, 3, 0.3)
+material = ExtResource("7")
 use_collision = true
+
+[node name="WallBackBand" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -4.985)
+size = Vector3(12, 1, 0.04)
+material = ExtResource("8")
 
 [node name="WallLeft" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.15, 1.5, 0)
 size = Vector3(0.3, 3, 10)
-material = SubResource("StandardMaterial3D_5")
+material = ExtResource("9")
 use_collision = true
 
+[node name="WallLeftBand" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.985, 0.5, 0)
+size = Vector3(0.04, 1, 10)
+material = ExtResource("10")
+
 [node name="WallFrontA" type="CSGBox3D" parent="Level"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.25, 5.15)
-size = Vector3(5, 0.5, 0.3)
-material = SubResource("StandardMaterial3D_4")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.31, 0.25, 5.15)
+size = Vector3(5.38, 0.5, 0.3)
+material = ExtResource("7")
 use_collision = true
 
 [node name="WallFrontB" type="CSGBox3D" parent="Level"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.25, 5.15)
-size = Vector3(5, 0.5, 0.3)
-material = SubResource("StandardMaterial3D_4")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.31, 0.25, 5.15)
+size = Vector3(5.38, 0.5, 0.3)
+material = ExtResource("7")
 use_collision = true
 
 [node name="WallRight" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.15, 0.25, 0)
-size = Vector3(0.3, 0.5, 10)
-material = SubResource("StandardMaterial3D_5")
+size = Vector3(0.3, 0.5, 10.6)
+material = ExtResource("9")
 use_collision = true
 
 [node name="Decor" type="Node3D" parent="Level"]
 
-[node name="Sofa" type="CSGBox3D" parent="Level/Decor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.4, -4.2)
-size = Vector3(2.6, 0.8, 1)
-material = SubResource("StandardMaterial3D_6")
-use_collision = true
+[node name="Bed" parent="Level/Decor" instance=ExtResource("11")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0, -3.2)
 
-[node name="TvStand" type="CSGBox3D" parent="Level/Decor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.3, 2.8)
-size = Vector3(1.4, 0.6, 0.8)
-material = SubResource("StandardMaterial3D_7")
-use_collision = true
+[node name="Nightstand" parent="Level/Decor" instance=ExtResource("12")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.1, 0, -4.6)
 
-[node name="Tv" type="CSGBox3D" parent="Level/Decor"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 2.8)
-size = Vector3(1, 0.8, 0.8)
-material = SubResource("StandardMaterial3D_8")
-use_collision = true
+[node name="WindowBed" parent="Level/Decor" instance=ExtResource("13")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 2, -4.96)
 
-[node name="Fan" type="CSGBox3D" parent="Level/Decor"]
-transform = Transform3D(0.866, 0, 0.5, 0, 1, 0, -0.5, 0, 0.866, 1, 2.9, 0.5)
-size = Vector3(1.6, 0.05, 0.25)
-material = SubResource("StandardMaterial3D_9")
+[node name="Plant" parent="Level/Decor" instance=ExtResource("14")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1, 0, -4.6)
+
+[node name="Picture" parent="Level/Decor" instance=ExtResource("15")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 1.95, -4.97)
+
+[node name="Tv" parent="Level/Decor" instance=ExtResource("16")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0, -4.55)
+
+[node name="Rug" parent="Level/Decor" instance=ExtResource("17")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0, -3)
+
+[node name="Sofa" parent="Level/Decor" instance=ExtResource("18")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 1.2, 0, -1.5)
+
+[node name="FloorLamp" parent="Level/Decor" instance=ExtResource("19")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 0, -1.3)
+
+[node name="FloorFan" parent="Level/Decor" instance=ExtResource("20")]
+transform = Transform3D(0.766, 0, -0.6428, 0, 1, 0, 0.6428, 0, 0.766, 3.5, 0, -2.6)
+
+[node name="WindowLiving" parent="Level/Decor" instance=ExtResource("13")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1, 1.9, -4.96)
+
+[node name="PhoneTable" parent="Level/Decor" instance=ExtResource("21")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0, -4.55)
+
+[node name="Clock" parent="Level/Decor" instance=ExtResource("22")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 2.1, -4.97)
+
+[node name="Counter" parent="Level/Decor" instance=ExtResource("23")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5.6, 0, -0.4)
+
+[node name="WindowKitchen" parent="Level/Decor" instance=ExtResource("13")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5.96, 1.95, -0.4)
+
+[node name="Fridge" parent="Level/Decor" instance=ExtResource("24")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5.5, 0, 1.5)
+
+[node name="Stove" parent="Level/Decor" instance=ExtResource("25")]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5.58, 0, 2.85)
+
+[node name="DiningTable" parent="Level/Decor" instance=ExtResource("26")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.3, 0, 2.3)
+
+[node name="PlantCorner" parent="Level/Decor" instance=ExtResource("14")]
+transform = Transform3D(0.5, 0, 0.866, 0, 1, 0, -0.866, 0, 0.5, 5.35, 0, 4.3)
+
+[node name="Door" parent="Level/Decor" instance=ExtResource("27")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5.15)
 
 [node name="Interactables" type="Node3D" parent="."]
 
-[node name="BedFrame" type="CSGBox3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0.3, -3.2)
-size = Vector3(2.2, 0.6, 3.2)
-material = SubResource("StandardMaterial3D_7")
-use_collision = true
-
-[node name="BedSheet" type="CSGBox3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0.65, -2.8)
-size = Vector3(2, 0.15, 2.4)
-material = SubResource("StandardMaterial3D_10")
-
 [node name="Bed" type="Area3D" parent="Interactables"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.6, 0.8, -3.2)
-script = ExtResource("3")
+script = ExtResource("28")
 prompt = "Dormir"
 
 [node name="Shape" type="CollisionShape3D" parent="Interactables/Bed"]
-shape = SubResource("BoxShape3D_11")
-
-[node name="FridgeBody" type="CSGBox3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.4, 1.1, 1.5)
-size = Vector3(1, 2.2, 1)
-material = SubResource("StandardMaterial3D_9")
-use_collision = true
+shape = SubResource("BoxShape3D_2")
 
 [node name="Fridge" type="Area3D" parent="Interactables"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2, 1, 1.5)
-script = ExtResource("3")
+script = ExtResource("28")
 prompt = "Abrir a geladeira"
 
 [node name="Shape" type="CollisionShape3D" parent="Interactables/Fridge"]
-shape = SubResource("BoxShape3D_12")
-
-[node name="PhoneTable" type="CSGBox3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0.4, -4.4)
-size = Vector3(0.8, 0.8, 0.8)
-material = SubResource("StandardMaterial3D_7")
-use_collision = true
-
-[node name="PhoneBody" type="CSGBox3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0.9, -4.4)
-size = Vector3(0.4, 0.2, 0.3)
-material = SubResource("StandardMaterial3D_13")
+shape = SubResource("BoxShape3D_3")
 
 [node name="Phone" type="Area3D" parent="Interactables"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.6, 0.8, -4.2)
-script = ExtResource("3")
+script = ExtResource("28")
 prompt = "Usar o telefone"
 
 [node name="Shape" type="CollisionShape3D" parent="Interactables/Phone"]
-shape = SubResource("BoxShape3D_14")
-
-[node name="DoorFrame" type="CSGBox3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 5.15)
-size = Vector3(2, 2.4, 0.2)
-material = SubResource("StandardMaterial3D_7")
+shape = SubResource("BoxShape3D_4")
 
 [node name="DoorToBackyard" type="Area3D" parent="Interactables"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 4.6)
-script = ExtResource("3")
+script = ExtResource("28")
 prompt = "Sair para o quintal"
 
 [node name="Shape" type="CollisionShape3D" parent="Interactables/DoorToBackyard"]
-shape = SubResource("BoxShape3D_15")
+shape = SubResource("BoxShape3D_5")
 
 [node name="SpawnPoints" type="Node3D" parent="."]
 
@@ -226,4 +232,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.6, 0.05, -2.5)
 [node name="FromBackyard" type="Marker3D" parent="SpawnPoints"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 3.6)
 
-[node name="Player" parent="." instance=ExtResource("4")]
+[node name="Player" parent="." instance=ExtResource("29")]

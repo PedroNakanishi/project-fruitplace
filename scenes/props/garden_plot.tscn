@@ -1,47 +1,63 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://scenes/props/garden_plot.gd" id="1"]
-[ext_resource type="Script" path="res://scenes/components/interactable.gd" id="2"]
+[ext_resource type="Script" path="res://scenes/props/garden_plot.gd" id="1_0r4v0"]
+[ext_resource type="Material" path="res://assets/materials/soil.tres" id="2_r4ged"]
+[ext_resource type="Material" path="res://assets/materials/wood.tres" id="3_4t4sg"]
+[ext_resource type="Script" path="res://scenes/components/interactable.gd" id="4_02r7x"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1"]
-albedo_color = Color(0.3, 0.65, 0.25, 1)
-roughness = 0.9
+[sub_resource type="BoxMesh" id="BoxMesh_f2o0s"]
+material = ExtResource("2_r4ged")
+size = Vector3(1.5, 0.16, 1.5)
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_2"]
-top_radius = 0.12
-bottom_radius = 0.3
-height = 0.9
-radial_segments = 6
-material = SubResource("StandardMaterial3D_1")
+[sub_resource type="BoxMesh" id="BoxMesh_dddk0"]
+material = ExtResource("3_4t4sg")
+size = Vector3(1.7, 0.22, 0.1)
 
-[sub_resource type="SphereMesh" id="SphereMesh_3"]
-radius = 0.26
-height = 0.52
-radial_segments = 8
-rings = 4
+[sub_resource type="BoxMesh" id="BoxMesh_4hdv5"]
+material = ExtResource("3_4t4sg")
+size = Vector3(1.7, 0.22, 0.1)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_4"]
+[sub_resource type="BoxMesh" id="BoxMesh_lrsqm"]
+material = ExtResource("3_4t4sg")
+size = Vector3(0.1, 0.22, 1.5)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8ul66"]
+material = ExtResource("3_4t4sg")
+size = Vector3(0.1, 0.22, 1.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_dwye3"]
 size = Vector3(1.6, 1.5, 1.6)
 
-[node name="GardenPlot" type="Node3D"]
-script = ExtResource("1")
+[node name="GardenPlot" type="Node3D" unique_id=1565806529]
+script = ExtResource("1_0r4v0")
 
-[node name="Soil" type="CSGBox3D" parent="."]
+[node name="Soil" type="MeshInstance3D" parent="." unique_id=585818684]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
-size = Vector3(1.6, 0.2, 1.6)
+mesh = SubResource("BoxMesh_f2o0s")
 
-[node name="Plant" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
-mesh = SubResource("CylinderMesh_2")
+[node name="Border" type="MeshInstance3D" parent="." unique_id=659833391]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, -0.8)
+mesh = SubResource("BoxMesh_dddk0")
 
-[node name="Fruit" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
-mesh = SubResource("SphereMesh_3")
+[node name="Border2" type="MeshInstance3D" parent="." unique_id=1168145578]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.11, 0.8)
+mesh = SubResource("BoxMesh_4hdv5")
 
-[node name="Interactable" type="Area3D" parent="."]
+[node name="Border3" type="MeshInstance3D" parent="." unique_id=87872280]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0.11, 0)
+mesh = SubResource("BoxMesh_lrsqm")
+
+[node name="Border4" type="MeshInstance3D" parent="." unique_id=1682149724]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 0.11, 0)
+mesh = SubResource("BoxMesh_8ul66")
+
+[node name="PlantSlot" type="Node3D" parent="." unique_id=969950201]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.18, 0)
+
+[node name="Interactable" type="Area3D" parent="." unique_id=191873169]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
-script = ExtResource("2")
+script = ExtResource("4_02r7x")
 prompt = "Plantar"
 
-[node name="Shape" type="CollisionShape3D" parent="Interactable"]
-shape = SubResource("BoxShape3D_4")
+[node name="Shape" type="CollisionShape3D" parent="Interactable" unique_id=1563158255]
+shape = SubResource("BoxShape3D_dwye3")

@@ -1,0 +1,136 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/stone.tres" id="1_ff2tv"]
+[ext_resource type="Material" path="res://assets/materials/chrome.tres" id="2_slbve"]
+[ext_resource type="Material" path="res://assets/materials/tomato.tres" id="3_yedn0"]
+[ext_resource type="Material" path="res://assets/materials/water.tres" id="4_bufp6"]
+[ext_resource type="Material" path="res://assets/materials/gray.tres" id="5_7pnfi"]
+[ext_resource type="Material" path="res://assets/materials/can_green.tres" id="6_e8skv"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_62dq6"]
+material = ExtResource("1_ff2tv")
+size = Vector3(0.12, 0.9, 0.12)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_epn2f"]
+material = ExtResource("2_slbve")
+top_radius = 0.03
+bottom_radius = 0.03
+height = 0.18
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_mv6qm"]
+material = ExtResource("3_yedn0")
+size = Vector3(0.12, 0.03, 0.03)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_e1txe"]
+material = ExtResource("4_bufp6")
+top_radius = 0.3
+bottom_radius = 0.3
+height = 0.012
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_u0o72"]
+material = ExtResource("5_7pnfi")
+top_radius = 0.17
+bottom_radius = 0.13
+height = 0.26
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_1jw5u"]
+material = ExtResource("4_bufp6")
+top_radius = 0.15
+bottom_radius = 0.15
+height = 0.02
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_sdh8g"]
+material = ExtResource("6_e8skv")
+top_radius = 0.15
+bottom_radius = 0.17
+height = 0.3
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4xdww"]
+material = ExtResource("6_e8skv")
+top_radius = 0.03
+bottom_radius = 0.04
+height = 0.36
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_s1loe"]
+material = ExtResource("6_e8skv")
+top_radius = 0.07
+bottom_radius = 0.03
+height = 0.05
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_6eo1a"]
+material = ExtResource("6_e8skv")
+size = Vector3(0.04, 0.26, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_1sjq6"]
+material = ExtResource("6_e8skv")
+size = Vector3(0.24, 0.03, 0.03)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s4lwg"]
+size = Vector3(0.2, 0.9, 0.2)
+
+[node name="WaterTap" type="StaticBody3D" unique_id=1228985508]
+
+[node name="Post" type="MeshInstance3D" parent="." unique_id=796018154]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("BoxMesh_62dq6")
+
+[node name="Tap" type="MeshInstance3D" parent="." unique_id=762291536]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.8, 0.12)
+mesh = SubResource("CylinderMesh_epn2f")
+
+[node name="Handle" type="MeshInstance3D" parent="." unique_id=1239379862]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.87, 0.1)
+mesh = SubResource("BoxMesh_mv6qm")
+
+[node name="Puddle" type="MeshInstance3D" parent="." unique_id=1813411238]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.05, 0.008, 0.35)
+mesh = SubResource("CylinderMesh_e1txe")
+
+[node name="Bucket" type="MeshInstance3D" parent="." unique_id=936710794]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.13, 0.25)
+mesh = SubResource("CylinderMesh_u0o72")
+
+[node name="BucketWater" type="MeshInstance3D" parent="." unique_id=1193803908]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.4, 0.24, 0.25)
+mesh = SubResource("CylinderMesh_1jw5u")
+
+[node name="WateringCan" type="Node3D" parent="." unique_id=525991699]
+transform = Transform3D(0.8660254, 0, -0.5, 0, 1, 0, 0.5, 0, 0.8660254, 0.5, 0, 0.2)
+
+[node name="Body" type="MeshInstance3D" parent="WateringCan" unique_id=1053707871]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+mesh = SubResource("CylinderMesh_sdh8g")
+
+[node name="Spout" type="MeshInstance3D" parent="WateringCan" unique_id=208298298]
+transform = Transform3D(0.57357645, 0.81915206, 0, -0.81915206, 0.57357645, 0, 0, 0, 1, 0.26, 0.26, 0)
+mesh = SubResource("CylinderMesh_4xdww")
+
+[node name="Rose" type="MeshInstance3D" parent="WateringCan" unique_id=906463413]
+transform = Transform3D(0.57357645, 0.81915206, 0, -0.81915206, 0.57357645, 0, 0, 0, 1, 0.42, 0.37, 0)
+mesh = SubResource("CylinderMesh_s1loe")
+
+[node name="Handle" type="MeshInstance3D" parent="WateringCan" unique_id=1426603236]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 0.2, 0)
+mesh = SubResource("BoxMesh_6eo1a")
+
+[node name="Grip" type="MeshInstance3D" parent="WateringCan" unique_id=2037175431]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.08, 0.34, 0)
+mesh = SubResource("BoxMesh_1sjq6")
+
+[node name="Hit" type="CollisionShape3D" parent="." unique_id=1647716036]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("BoxShape3D_s4lwg")

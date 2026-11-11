@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/clock.tres" id="1_44ntf"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_lyhee"]
+material = ExtResource("1_44ntf")
+size = Vector2(0.5, 0.5)
+
+[node name="WallClock" type="Node3D" unique_id=933978646]
+
+[node name="Face" type="MeshInstance3D" parent="." unique_id=830386251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.02)
+mesh = SubResource("QuadMesh_lyhee")

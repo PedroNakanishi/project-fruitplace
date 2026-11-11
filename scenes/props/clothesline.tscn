@@ -1,0 +1,198 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/wood.tres" id="1_4rxo7"]
+[ext_resource type="Material" path="res://assets/materials/cream.tres" id="2_jm03n"]
+[ext_resource type="Script" path="res://scenes/components/sway.gd" id="3_7r5ta"]
+[ext_resource type="Material" path="res://assets/materials/yellow.tres" id="4_ieis3"]
+[ext_resource type="Material" path="res://assets/materials/wood_light.tres" id="5_6fnem"]
+[ext_resource type="Material" path="res://assets/materials/cloth_blue.tres" id="6_svqd5"]
+[ext_resource type="Material" path="res://assets/materials/cloth_red.tres" id="7_afvps"]
+[ext_resource type="Material" path="res://assets/materials/fabric_white.tres" id="8_gli2u"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_e1b21"]
+material = ExtResource("1_4rxo7")
+top_radius = 0.045
+bottom_radius = 0.045
+height = 1.9
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_abuvl"]
+material = ExtResource("1_4rxo7")
+size = Vector3(0.06, 0.05, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lt7t3"]
+size = Vector3(0.16, 1.9, 0.16)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_3fnp7"]
+material = ExtResource("1_4rxo7")
+top_radius = 0.045
+bottom_radius = 0.045
+height = 1.9
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_kv81p"]
+material = ExtResource("1_4rxo7")
+size = Vector3(0.06, 0.05, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hpmnk"]
+size = Vector3(0.16, 1.9, 0.16)
+
+[sub_resource type="BoxMesh" id="BoxMesh_y7pyp"]
+material = ExtResource("2_jm03n")
+size = Vector3(3.6, 0.015, 0.015)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8gfg7"]
+material = ExtResource("4_ieis3")
+size = Vector3(0.55, 0.6, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4gu2j"]
+material = ExtResource("5_6fnem")
+size = Vector3(0.03, 0.07, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g0lur"]
+material = ExtResource("5_6fnem")
+size = Vector3(0.03, 0.07, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_36php"]
+material = ExtResource("6_svqd5")
+size = Vector3(0.6, 0.85, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hjq4u"]
+material = ExtResource("5_6fnem")
+size = Vector3(0.03, 0.07, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wvto2"]
+material = ExtResource("5_6fnem")
+size = Vector3(0.03, 0.07, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pns3o"]
+material = ExtResource("7_afvps")
+size = Vector3(0.42, 0.36, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qaif5"]
+material = ExtResource("5_6fnem")
+size = Vector3(0.03, 0.07, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4jv6h"]
+material = ExtResource("5_6fnem")
+size = Vector3(0.03, 0.07, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_u84y7"]
+material = ExtResource("8_gli2u")
+size = Vector3(0.85, 0.9, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_huu5l"]
+material = ExtResource("5_6fnem")
+size = Vector3(0.03, 0.07, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6dj0u"]
+material = ExtResource("5_6fnem")
+size = Vector3(0.03, 0.07, 0.04)
+
+[node name="Clothesline" type="StaticBody3D" unique_id=914861501]
+
+[node name="Pole" type="MeshInstance3D" parent="." unique_id=1804766767]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0.95, 0)
+mesh = SubResource("CylinderMesh_e1b21")
+
+[node name="Crossbar" type="MeshInstance3D" parent="." unique_id=2120435964]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 1.85, 0)
+mesh = SubResource("BoxMesh_abuvl")
+
+[node name="Hit" type="CollisionShape3D" parent="." unique_id=1636753132]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0.95, 0)
+shape = SubResource("BoxShape3D_lt7t3")
+
+[node name="Pole2" type="MeshInstance3D" parent="." unique_id=1159696293]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0.95, 0)
+mesh = SubResource("CylinderMesh_3fnp7")
+
+[node name="Crossbar2" type="MeshInstance3D" parent="." unique_id=1767008827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 1.85, 0)
+mesh = SubResource("BoxMesh_kv81p")
+
+[node name="Hit2" type="CollisionShape3D" parent="." unique_id=2047195188]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0.95, 0)
+shape = SubResource("BoxShape3D_hpmnk")
+
+[node name="Line" type="MeshInstance3D" parent="." unique_id=1891891454]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.82, 0)
+mesh = SubResource("BoxMesh_y7pyp")
+
+[node name="Cloth" type="Node3D" parent="." unique_id=503659644]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 1.82, 0)
+script = ExtResource("3_7r5ta")
+axis = Vector3(1, 0, 0)
+degrees = 7.0
+speed = 1.6
+
+[node name="Mesh" type="MeshInstance3D" parent="Cloth" unique_id=639371955]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+mesh = SubResource("BoxMesh_8gfg7")
+
+[node name="Peg" type="MeshInstance3D" parent="Cloth" unique_id=398698252]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.165, 0.01, 0)
+mesh = SubResource("BoxMesh_4gu2j")
+
+[node name="Peg2" type="MeshInstance3D" parent="Cloth" unique_id=1927711070]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.165, 0.01, 0)
+mesh = SubResource("BoxMesh_g0lur")
+
+[node name="Cloth2" type="Node3D" parent="." unique_id=711901160]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.45, 1.82, 0)
+script = ExtResource("3_7r5ta")
+axis = Vector3(1, 0, 0)
+degrees = 7.0
+speed = 1.6
+
+[node name="Mesh" type="MeshInstance3D" parent="Cloth2" unique_id=39329548]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.425, 0)
+mesh = SubResource("BoxMesh_36php")
+
+[node name="Peg" type="MeshInstance3D" parent="Cloth2" unique_id=2064614158]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.18, 0.01, 0)
+mesh = SubResource("BoxMesh_hjq4u")
+
+[node name="Peg2" type="MeshInstance3D" parent="Cloth2" unique_id=1490319584]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.01, 0)
+mesh = SubResource("BoxMesh_wvto2")
+
+[node name="Cloth3" type="Node3D" parent="." unique_id=401836561]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 1.82, 0)
+script = ExtResource("3_7r5ta")
+axis = Vector3(1, 0, 0)
+degrees = 7.0
+speed = 1.6
+
+[node name="Mesh" type="MeshInstance3D" parent="Cloth3" unique_id=1974491296]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.18, 0)
+mesh = SubResource("BoxMesh_pns3o")
+
+[node name="Peg" type="MeshInstance3D" parent="Cloth3" unique_id=2059680119]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.126, 0.01, 0)
+mesh = SubResource("BoxMesh_qaif5")
+
+[node name="Peg2" type="MeshInstance3D" parent="Cloth3" unique_id=2124551733]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.126, 0.01, 0)
+mesh = SubResource("BoxMesh_4jv6h")
+
+[node name="Cloth4" type="Node3D" parent="." unique_id=337998323]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 1.82, 0)
+script = ExtResource("3_7r5ta")
+axis = Vector3(1, 0, 0)
+degrees = 7.0
+speed = 1.6
+
+[node name="Mesh" type="MeshInstance3D" parent="Cloth4" unique_id=374796007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
+mesh = SubResource("BoxMesh_u84y7")
+
+[node name="Peg" type="MeshInstance3D" parent="Cloth4" unique_id=435487497]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.255, 0.01, 0)
+mesh = SubResource("BoxMesh_huu5l")
+
+[node name="Peg2" type="MeshInstance3D" parent="Cloth4" unique_id=1672799186]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.255, 0.01, 0)
+mesh = SubResource("BoxMesh_6dj0u")

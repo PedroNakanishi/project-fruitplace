@@ -1,11 +1,23 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/maps/market/market.gd" id="1"]
-[ext_resource type="Script" path="res://scenes/components/camera_rig.gd" id="2"]
-[ext_resource type="Script" path="res://scenes/components/interactable.gd" id="3"]
-[ext_resource type="PackedScene" path="res://scenes/props/truck.tscn" id="4"]
-[ext_resource type="Script" path="res://scenes/maps/market/service_controller.gd" id="5"]
-[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="6"]
+[ext_resource type="Script" path="res://scenes/components/day_night.gd" id="2"]
+[ext_resource type="Script" path="res://scenes/components/camera_rig.gd" id="3"]
+[ext_resource type="Material" path="res://assets/materials/grass_far.tres" id="4"]
+[ext_resource type="Material" path="res://assets/materials/asphalt.tres" id="5"]
+[ext_resource type="Material" path="res://assets/materials/paving.tres" id="6"]
+[ext_resource type="Material" path="res://assets/materials/wall_pink.tres" id="7"]
+[ext_resource type="Material" path="res://assets/materials/wall_cream.tres" id="8"]
+[ext_resource type="Material" path="res://assets/materials/yellow.tres" id="9"]
+[ext_resource type="PackedScene" path="res://scenes/props/palm.tscn" id="10"]
+[ext_resource type="PackedScene" path="res://scenes/props/lamp_post.tscn" id="11"]
+[ext_resource type="PackedScene" path="res://scenes/props/stall_player.tscn" id="12"]
+[ext_resource type="Script" path="res://scenes/components/interactable.gd" id="13"]
+[ext_resource type="PackedScene" path="res://scenes/props/stall_blue.tscn" id="14"]
+[ext_resource type="PackedScene" path="res://scenes/props/stall_pink.tscn" id="15"]
+[ext_resource type="PackedScene" path="res://scenes/props/truck.tscn" id="16"]
+[ext_resource type="Script" path="res://scenes/maps/market/service_controller.gd" id="17"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="18"]
 
 [sub_resource type="Environment" id="Environment_1"]
 background_mode = 1
@@ -14,60 +26,8 @@ ambient_light_source = 2
 ambient_light_color = Color(1, 0.95, 0.85, 1)
 ambient_light_energy = 0.7
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2"]
-albedo_color = Color(0.36, 0.36, 0.4, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3"]
-albedo_color = Color(0.78, 0.74, 0.66, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4"]
-albedo_color = Color(0.95, 0.55, 0.62, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5"]
-albedo_color = Color(0.9, 0.85, 0.75, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6"]
-albedo_color = Color(0.55, 0.38, 0.22, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7"]
-albedo_color = Color(0.2, 0.6, 0.25, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_8"]
-albedo_color = Color(0.25, 0.68, 0.3, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_9"]
-albedo_color = Color(0.55, 0.36, 0.22, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_10"]
-albedo_color = Color(1, 0.55, 0.15, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_11"]
-albedo_color = Color(0.85, 0.85, 0.85, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_12"]
-albedo_color = Color(0.9, 0.3, 0.2, 1)
-roughness = 0.9
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_13"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_2"]
 size = Vector3(4, 2, 4.8)
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_14"]
-albedo_color = Color(0.3, 0.7, 0.85, 1)
-roughness = 0.9
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_15"]
-albedo_color = Color(0.95, 0.45, 0.6, 1)
-roughness = 0.9
 
 [node name="Market" type="Node3D"]
 script = ExtResource("1")
@@ -81,9 +41,11 @@ light_color = Color(1, 0.95, 0.85, 1)
 light_energy = 1.1
 shadow_enabled = true
 
-[node name="CameraRig" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+[node name="DayNight" type="Node" parent="."]
 script = ExtResource("2")
+
+[node name="CameraRig" type="Node3D" parent="."]
+script = ExtResource("3")
 ortho_size = 13
 follow = true
 target_path = NodePath("../Player")
@@ -92,173 +54,134 @@ target_path = NodePath("../Player")
 
 [node name="Level" type="Node3D" parent="."]
 
+[node name="Ground" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.46, 0)
+size = Vector3(120, 0.4, 120)
+material = ExtResource("4")
+
 [node name="Street" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 1.5)
 size = Vector3(36, 0.5, 6)
-material = SubResource("StandardMaterial3D_2")
+material = ExtResource("5")
 use_collision = true
 
 [node name="SidewalkBack" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, -7)
 size = Vector3(36, 0.5, 11)
-material = SubResource("StandardMaterial3D_3")
+material = ExtResource("6")
 use_collision = true
 
 [node name="SidewalkFront" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 6.5)
 size = Vector3(36, 0.5, 4)
-material = SubResource("StandardMaterial3D_3")
+material = ExtResource("6")
 use_collision = true
 
 [node name="BoundBack" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -12.6)
 size = Vector3(36, 1, 0.3)
-material = SubResource("StandardMaterial3D_4")
+material = ExtResource("7")
 use_collision = true
 
 [node name="BoundFront" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 8.6)
 size = Vector3(36, 0.4, 0.3)
-material = SubResource("StandardMaterial3D_5")
+material = ExtResource("8")
 use_collision = true
 
 [node name="BoundLeft" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.1, 0.5, -2)
 size = Vector3(0.3, 1, 21)
-material = SubResource("StandardMaterial3D_5")
+material = ExtResource("8")
 use_collision = true
 
 [node name="BoundRight" type="CSGBox3D" parent="Level"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1, 0.5, -2)
 size = Vector3(0.3, 1, 21)
-material = SubResource("StandardMaterial3D_5")
+material = ExtResource("8")
 use_collision = true
 
-[node name="PalmA" type="Node3D" parent="Level"]
+[node name="Dash0" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0.006, 1.5)
+size = Vector3(1.6, 0.02, 0.16)
+material = ExtResource("9")
+
+[node name="Dash1" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.006, 1.5)
+size = Vector3(1.6, 0.02, 0.16)
+material = ExtResource("9")
+
+[node name="Dash2" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.006, 1.5)
+size = Vector3(1.6, 0.02, 0.16)
+material = ExtResource("9")
+
+[node name="Dash3" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.006, 1.5)
+size = Vector3(1.6, 0.02, 0.16)
+material = ExtResource("9")
+
+[node name="Dash4" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.006, 1.5)
+size = Vector3(1.6, 0.02, 0.16)
+material = ExtResource("9")
+
+[node name="Dash5" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.006, 1.5)
+size = Vector3(1.6, 0.02, 0.16)
+material = ExtResource("9")
+
+[node name="Dash6" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.006, 1.5)
+size = Vector3(1.6, 0.02, 0.16)
+material = ExtResource("9")
+
+[node name="Dash7" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.006, 1.5)
+size = Vector3(1.6, 0.02, 0.16)
+material = ExtResource("9")
+
+[node name="Dash8" type="CSGBox3D" parent="Level"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0.006, 1.5)
+size = Vector3(1.6, 0.02, 0.16)
+material = ExtResource("9")
+
+[node name="PalmA" parent="Level" instance=ExtResource("10")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 0, 6.5)
 
-[node name="Trunk" type="CSGCylinder3D" parent="Level/PalmA"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-radius = 0.18
-height = 3
-sides = 8
-material = SubResource("StandardMaterial3D_6")
-use_collision = true
+[node name="PalmB" parent="Level" instance=ExtResource("10")]
+transform = Transform3D(-0.766, 0, 0.6428, 0, 1, 0, -0.6428, 0, -0.766, 10, 0, 6.8)
 
-[node name="LeafA" type="CSGBox3D" parent="Level/PalmA"]
-transform = Transform3D(0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, 0.9397, 0, 3, 0)
-size = Vector3(2.6, 0.12, 0.7)
-material = SubResource("StandardMaterial3D_7")
+[node name="PalmC" parent="Level" instance=ExtResource("10")]
+transform = Transform3D(-0.342, 0, -0.9397, 0, 1, 0, 0.9397, 0, -0.342, 14, 0, -9)
 
-[node name="LeafB" type="CSGBox3D" parent="Level/PalmA"]
-transform = Transform3D(-0.342, 0, 0.9397, 0, 1, 0, -0.9397, 0, -0.342, 0, 3.05, 0)
-size = Vector3(2.6, 0.12, 0.7)
-material = SubResource("StandardMaterial3D_8")
+[node name="LampA" parent="Level" instance=ExtResource("11")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -6, 0, 5)
 
-[node name="PalmB" type="Node3D" parent="Level"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 6.8)
-
-[node name="Trunk" type="CSGCylinder3D" parent="Level/PalmB"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-radius = 0.18
-height = 3
-sides = 8
-material = SubResource("StandardMaterial3D_6")
-use_collision = true
-
-[node name="LeafA" type="CSGBox3D" parent="Level/PalmB"]
-transform = Transform3D(0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, 0.9397, 0, 3, 0)
-size = Vector3(2.6, 0.12, 0.7)
-material = SubResource("StandardMaterial3D_7")
-
-[node name="LeafB" type="CSGBox3D" parent="Level/PalmB"]
-transform = Transform3D(-0.342, 0, 0.9397, 0, 1, 0, -0.9397, 0, -0.342, 0, 3.05, 0)
-size = Vector3(2.6, 0.12, 0.7)
-material = SubResource("StandardMaterial3D_8")
-
-[node name="PalmC" type="Node3D" parent="Level"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0, -9)
-
-[node name="Trunk" type="CSGCylinder3D" parent="Level/PalmC"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
-radius = 0.18
-height = 3
-sides = 8
-material = SubResource("StandardMaterial3D_6")
-use_collision = true
-
-[node name="LeafA" type="CSGBox3D" parent="Level/PalmC"]
-transform = Transform3D(0.9397, 0, 0.342, 0, 1, 0, -0.342, 0, 0.9397, 0, 3, 0)
-size = Vector3(2.6, 0.12, 0.7)
-material = SubResource("StandardMaterial3D_7")
-
-[node name="LeafB" type="CSGBox3D" parent="Level/PalmC"]
-transform = Transform3D(-0.342, 0, 0.9397, 0, 1, 0, -0.9397, 0, -0.342, 0, 3.05, 0)
-size = Vector3(2.6, 0.12, 0.7)
-material = SubResource("StandardMaterial3D_8")
+[node name="LampB" parent="Level" instance=ExtResource("11")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 6, 0, 5)
 
 [node name="Stalls" type="Node3D" parent="."]
 
 [node name="PlayerStall" type="Node3D" parent="Stalls"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -3.2)
 
-[node name="Counter" type="CSGBox3D" parent="Stalls/PlayerStall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.3)
-size = Vector3(3, 1, 1)
-material = SubResource("StandardMaterial3D_9")
-use_collision = true
-
-[node name="Awning" type="CSGBox3D" parent="Stalls/PlayerStall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
-size = Vector3(3.6, 0.15, 2.4)
-material = SubResource("StandardMaterial3D_10")
-
-[node name="Pole0" type="CSGCylinder3D" parent="Stalls/PlayerStall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.25, 1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="Pole1" type="CSGCylinder3D" parent="Stalls/PlayerStall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.25, 1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="Pole2" type="CSGCylinder3D" parent="Stalls/PlayerStall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.25, -1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="Pole3" type="CSGCylinder3D" parent="Stalls/PlayerStall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.25, -1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="Crates" type="CSGBox3D" parent="Stalls/PlayerStall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.15, 0.3)
-size = Vector3(2.4, 0.3, 0.7)
-material = SubResource("StandardMaterial3D_12")
+[node name="Model" parent="Stalls/PlayerStall" instance=ExtResource("12")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="ServicePoint" type="Marker3D" parent="Stalls/PlayerStall"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.5)
 
 [node name="ServiceArea" type="Area3D" parent="Stalls/PlayerStall"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
-script = ExtResource("3")
+script = ExtResource("13")
 prompt = "Barraca"
 
 [node name="Shape" type="CollisionShape3D" parent="Stalls/PlayerStall/ServiceArea"]
-shape = SubResource("BoxShape3D_13")
+shape = SubResource("BoxShape3D_2")
 
 [node name="StockLabel" type="Label3D" parent="Stalls/PlayerStall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.6, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.7, 0)
 billboard = 1
 no_depth_test = true
 pixel_size = 0.011
@@ -268,91 +191,13 @@ text = "Barraca vazia"
 
 [node name="AuctionStalls" type="Node3D" parent="Stalls"]
 
-[node name="StallWest" type="Node3D" parent="Stalls/AuctionStalls"]
+[node name="StallWest" parent="Stalls/AuctionStalls" instance=ExtResource("14")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0, -3.2)
 
-[node name="Counter" type="CSGBox3D" parent="Stalls/AuctionStalls/StallWest"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.3)
-size = Vector3(3, 1, 1)
-material = SubResource("StandardMaterial3D_9")
-use_collision = true
-
-[node name="Awning" type="CSGBox3D" parent="Stalls/AuctionStalls/StallWest"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
-size = Vector3(3.6, 0.15, 2.4)
-material = SubResource("StandardMaterial3D_14")
-
-[node name="Pole0" type="CSGCylinder3D" parent="Stalls/AuctionStalls/StallWest"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.25, 1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="Pole1" type="CSGCylinder3D" parent="Stalls/AuctionStalls/StallWest"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.25, 1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="Pole2" type="CSGCylinder3D" parent="Stalls/AuctionStalls/StallWest"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.25, -1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="Pole3" type="CSGCylinder3D" parent="Stalls/AuctionStalls/StallWest"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.25, -1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="StallEast" type="Node3D" parent="Stalls/AuctionStalls"]
+[node name="StallEast" parent="Stalls/AuctionStalls" instance=ExtResource("15")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.5, 0, -3.2)
 
-[node name="Counter" type="CSGBox3D" parent="Stalls/AuctionStalls/StallEast"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.3)
-size = Vector3(3, 1, 1)
-material = SubResource("StandardMaterial3D_9")
-use_collision = true
-
-[node name="Awning" type="CSGBox3D" parent="Stalls/AuctionStalls/StallEast"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
-size = Vector3(3.6, 0.15, 2.4)
-material = SubResource("StandardMaterial3D_15")
-
-[node name="Pole0" type="CSGCylinder3D" parent="Stalls/AuctionStalls/StallEast"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.25, 1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="Pole1" type="CSGCylinder3D" parent="Stalls/AuctionStalls/StallEast"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.25, 1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="Pole2" type="CSGCylinder3D" parent="Stalls/AuctionStalls/StallEast"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 1.25, -1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="Pole3" type="CSGCylinder3D" parent="Stalls/AuctionStalls/StallEast"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.6, 1.25, -1)
-radius = 0.06
-height = 2.5
-sides = 8
-material = SubResource("StandardMaterial3D_11")
-
-[node name="Truck" parent="." instance=ExtResource("4")]
+[node name="Truck" parent="." instance=ExtResource("16")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -6.5)
 
 [node name="Customers" type="Node3D" parent="."]
@@ -361,7 +206,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0, -6.5)
 one_shot = true
 
 [node name="ServiceController" type="Node" parent="."]
-script = ExtResource("5")
+script = ExtResource("17")
 service_point_path = NodePath("../Stalls/PlayerStall/ServicePoint")
 
 [node name="SpawnPoints" type="Node3D" parent="."]
@@ -369,4 +214,4 @@ service_point_path = NodePath("../Stalls/PlayerStall/ServicePoint")
 [node name="FromTruck" type="Marker3D" parent="SpawnPoints"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0.05, -4.2)
 
-[node name="Player" parent="." instance=ExtResource("6")]
+[node name="Player" parent="." instance=ExtResource("18")]

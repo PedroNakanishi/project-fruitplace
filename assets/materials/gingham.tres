@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/textures/gingham.png" id="1_60iq0"]
+
+[resource]
+albedo_texture = ExtResource("1_60iq0")
+metallic_specular = 0.2
+uv1_scale = Vector3(2, 2, 2)
+uv1_triplanar = true
+texture_filter = 0

@@ -19,6 +19,7 @@ func _ready() -> void:
 func _on_bed() -> void:
 	if not TimeManager.can_sleep():
 		EventBus.toast.emit("Ainda não. Só dá para dormir depois das 19:30.")
+		Sfx.play(&"error")
 		return
 	var rested := PlayerStats.is_rested_for_sleep()
 	var body := "Dormir agora encerra o dia e abre as contas."
@@ -30,6 +31,7 @@ func _on_bed() -> void:
 func _on_fridge() -> void:
 	if not Economy.fridge_stocked:
 		EventBus.toast.emit("Geladeira vazia! Pague a conta de Comida à noite.")
+		Sfx.play(&"error")
 		return
 	var options: Array = []
 	for f: FoodData in Catalog.FOODS:
@@ -41,11 +43,13 @@ func _on_fridge() -> void:
 		return
 	var food: FoodData = Catalog.FOODS[i]
 	PlayerStats.eat(food)
+	Sfx.play(&"eat")
 	EventBus.toast.emit("Comeu " + food.display_name.to_lower() + ".")
 	TimeManager.advance(food.minutes_to_eat)
 
 
 func _on_phone() -> void:
+	Sfx.play(&"phone")
 	TimeManager.advance(PHONE_MINUTES)
 	while not TimeManager.night_pending:
 		var tab := await MenuLayer.current.choose("Telefone", "Saldo: R$ %d" % Economy.money, ["Sementes", "Adubos", "Desligar"])
@@ -70,8 +74,10 @@ func _shop_seeds() -> void:
 		var crop: CropData = Catalog.CROPS[i]
 		if Economy.spend(crop.seed_price):
 			Inventory.add(Inventory.BACKPACK, crop.seed_id(), 1)
+			Sfx.play(&"buy")
 		else:
 			EventBus.toast.emit("Dinheiro insuficiente.")
+			Sfx.play(&"error")
 
 
 func _shop_fertilizers() -> void:
@@ -87,5 +93,7 @@ func _shop_fertilizers() -> void:
 		var fert: FertilizerData = Catalog.FERTILIZERS[i]
 		if Economy.spend(fert.price):
 			Inventory.add(Inventory.BACKPACK, fert.id, 1)
+			Sfx.play(&"buy")
 		else:
 			EventBus.toast.emit("Dinheiro insuficiente.")
+			Sfx.play(&"error")

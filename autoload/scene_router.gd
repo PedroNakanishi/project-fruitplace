@@ -36,6 +36,8 @@ func go_to(map_id: StringName, spawn: StringName, minutes_cost := 0) -> void:
 		return
 	busy = true
 	EventBus.interaction_prompt.emit("")
+	# Ir ou voltar da feira é de caminhonete; o resto é pela porta.
+	Sfx.play(&"engine" if map_id == &"market" or current_id == &"market" else &"door")
 	await _fade_to(1.0)
 	if minutes_cost > 0:
 		TimeManager.advance(minutes_cost)

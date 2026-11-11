@@ -1,23 +1,31 @@
 extends Node
-## Fila da barraca do jogador e o minigame de Atender.
-## Bajular, Desconto e Sobrepreço podem ser usados uma vez cada antes de Vender.
+## Fila da barraca do jogador e o Atendimento.
+## Cada cliente chega com um HUMOR (Raiva < Triste < Normal < Feliz).
+##   Conversar  — 1× por cliente: 45% melhora, 45% piora, 10% fica igual.
+##   Desconto   — humor melhora, paga menos, ganha um pouco de energia. Fecha a venda.
+##   Vender     — só fecha a venda.
+##   Sobrepreço — humor piora, paga mais, gasta energia. Fecha a venda.
 
 const QUEUE_MAX := 4
 const QUEUE_SPACING := 1.1
-const SERVICE_MINUTES := 2
+const TALK_MINUTES := 2
 const SALE_MINUTES := 3
-const REFUSE_BELOW := 0.2  ## Humor abaixo disso: o cliente não compra.
-const HAPPY_FROM := 0.6
 
-const OPTIONS := {
-	&"bajular": {"label": "Bajular (+10%, −2 energia)", "price": 0.10, "energy": -2.0},
-	&"desconto": {"label": "Dar desconto (−15%, +2 energia: melhor não discutir)", "price": -0.15, "energy": 2.0},
-	&"sobrepreco": {"label": "Sobrepreço (+30%, −5 energia)", "price": 0.30, "energy": -5.0},
-}
+const TALK_BETTER := 0.45
+const TALK_WORSE := 0.45  ## O que sobra (10%) mantém o humor.
+
+const DISCOUNT_PRICE := -0.15
+const DISCOUNT_ENERGY := 2.0  ## Ganho baixo.
+const MARKUP_PRICE := 0.30
+const MARKUP_ENERGY := 5.0  ## Perda moderada.
+## Cliente com Raiva não aceita pagar a mais: a opção some do menu.
+const ANGRY_REFUSES_MARKUP := true
 
 @export var service_point_path: NodePath
 
 var queue: Array[Customer] = []
+## Sorteio de 0 a 1 da conversa (trocado nos testes).
+var roll: Callable = func() -> float: return randf()
 var _service_point: Node3D
 var _serving := false
 
@@ -51,79 +59,92 @@ func serve() -> void:
 		return
 	_serving = true
 	c.being_served = true
-	var price_mult := 1.0
-	var used := {}
 	while is_instance_valid(c) and not TimeManager.night_pending:
 		if Inventory.count(Inventory.STALL, c.wants) == 0 and not _pick_want(c):
 			EventBus.toast.emit("A barraca ficou sem produto!")
-			_finish(c, false, false)
+			_finish(c, true)
 			break
 		var qty := mini(c.wants_qty, Inventory.count(Inventory.STALL, c.wants))
-		var price := maxi(1, roundi(Economy.sell_price(c.wants) * qty * price_mult))
-		var body := "Cliente quer %d× %s.\nPreço: R$ %d\nHumor: %s" % [qty, Catalog.item_name(c.wants).to_lower(), price, c.mood_text()]
-		var keys: Array = []
+		var base := Economy.sell_price(c.wants) * qty
+		var keys: Array[StringName] = []
 		var labels: Array = []
-		for k: StringName in OPTIONS:
-			if not used.has(k):
-				keys.append(k)
-				labels.append(OPTIONS[k].label)
+		if not c.talked:
+			keys.append(&"conversar")
+			labels.append("Conversar  (o humor pode melhorar ou piorar)")
+		keys.append(&"desconto")
+		labels.append("Desconto: R$ %d  (humor melhora, +%d energia)" % [_price(base, DISCOUNT_PRICE), int(DISCOUNT_ENERGY)])
 		keys.append(&"vender")
-		labels.append("Vender por R$ %d" % price)
-		var pick := await MenuLayer.current.choose("Atender", body, labels)
-		if pick < 0 or not is_instance_valid(c):
-			if is_instance_valid(c):
-				c.being_served = false
-			break
-		var key: StringName = keys[pick]
-		if key == &"vender":
-			_sell(c, qty, price)
-			break
-		used[key] = true
-		price_mult += OPTIONS[key].price
-		var energy: float = OPTIONS[key].energy
-		if energy < 0.0:
-			PlayerStats.spend_energy(-energy)
+		labels.append("Vender: R$ %d" % _price(base, 0.0))
+		var body := "Cliente quer %d× %s.\nHumor: %s" % [qty, Catalog.item_name(c.wants).to_lower(), c.mood_text()]
+		if ANGRY_REFUSES_MARKUP and c.mood == Customer.Mood.RAIVA:
+			body += "\nCom raiva, ele não aceita sobrepreço."
 		else:
-			PlayerStats.gain_energy(energy)
-		c.mood = clampf(c.mood + _reaction(c.profile, key), 0.0, 1.0)
-		TimeManager.advance(SERVICE_MINUTES)
-		if c.mood <= 0.0:
-			EventBus.toast.emit("O cliente foi embora bufando!")
-			_finish(c, false, true)
+			keys.append(&"sobrepreco")
+			labels.append("Sobrepreço: R$ %d  (humor piora, −%d energia)" % [_price(base, MARKUP_PRICE), int(MARKUP_ENERGY)])
+
+		var pick := await MenuLayer.current.choose("Atender", body, labels)
+		if not is_instance_valid(c):
 			break
+		if pick < 0:
+			c.being_served = false
+			break
+		match keys[pick]:
+			&"conversar":
+				_talk(c)
+				TimeManager.advance(TALK_MINUTES)
+				continue
+			&"desconto":
+				c.shift_mood(1)
+				PlayerStats.gain_energy(DISCOUNT_ENERGY)
+				_sell(c, qty, _price(base, DISCOUNT_PRICE))
+			&"vender":
+				_sell(c, qty, _price(base, 0.0))
+			&"sobrepreco":
+				c.shift_mood(-1)
+				PlayerStats.spend_energy(MARKUP_ENERGY)
+				_sell(c, qty, _price(base, MARKUP_PRICE))
+		break
 	_serving = false
 
 
-func _sell(c: Customer, qty: int, price: int) -> void:
-	if c.mood < REFUSE_BELOW:
-		EventBus.toast.emit("O cliente se irritou e não comprou!")
-		_finish(c, false, true)
+static func _price(base: int, change: float) -> int:
+	return maxi(1, roundi(base * (1.0 + change)))
+
+
+## Conversa fiada: uma vez por cliente, e pode sair pela culatra.
+func _talk(c: Customer) -> void:
+	c.talked = true
+	Sfx.play(&"talk")
+	var r: float = roll.call()
+	if r < TALK_BETTER:
+		c.shift_mood(1)
+		EventBus.toast.emit("A conversa animou o cliente!")
+	elif r < TALK_BETTER + TALK_WORSE:
+		c.shift_mood(-1)
+		EventBus.toast.emit("A conversa azedou o humor do cliente...")
 	else:
-		Inventory.remove(Inventory.STALL, c.wants, qty)
-		var happy := c.mood >= HAPPY_FROM
-		Economy.record_sale(price, qty, happy)
-		EventBus.toast.emit("+R$ %d%s" % [price, "  (cliente feliz!)" if happy else ""])
-		_finish(c, happy, false)
+		EventBus.toast.emit("Conversa vai, conversa vem... nada mudou.")
+
+
+func _sell(c: Customer, qty: int, price: int) -> void:
+	Inventory.remove(Inventory.STALL, c.wants, qty)
+	var happy := c.mood == Customer.Mood.FELIZ
+	Economy.record_sale(price, qty, happy)
+	EventBus.toast.emit("+R$ %d%s" % [price, "  (cliente feliz!)" if happy else ""])
+	if happy:
+		Sfx.play(&"happy", -3.0)
+	elif c.mood == Customer.Mood.RAIVA:
+		Sfx.play(&"angry", -3.0)
+	_finish(c, false)
 	TimeManager.advance(SALE_MINUTES)
 
 
-func _finish(c: Customer, happy: bool, lost: bool) -> void:
+func _finish(c: Customer, lost: bool) -> void:
 	queue.erase(c)
 	if lost:
 		Economy.record_lost_customer()
-	c.leave(happy)
+	c.leave()
 	_reflow()
-
-
-func _reaction(p: CustomerProfile, key: StringName) -> float:
-	match key:
-		&"bajular":
-			return p.flattery_reaction
-		&"desconto":
-			return p.discount_reaction
-		&"sobrepreco":
-			return p.markup_reaction
-	return 0.0
 
 
 ## Escolhe um produto que a barraca tem. Devolve false se está vazia.

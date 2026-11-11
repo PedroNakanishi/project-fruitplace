@@ -1,0 +1,81 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/wood.tres" id="1_b4j4g"]
+[ext_resource type="Material" path="res://assets/materials/wood_light.tres" id="2_m0aox"]
+[ext_resource type="Material" path="res://assets/materials/brass.tres" id="3_4ifxb"]
+[ext_resource type="Material" path="res://assets/materials/terracotta.tres" id="4_6s58a"]
+[ext_resource type="Material" path="res://assets/materials/lamp_shade.tres" id="5_fs27p"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_thxye"]
+material = ExtResource("1_b4j4g")
+size = Vector3(0.6, 0.55, 0.55)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0ju20"]
+material = ExtResource("2_m0aox")
+size = Vector3(0.66, 0.05, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uulfq"]
+material = ExtResource("2_m0aox")
+size = Vector3(0.48, 0.2, 0.02)
+
+[sub_resource type="SphereMesh" id="SphereMesh_qvk4i"]
+material = ExtResource("3_4ifxb")
+radius = 0.03
+height = 0.06
+radial_segments = 8
+rings = 4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_gnmdk"]
+material = ExtResource("4_6s58a")
+top_radius = 0.06
+bottom_radius = 0.09
+height = 0.22
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_mw3gh"]
+material = ExtResource("5_fs27p")
+top_radius = 0.1
+bottom_radius = 0.18
+height = 0.2
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pwve8"]
+size = Vector3(0.6, 0.6, 0.55)
+
+[node name="Nightstand" type="StaticBody3D" unique_id=645263107]
+
+[node name="Body" type="MeshInstance3D" parent="." unique_id=1378020024]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.275, 0)
+mesh = SubResource("BoxMesh_thxye")
+
+[node name="Top" type="MeshInstance3D" parent="." unique_id=348492922]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.575, 0)
+mesh = SubResource("BoxMesh_0ju20")
+
+[node name="Drawer" type="MeshInstance3D" parent="." unique_id=1872658132]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36, 0.285)
+mesh = SubResource("BoxMesh_uulfq")
+
+[node name="Knob" type="MeshInstance3D" parent="." unique_id=1210633215]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36, 0.31)
+mesh = SubResource("SphereMesh_qvk4i")
+
+[node name="LampBase" type="MeshInstance3D" parent="." unique_id=1819357023]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.71, 0)
+mesh = SubResource("CylinderMesh_gnmdk")
+
+[node name="LampShade" type="MeshInstance3D" parent="." unique_id=418135932]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("CylinderMesh_mw3gh")
+
+[node name="Light" type="OmniLight3D" parent="." unique_id=1291685183 groups=["night_light"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0.1)
+light_color = Color(1, 0.8, 0.5, 1)
+light_energy = 1.4
+omni_range = 5.5
+
+[node name="Hit" type="CollisionShape3D" parent="." unique_id=1274314570]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+shape = SubResource("BoxShape3D_pwve8")

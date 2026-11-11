@@ -10,6 +10,8 @@ signal faint_time_reached
 const DAY_START := 7 * 60 + 30  ## 07:30
 const SLEEP_FROM := 19 * 60 + 30  ## 19:30
 const FAINT_AT := 24 * 60 + 2 * 60 + 55  ## 02:55 do dia seguinte
+const NIGHT_FROM := 19 * 60  ## Anoitece às 19:00...
+const NIGHT_UNTIL := 5 * 60 + 30  ## ...e clareia às 05:30.
 
 ## Segundos reais por minuto de jogo (0.5 s = ~10 min reais por dia).
 @export var seconds_per_minute := 0.5
@@ -52,6 +54,12 @@ func advance(amount: int) -> void:
 		if minutes >= FAINT_AT:
 			faint_time_reached.emit()
 			return
+
+
+## Escuro lá fora (para o som ambiente).
+func is_night() -> bool:
+	var m := minutes % (24 * 60)
+	return m >= NIGHT_FROM or m < NIGHT_UNTIL
 
 
 func can_sleep() -> bool:

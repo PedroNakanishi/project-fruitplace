@@ -1,0 +1,116 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/terracotta.tres" id="1_toa06"]
+[ext_resource type="Material" path="res://assets/materials/dark.tres" id="2_fty0c"]
+[ext_resource type="Material" path="res://assets/materials/leaf_dark.tres" id="3_oinab"]
+[ext_resource type="Material" path="res://assets/materials/crop_leaf.tres" id="4_513gc"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5hxga"]
+material = ExtResource("1_toa06")
+top_radius = 0.24
+bottom_radius = 0.17
+height = 0.34
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_tjkws"]
+material = ExtResource("2_fty0c")
+top_radius = 0.22
+bottom_radius = 0.22
+height = 0.02
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_ixade"]
+material = ExtResource("3_oinab")
+size = Vector3(0.1, 0.5, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7egrm"]
+material = ExtResource("4_513gc")
+size = Vector3(0.1, 0.68, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lk6jq"]
+material = ExtResource("3_oinab")
+size = Vector3(0.1, 0.86, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_en114"]
+material = ExtResource("4_513gc")
+size = Vector3(0.1, 0.59, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_a23mw"]
+material = ExtResource("3_oinab")
+size = Vector3(0.1, 0.77, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_isetu"]
+material = ExtResource("4_513gc")
+size = Vector3(0.1, 0.5, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_veask"]
+material = ExtResource("3_oinab")
+size = Vector3(0.1, 0.68, 0.03)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bd074"]
+size = Vector3(0.45, 0.9, 0.45)
+
+[node name="PottedPlant" type="StaticBody3D" unique_id=1518918922]
+
+[node name="Pot" type="MeshInstance3D" parent="." unique_id=652829579]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17, 0)
+mesh = SubResource("CylinderMesh_5hxga")
+
+[node name="Soil" type="MeshInstance3D" parent="." unique_id=195137362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34, 0)
+mesh = SubResource("CylinderMesh_tjkws")
+
+[node name="Leaf" type="Node3D" parent="." unique_id=1135354815]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.34, 0)
+
+[node name="Blade" type="MeshInstance3D" parent="Leaf" unique_id=875551930]
+transform = Transform3D(0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0, 0, 1, 0.12, 0.25, 0)
+mesh = SubResource("BoxMesh_ixade")
+
+[node name="Leaf2" type="Node3D" parent="." unique_id=1055386154]
+transform = Transform3D(0.62387955, 0, 0.7815205, 0, 1, 0, -0.7815205, 0, 0.62387955, 0, 0.34, 0)
+
+[node name="Blade" type="MeshInstance3D" parent="Leaf2" unique_id=969599634]
+transform = Transform3D(0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0, 0, 1, 0.138, 0.34, 0)
+mesh = SubResource("BoxMesh_7egrm")
+
+[node name="Leaf3" type="Node3D" parent="." unique_id=783966778]
+transform = Transform3D(-0.22154854, 0, 0.97514933, 0, 1, 0, -0.97514933, 0, -0.22154854, 0, 0.34, 0)
+
+[node name="Blade" type="MeshInstance3D" parent="Leaf3" unique_id=1636381864]
+transform = Transform3D(0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0, 0, 1, 0.156, 0.43, 0)
+mesh = SubResource("BoxMesh_lk6jq")
+
+[node name="Leaf4" type="Node3D" parent="." unique_id=465310403]
+transform = Transform3D(-0.9003187, 0, 0.43523127, 0, 1, 0, -0.43523127, 0, -0.9003187, 0, 0.34, 0)
+
+[node name="Blade" type="MeshInstance3D" parent="Leaf4" unique_id=1453002306]
+transform = Transform3D(0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0, 0, 1, 0.129, 0.295, 0)
+mesh = SubResource("BoxMesh_en114")
+
+[node name="Leaf5" type="Node3D" parent="." unique_id=977781713]
+transform = Transform3D(-0.90183246, 0, -0.4320858, 0, 1, 0, 0.4320858, 0, -0.90183246, 0, 0.34, 0)
+
+[node name="Blade" type="MeshInstance3D" parent="Leaf5" unique_id=106416057]
+transform = Transform3D(0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0, 0, 1, 0.147, 0.385, 0)
+mesh = SubResource("BoxMesh_a23mw")
+
+[node name="Leaf6" type="Node3D" parent="." unique_id=1205821796]
+transform = Transform3D(-0.22495118, 0, -0.97437006, 0, 1, 0, 0.97437006, 0, -0.22495118, 0, 0.34, 0)
+
+[node name="Blade" type="MeshInstance3D" parent="Leaf6" unique_id=31929168]
+transform = Transform3D(0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0, 0, 1, 0.12, 0.25, 0)
+mesh = SubResource("BoxMesh_isetu")
+
+[node name="Leaf7" type="Node3D" parent="." unique_id=426591903]
+transform = Transform3D(0.6211475, 0, -0.7836937, 0, 1, 0, 0.7836937, 0, 0.6211475, 0, 0.34, 0)
+
+[node name="Blade" type="MeshInstance3D" parent="Leaf7" unique_id=2037817225]
+transform = Transform3D(0.9781476, 0.2079117, 0, -0.2079117, 0.9781476, 0, 0, 0, 1, 0.138, 0.34, 0)
+mesh = SubResource("BoxMesh_veask")
+
+[node name="Hit" type="CollisionShape3D" parent="." unique_id=1190745268]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("BoxShape3D_bd074")

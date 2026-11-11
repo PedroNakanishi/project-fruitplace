@@ -17,6 +17,9 @@ func _ready() -> void:
 	await _run()
 	check(finished, "o teste chegou ao fim (sem erro de script no meio)")
 	print("\nRESULTADO: %s (%d falha(s))" % ["OK" if failures == 0 else "FALHOU", failures])
+	# Dá tempo de o áudio parar; senão o Godot fecha avisando de recursos em uso.
+	Sfx.stop_all()
+	await get_tree().create_timer(0.4).timeout
 	get_tree().quit(1 if failures else 0)
 
 
@@ -32,6 +35,15 @@ func check(cond: bool, msg: String) -> void:
 func pick(i: int) -> void:
 	check(MenuLayer.current.is_open, "menu aberto antes de escolher %d" % i)
 	MenuLayer.current._picked.emit(i)
+
+
+## Quantas opções o menu aberto está mostrando.
+func option_count() -> int:
+	var n := 0
+	for c in MenuLayer.current._content.get_children():
+		if c is Button and not c.is_queued_for_deletion():
+			n += 1
+	return n
 
 
 func wait_router() -> void:
@@ -53,6 +65,21 @@ func _run() -> void:
 	check(Inventory.count(Inventory.BACKPACK, &"semente_tomate") == 6, "6 sementes de tomate")
 
 	print("== Casa")
+	# A porta da frente precisa ser sólida: antes dava para atravessar o vão e cair do mapa.
+	for f in 3:
+		await get_tree().physics_frame
+	var player := SceneRouter.player() as CharacterBody3D
+	player.global_position = Vector3(0.0, 0.05, 4.0)
+	check(player.move_and_collide(Vector3(0.0, 0.0, 3.0), true) != null, "a porta da casa bloqueia a passagem")
+	for x: float in [-5.0, -0.9, 0.9, 5.0]:
+		player.global_position = Vector3(x, 0.05, 4.0)
+		check(player.move_and_collide(Vector3(0.0, 0.0, 3.0), true) != null, "parede da frente fechada em x = %.1f" % x)
+	player.global_position = Vector3(0.0, -20.0, 30.0)  # simula uma queda para fora do mapa
+	player._safe_position = Vector3(0.0, 0.05, 3.6)
+	player._has_safe = true
+	for f in 3:
+		await get_tree().physics_frame
+	check(player.global_position.y > -1.0, "quem cai do mapa volta para o último chão firme")
 	map()._on_bed()
 	check(not TimeManager.night_pending and not MenuLayer.current.is_open, "não dorme antes das 19:30")
 
@@ -146,28 +173,74 @@ func _run() -> void:
 	check(saw.has(&"player"), "cliente analisou a barraca do jogador")
 	check(c.state == Customer.State.WAITING and service.queue.has(c), "depois de analisar, entrou na fila")
 	check(market.player_stall_appeal(c) > 0.1, "barraca com estoque é atraente (%.2f)" % market.player_stall_appeal(c))
-	c.wants = &"tomate"
-	c.wants_qty = 2
-	var money_before := Economy.money
-	service.serve()
-	pick(0)  # bajular: vaidoso gosta
-	check(c.mood > 0.7, "vaidoso ficou feliz com a bajulação")
-	pick(2)  # vender (opções restantes: desconto, sobrepreço, vender)
-	var expected := roundi(Economy.sell_price(&"tomate") * 2 * 1.1)
-	check(Economy.money - money_before == expected, "venda de 2 tomates com +10%% = R$ %d" % expected)
-	check(Inventory.count(Inventory.STALL, &"tomate") == 2, "2 tomates saíram da barraca")
-	check(Economy.happy_today == 1, "cliente feliz contado")
-	check(service.queue.is_empty(), "fila vazia depois da venda")
+	var price := Economy.sell_price(&"tomate")
+	var talk_rolls := [0.1, 0.5, 0.95]  # melhora, piora, fica igual
+	service.roll = func() -> float: return talk_rolls.pop_front()
 
-	var c2: Customer = market.spawn_customer(Catalog.CUSTOMERS[1], true)  # pão-duro
+	print("== Atendimento: conversar + desconto")
+	c.wants = &"tomate"
+	c.wants_qty = 1
+	c.mood = Customer.Mood.TRISTE
+	var money_before := Economy.money
+	var energy_before2 := PlayerStats.energy
+	service.serve()
+	check(option_count() == 4, "menu: conversar, desconto, vender e sobrepreço")
+	pick(0)  # conversar (sorteio 0.1 = melhora)
+	check(c.mood == Customer.Mood.NORMAL, "conversa melhorou o humor: Triste → Normal")
+	check(option_count() == 3, "conversar só uma vez por cliente")
+	pick(0)  # desconto
+	var expected := roundi(price * 0.85)
+	check(Economy.money - money_before == expected, "desconto: 1 tomate por R$ %d" % expected)
+	check(c.mood == Customer.Mood.FELIZ and Economy.happy_today == 1, "desconto melhorou o humor: cliente feliz contado")
+	check(PlayerStats.energy > energy_before2, "desconto devolve um pouco de energia")
+	check(Inventory.count(Inventory.STALL, &"tomate") == 3, "1 tomate saiu da barraca")
+	check(service.queue.is_empty() and c.state == Customer.State.LEAVING, "desconto encerra a venda")
+
+	print("== Atendimento: sobrepreço")
+	var c2: Customer = market.spawn_customer(Catalog.CUSTOMERS[1], true)
 	market._on_customer_evaluated(c2, &"player")
 	c2.state = Customer.State.WAITING
+	c2.wants = &"tomate"
+	c2.wants_qty = 1
+	c2.mood = Customer.Mood.NORMAL
+	money_before = Economy.money
+	energy_before2 = PlayerStats.energy
 	service.serve()
-	pick(2)  # sobrepreço: pão-duro odeia
-	check(c2.mood < 0.2, "pão-duro irritado com sobrepreço")
-	pick(2)  # vender → recusa
-	check(Economy.angry_today == 1, "cliente perdido contado")
-	check(Inventory.count(Inventory.STALL, &"tomate") == 2, "nada vendido ao cliente irritado")
+	pick(3)  # sobrepreço
+	expected = roundi(price * 1.3)
+	check(Economy.money - money_before == expected, "sobrepreço: 1 tomate por R$ %d" % expected)
+	check(c2.mood == Customer.Mood.TRISTE, "sobrepreço piorou o humor: Normal → Triste")
+	check(PlayerStats.energy <= energy_before2 - 5.0, "sobrepreço custa energia")
+	check(Economy.happy_today == 1 and service.queue.is_empty(), "sobrepreço encerra a venda, sem cliente feliz")
+	check(Inventory.count(Inventory.STALL, &"tomate") == 2, "2 tomates na barraca")
+
+	print("== Atendimento: cliente com raiva")
+	var c5: Customer = market.spawn_customer(Catalog.CUSTOMERS[0], true)
+	market._on_customer_evaluated(c5, &"player")
+	c5.state = Customer.State.WAITING
+	c5.wants = &"tomate"
+	c5.wants_qty = 1
+	c5.mood = Customer.Mood.TRISTE
+	service.serve()
+	pick(0)  # conversar (sorteio 0.5 = piora)
+	check(c5.mood == Customer.Mood.RAIVA, "conversa piorou o humor: Triste → Raiva")
+	check(option_count() == 2, "com raiva não aceita sobrepreço: só desconto e vender")
+	MenuLayer.current.close()  # Esc: desiste de atender agora
+	check(not c5.being_served and service.queue.has(c5), "fechar o menu deixa o cliente na fila")
+	service.serve()
+	check(option_count() == 2, "voltando, a conversa continua gasta")
+	MenuLayer.current.close()
+	c5.mood = Customer.Mood.NORMAL
+	c5.talked = false
+	service.serve()
+	pick(0)  # conversar (sorteio 0.95 = fica igual)
+	check(c5.mood == Customer.Mood.NORMAL, "10% das conversas não mudam nada")
+	MenuLayer.current.close()
+	c5.patience = 0.0
+	await get_tree().process_frame
+	await get_tree().process_frame
+	check(c5.mood == Customer.Mood.RAIVA and Economy.angry_today == 1, "cliente que cansa de esperar sai com raiva e conta como perdido")
+	check(Inventory.count(Inventory.STALL, &"tomate") == 2, "nada vendido ao cliente que foi embora")
 
 	var c3: Customer = market.spawn_customer(Catalog.CUSTOMERS[2], false)
 	market._on_customer_evaluated(c3, &"east")

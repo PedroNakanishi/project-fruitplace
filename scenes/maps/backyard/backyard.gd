@@ -10,6 +10,7 @@ const TRAVEL_MINUTES := 30
 @onready var cargo_bed: Interactable = $Truck/CargoBed
 @onready var driver_door: Interactable = $Truck/DriverDoor
 @onready var door: Interactable = $Interactables/DoorToHouse
+@onready var dog: Interactable = $Level/Decor/Dog/Pet
 
 
 func _ready() -> void:
@@ -20,6 +21,7 @@ func _ready() -> void:
 	driver_door.prompt = "Dirigir até a Feira"
 	driver_door.interacted.connect(_on_drive)
 	door.interacted.connect(func() -> void: SceneRouter.go_to(&"house", &"FromBackyard", 5))
+	dog.interacted.connect(_on_pet_dog)
 
 
 func _on_plot(i: int) -> void:
@@ -27,6 +29,7 @@ func _on_plot(i: int) -> void:
 	match GardenState.next_action(i):
 		&"harvest":
 			var qty := GardenState.harvest(i)
+			Sfx.play(&"harvest")
 			EventBus.toast.emit("Colheu %d× %s." % [qty, crop.display_name.to_lower()])
 		&"plant":
 			var seed := GardenState.selected_crop()
@@ -35,16 +38,19 @@ func _on_plot(i: int) -> void:
 				return
 			GardenState.selected_seed = seed.seed_id()
 			GardenState.plant(i, seed)
+			Sfx.play(&"plant")
 		&"water":
 			var err := GardenState.water(i)
 			if err != "":
 				EventBus.toast.emit(err)
 				return
+			Sfx.play(&"water")
 		&"fertilize":
 			var err := GardenState.fertilize(i, GardenState.first_fertilizer())
 			if err != "":
 				EventBus.toast.emit(err)
 				return
+			Sfx.play(&"fertilize")
 		_:
 			var why := "" if GardenState.plots[i].watered else " · regador vazio"
 			EventBus.toast.emit("%s: %d%%, pronto em %d min%s." % [crop.display_name, int(GardenState.stage(i) * 100.0), GardenState.minutes_left(i), why])
@@ -52,10 +58,16 @@ func _on_plot(i: int) -> void:
 	TimeManager.advance(ACTION_MINUTES)
 
 
+func _on_pet_dog() -> void:
+	EventBus.toast.emit("O Caramelo abana o rabo, feliz da vida.")
+	Sfx.play(&"happy", -4.0)
+
+
 func _on_load_truck() -> void:
 	var moved := Inventory.transfer(Inventory.BACKPACK, Inventory.TRUCK, func(id: StringName) -> bool: return Catalog.is_produce(id))
 	if moved > 0:
 		EventBus.toast.emit("Carregou %d itens. Caçamba: %d/%d." % [moved, Inventory.total(Inventory.TRUCK), Inventory.CAPACITY[Inventory.TRUCK]])
+		Sfx.play(&"plant")
 		TimeManager.advance(ACTION_MINUTES)
 	elif Inventory.space(Inventory.TRUCK) == 0:
 		EventBus.toast.emit("A caçamba está cheia.")
@@ -71,5 +83,6 @@ func _on_drive() -> void:
 		return
 	if not Economy.use_trip():
 		EventBus.toast.emit("Sem gasolina! Pague a conta de Gasolina à noite.")
+		Sfx.play(&"error")
 		return
 	SceneRouter.go_to(&"market", &"FromTruck", TRAVEL_MINUTES)

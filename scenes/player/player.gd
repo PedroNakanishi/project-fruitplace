@@ -4,12 +4,19 @@ extends CharacterBody3D
 
 const SPEED := 5.5
 const GRAVITY := 20.0
+const FALL_LIMIT := -6.0  ## Abaixo disso o jogador caiu do mapa.
 
 @onready var reach: Area3D = $Reach
-@onready var body: Node3D = $Body
+@onready var body: Humanoid = $Body
 
 var _focus: Interactable
 var _last_prompt := ""
+var _safe_position := Vector3.ZERO
+var _has_safe := false
+
+
+func _ready() -> void:
+	body.stepped.connect(Sfx.step)
 
 
 func _physics_process(delta: float) -> void:
@@ -23,9 +30,22 @@ func _physics_process(delta: float) -> void:
 	velocity.z = dir.z * SPEED
 	velocity.y = 0.0 if is_on_floor() else velocity.y - GRAVITY * delta
 	move_and_slide()
+	_keep_on_map()
+	body.walking = dir.length_squared() > 0.01 and is_on_floor()
 	if dir.length_squared() > 0.01:
 		body.rotation.y = atan2(dir.x, dir.z)
 	_update_focus()
+
+
+## Rede de segurança: se uma falha de colisão deixar o jogador cair do
+## mapa, ele volta para o último lugar firme em vez de sumir no limbo.
+func _keep_on_map() -> void:
+	if is_on_floor():
+		_safe_position = global_position
+		_has_safe = true
+	elif global_position.y < FALL_LIMIT and _has_safe:
+		global_position = _safe_position
+		velocity = Vector3.ZERO
 
 
 func try_interact() -> void:

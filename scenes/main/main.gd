@@ -15,6 +15,7 @@ func _ready() -> void:
 	TimeManager.faint_time_reached.connect(func() -> void: run_night(true))
 	SceneRouter.load_now(&"house", &"FromStart")
 	EventBus.toast.emit.call_deferred("Dia 1 — o tempo não para!")
+	Sfx.play(&"new_day")
 
 
 # A interação fica aqui (fora do SubViewport) para que a tecla usada num
@@ -51,6 +52,7 @@ func run_night(fainted: bool) -> void:
 	if Economy.risk > 0:
 		note += "\n⚠ Ontem 2 contas ficaram sem pagar!"
 
+	Sfx.play(&"night")
 	var paid: Dictionary = await menu.bills(Economy.bills_today(), Economy.money, note)
 	if Economy.settle_bills(paid):
 		await menu.choose("FALÊNCIA", "As dívidas chegaram. Você perdeu a barraca no dia %d." % TimeManager.day, ["Recomeçar"])

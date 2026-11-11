@@ -112,6 +112,7 @@ func _on_stock() -> void:
 	var moved := Inventory.transfer(Inventory.TRUCK, Inventory.STALL)
 	if moved > 0:
 		EventBus.toast.emit("Abasteceu %d itens na barraca." % moved)
+		Sfx.play(&"plant")
 		TimeManager.advance(STOCK_MINUTES)
 	elif Inventory.total(Inventory.TRUCK) == 0:
 		EventBus.toast.emit("A caçamba está vazia.")
