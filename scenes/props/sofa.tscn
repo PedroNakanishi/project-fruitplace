@@ -1,0 +1,103 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/wood.tres" id="1_nx5xf"]
+[ext_resource type="Material" path="res://assets/materials/fabric_red.tres" id="2_s541i"]
+[ext_resource type="Material" path="res://assets/materials/fabric_red_dark.tres" id="3_lle2f"]
+[ext_resource type="Material" path="res://assets/materials/fabric_yellow.tres" id="4_o1i3j"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_15x5e"]
+material = ExtResource("1_nx5xf")
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vm2ha"]
+material = ExtResource("1_nx5xf")
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cpibd"]
+material = ExtResource("1_nx5xf")
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_8ci2r"]
+material = ExtResource("1_nx5xf")
+size = Vector3(0.1, 0.1, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rp1jl"]
+material = ExtResource("2_s541i")
+size = Vector3(2.5, 0.42, 0.95)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gcdy5"]
+material = ExtResource("2_s541i")
+size = Vector3(2.5, 0.85, 0.25)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ivemn"]
+material = ExtResource("3_lle2f")
+size = Vector3(0.25, 0.68, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xrlxl"]
+material = ExtResource("3_lle2f")
+size = Vector3(0.25, 0.68, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7oiao"]
+material = ExtResource("3_lle2f")
+size = Vector3(1, 0.1, 0.62)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7ae05"]
+material = ExtResource("3_lle2f")
+size = Vector3(1, 0.1, 0.62)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5fnis"]
+material = ExtResource("4_o1i3j")
+size = Vector3(0.4, 0.4, 0.12)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_b8kcp"]
+size = Vector3(2.65, 0.9, 1)
+
+[node name="Sofa" type="StaticBody3D" unique_id=1946479837]
+
+[node name="Foot" type="MeshInstance3D" parent="." unique_id=1582162611]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.05, -0.35)
+mesh = SubResource("BoxMesh_15x5e")
+
+[node name="Foot2" type="MeshInstance3D" parent="." unique_id=1164900522]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.1, 0.05, 0.4)
+mesh = SubResource("BoxMesh_vm2ha")
+
+[node name="Foot3" type="MeshInstance3D" parent="." unique_id=558774385]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.05, -0.35)
+mesh = SubResource("BoxMesh_cpibd")
+
+[node name="Foot4" type="MeshInstance3D" parent="." unique_id=720311902]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1, 0.05, 0.4)
+mesh = SubResource("BoxMesh_8ci2r")
+
+[node name="Seat" type="MeshInstance3D" parent="." unique_id=721516081]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0.05)
+mesh = SubResource("BoxMesh_rp1jl")
+
+[node name="Back" type="MeshInstance3D" parent="." unique_id=1401573583]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62, -0.38)
+mesh = SubResource("BoxMesh_gcdy5")
+
+[node name="Arm" type="MeshInstance3D" parent="." unique_id=1885366244]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0.43, 0.02)
+mesh = SubResource("BoxMesh_ivemn")
+
+[node name="Arm2" type="MeshInstance3D" parent="." unique_id=555871814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.2, 0.43, 0.02)
+mesh = SubResource("BoxMesh_xrlxl")
+
+[node name="Cushion" type="MeshInstance3D" parent="." unique_id=968059921]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.52, 0.55, 0.12)
+mesh = SubResource("BoxMesh_7oiao")
+
+[node name="Cushion2" type="MeshInstance3D" parent="." unique_id=1559651346]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.52, 0.55, 0.12)
+mesh = SubResource("BoxMesh_7ae05")
+
+[node name="Pillow" type="MeshInstance3D" parent="." unique_id=346434893]
+transform = Transform3D(0.9848077, -0.17364818, 0, 0.16773126, 0.9512512, 0.25881904, -0.044943456, -0.25488698, 0.9659258, -0.8, 0.76, -0.16)
+mesh = SubResource("BoxMesh_5fnis")
+
+[node name="Hit" type="CollisionShape3D" parent="." unique_id=882365519]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("BoxShape3D_b8kcp")

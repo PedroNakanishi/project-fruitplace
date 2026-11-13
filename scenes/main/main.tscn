@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/main/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://ui/hud/hud.gd" id="2_hud"]
+[ext_resource type="Script" path="res://ui/menus/menu_layer.gd" id="3_menu"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_main")
+
+[node name="GameView" type="SubViewportContainer" parent="."]
+texture_filter = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch = true
+stretch_shrink = 3
+
+[node name="PixelViewport" type="SubViewport" parent="GameView"]
+handle_input_locally = false
+msaa_3d = 0
+size = Vector2i(426, 240)
+render_target_update_mode = 4
+
+[node name="MapSlot" type="Node3D" parent="GameView/PixelViewport"]
+unique_name_in_owner = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HUD" type="Control" parent="UI"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_hud")
+
+[node name="MenuLayer" type="Control" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_menu")

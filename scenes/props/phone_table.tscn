@@ -1,0 +1,127 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/wood.tres" id="1_efi4n"]
+[ext_resource type="Material" path="res://assets/materials/yellow.tres" id="2_xwe4o"]
+[ext_resource type="Material" path="res://assets/materials/cream.tres" id="3_b1lkh"]
+[ext_resource type="Material" path="res://assets/materials/phone_red.tres" id="4_x1nkx"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_8tyna"]
+material = ExtResource("1_efi4n")
+size = Vector3(0.75, 0.05, 0.6)
+
+[sub_resource type="BoxMesh" id="BoxMesh_trq0v"]
+material = ExtResource("1_efi4n")
+size = Vector3(0.06, 0.7, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7e2nj"]
+material = ExtResource("1_efi4n")
+size = Vector3(0.06, 0.7, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7e6wl"]
+material = ExtResource("1_efi4n")
+size = Vector3(0.06, 0.7, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_cqcsw"]
+material = ExtResource("1_efi4n")
+size = Vector3(0.06, 0.7, 0.06)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lg3rt"]
+material = ExtResource("1_efi4n")
+size = Vector3(0.7, 0.04, 0.55)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ppub7"]
+material = ExtResource("2_xwe4o")
+size = Vector3(0.3, 0.07, 0.4)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_673di"]
+material = ExtResource("3_b1lkh")
+top_radius = 0.27
+bottom_radius = 0.27
+height = 0.012
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_btiv0"]
+material = ExtResource("4_x1nkx")
+size = Vector3(0.34, 0.09, 0.26)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_y2821"]
+material = ExtResource("3_b1lkh")
+top_radius = 0.07
+bottom_radius = 0.07
+height = 0.02
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_51y1c"]
+material = ExtResource("4_x1nkx")
+size = Vector3(0.42, 0.055, 0.08)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tyrf0"]
+material = ExtResource("4_x1nkx")
+size = Vector3(0.09, 0.08, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_27w86"]
+material = ExtResource("4_x1nkx")
+size = Vector3(0.09, 0.08, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rg3yo"]
+size = Vector3(0.75, 0.9, 0.6)
+
+[node name="PhoneTable" type="StaticBody3D" unique_id=2068856576]
+
+[node name="Top" type="MeshInstance3D" parent="." unique_id=1181688116]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.72, 0)
+mesh = SubResource("BoxMesh_8tyna")
+
+[node name="Leg" type="MeshInstance3D" parent="." unique_id=1478532857]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32, 0.35, -0.25)
+mesh = SubResource("BoxMesh_trq0v")
+
+[node name="Leg2" type="MeshInstance3D" parent="." unique_id=534479504]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.32, 0.35, 0.25)
+mesh = SubResource("BoxMesh_7e2nj")
+
+[node name="Leg3" type="MeshInstance3D" parent="." unique_id=982702178]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, 0.35, -0.25)
+mesh = SubResource("BoxMesh_7e6wl")
+
+[node name="Leg4" type="MeshInstance3D" parent="." unique_id=1631165527]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.32, 0.35, 0.25)
+mesh = SubResource("BoxMesh_cqcsw")
+
+[node name="Shelf" type="MeshInstance3D" parent="." unique_id=1259888998]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+mesh = SubResource("BoxMesh_lg3rt")
+
+[node name="PhoneBook" type="MeshInstance3D" parent="." unique_id=647296172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.305, 0)
+mesh = SubResource("BoxMesh_ppub7")
+
+[node name="Doily" type="MeshInstance3D" parent="." unique_id=1726974381]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.752, 0)
+mesh = SubResource("CylinderMesh_673di")
+
+[node name="PhoneBase" type="MeshInstance3D" parent="." unique_id=1031494416]
+transform = Transform3D(1, 0, 0, 0, 0.9781476, -0.2079117, 0, 0.2079117, 0.9781476, 0, 0.81, 0)
+mesh = SubResource("BoxMesh_btiv0")
+
+[node name="PhoneDial" type="MeshInstance3D" parent="." unique_id=537322347]
+transform = Transform3D(1, 0, 0, 0, 0.9781476, -0.2079117, 0, 0.2079117, 0.9781476, 0, 0.86, 0.06)
+mesh = SubResource("CylinderMesh_y2821")
+
+[node name="Handset" type="MeshInstance3D" parent="." unique_id=2104454662]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.915, -0.07)
+mesh = SubResource("BoxMesh_51y1c")
+
+[node name="HandsetCup" type="MeshInstance3D" parent="." unique_id=1064478105]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.17, 0.885, -0.07)
+mesh = SubResource("BoxMesh_tyrf0")
+
+[node name="HandsetCup2" type="MeshInstance3D" parent="." unique_id=1781216087]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.17, 0.885, -0.07)
+mesh = SubResource("BoxMesh_27w86")
+
+[node name="Hit" type="CollisionShape3D" parent="." unique_id=1346324512]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("BoxShape3D_rg3yo")

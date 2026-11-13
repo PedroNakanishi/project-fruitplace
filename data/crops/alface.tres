@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="CropData" format=3]
+
+[ext_resource type="Script" path="res://resources/crop_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"alface"
+display_name = "Alface"
+color = Color(0.45, 0.78, 0.25, 1)
+category = "verdura"
+seed_price = 3
+base_sell_price = 5
+grow_minutes = 150
+base_yield = 2

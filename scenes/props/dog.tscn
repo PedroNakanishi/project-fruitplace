@@ -1,0 +1,132 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/caramel.tres" id="1_3iy0e"]
+[ext_resource type="Material" path="res://assets/materials/caramel_light.tres" id="2_b2yb6"]
+[ext_resource type="Material" path="res://assets/materials/dark.tres" id="3_8vuuc"]
+[ext_resource type="Material" path="res://assets/materials/caramel_dark.tres" id="4_0aenf"]
+[ext_resource type="Script" path="res://scenes/components/sway.gd" id="5_wdtgy"]
+[ext_resource type="Script" path="res://scenes/components/interactable.gd" id="6_lj5v0"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_p0ea6"]
+material = ExtResource("1_3iy0e")
+size = Vector3(0.3, 0.28, 0.62)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pi62m"]
+material = ExtResource("1_3iy0e")
+size = Vector3(0.24, 0.22, 0.24)
+
+[sub_resource type="BoxMesh" id="BoxMesh_jiy7h"]
+material = ExtResource("2_b2yb6")
+size = Vector3(0.13, 0.1, 0.14)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5me2k"]
+material = ExtResource("3_8vuuc")
+size = Vector3(0.05, 0.04, 0.03)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ydj7o"]
+material = ExtResource("4_0aenf")
+size = Vector3(0.07, 0.13, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fokak"]
+material = ExtResource("3_8vuuc")
+size = Vector3(0.035, 0.04, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_i0blg"]
+material = ExtResource("2_b2yb6")
+size = Vector3(0.09, 0.08, 0.26)
+
+[sub_resource type="BoxMesh" id="BoxMesh_n1h6k"]
+material = ExtResource("4_0aenf")
+size = Vector3(0.1, 0.14, 0.24)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wmbln"]
+material = ExtResource("4_0aenf")
+size = Vector3(0.07, 0.13, 0.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_x6l2f"]
+material = ExtResource("3_8vuuc")
+size = Vector3(0.035, 0.04, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6f4tk"]
+material = ExtResource("2_b2yb6")
+size = Vector3(0.09, 0.08, 0.26)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f0ylf"]
+material = ExtResource("4_0aenf")
+size = Vector3(0.1, 0.14, 0.24)
+
+[sub_resource type="BoxMesh" id="BoxMesh_htjex"]
+material = ExtResource("1_3iy0e")
+size = Vector3(0.05, 0.05, 0.28)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_o813p"]
+size = Vector3(1.2, 1.2, 1.4)
+
+[node name="Dog" type="Node3D" unique_id=344515211]
+
+[node name="Body" type="MeshInstance3D" parent="." unique_id=881895456]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.2, 0)
+mesh = SubResource("BoxMesh_p0ea6")
+
+[node name="Head" type="MeshInstance3D" parent="." unique_id=1337180098]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0.36)
+mesh = SubResource("BoxMesh_pi62m")
+
+[node name="Snout" type="MeshInstance3D" parent="." unique_id=530192560]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0.52)
+mesh = SubResource("BoxMesh_jiy7h")
+
+[node name="Nose" type="MeshInstance3D" parent="." unique_id=572420251]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39, 0.595)
+mesh = SubResource("BoxMesh_5me2k")
+
+[node name="Ear" type="MeshInstance3D" parent="." unique_id=1146471145]
+transform = Transform3D(0.9659258, -0.25881904, 0, 0.25881904, 0.9659258, 0, 0, 0, 1, -0.1, 0.52, 0.3)
+mesh = SubResource("BoxMesh_ydj7o")
+
+[node name="Eye" type="MeshInstance3D" parent="." unique_id=1810804235]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.065, 0.44, 0.485)
+mesh = SubResource("BoxMesh_fokak")
+
+[node name="FrontPaw" type="MeshInstance3D" parent="." unique_id=1224420668]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.04, 0.42)
+mesh = SubResource("BoxMesh_i0blg")
+
+[node name="HindLeg" type="MeshInstance3D" parent="." unique_id=873333825]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.16, 0.07, -0.2)
+mesh = SubResource("BoxMesh_n1h6k")
+
+[node name="Ear2" type="MeshInstance3D" parent="." unique_id=1250354328]
+transform = Transform3D(0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 0, 0, 1, 0.1, 0.52, 0.3)
+mesh = SubResource("BoxMesh_wmbln")
+
+[node name="Eye2" type="MeshInstance3D" parent="." unique_id=571920158]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.065, 0.44, 0.485)
+mesh = SubResource("BoxMesh_x6l2f")
+
+[node name="FrontPaw2" type="MeshInstance3D" parent="." unique_id=65342861]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.04, 0.42)
+mesh = SubResource("BoxMesh_6f4tk")
+
+[node name="HindLeg2" type="MeshInstance3D" parent="." unique_id=1463072696]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.16, 0.07, -0.2)
+mesh = SubResource("BoxMesh_f0ylf")
+
+[node name="Tail" type="Node3D" parent="." unique_id=2007536057]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.28, -0.3)
+script = ExtResource("5_wdtgy")
+axis = Vector3(0, 1, 0)
+degrees = 32.0
+speed = 9.0
+
+[node name="Mesh" type="MeshInstance3D" parent="Tail" unique_id=1126738499]
+transform = Transform3D(1, 0, 0, 0, 0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0.06, -0.12)
+mesh = SubResource("BoxMesh_htjex")
+
+[node name="Pet" type="Area3D" parent="." unique_id=916957445]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0.1)
+script = ExtResource("6_lj5v0")
+prompt = "Fazer carinho no Caramelo"
+
+[node name="Shape" type="CollisionShape3D" parent="Pet" unique_id=2128233949]
+shape = SubResource("BoxShape3D_o813p")

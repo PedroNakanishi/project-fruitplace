@@ -1,0 +1,91 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/dark.tres" id="1_2s81u"]
+[ext_resource type="Material" path="res://assets/materials/enamel.tres" id="2_kjqf2"]
+[ext_resource type="Material" path="res://assets/materials/gray.tres" id="3_m8a3o"]
+[ext_resource type="Material" path="res://assets/materials/chrome.tres" id="4_d46lg"]
+[ext_resource type="Material" path="res://assets/materials/tomato.tres" id="5_qhay2"]
+[ext_resource type="Material" path="res://assets/materials/yellow.tres" id="6_20kyy"]
+[ext_resource type="Material" path="res://assets/materials/cream.tres" id="7_kbhwn"]
+[ext_resource type="Material" path="res://assets/materials/crate.tres" id="8_ygl5q"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_by0by"]
+material = ExtResource("1_2s81u")
+size = Vector3(0.9, 0.06, 0.85)
+
+[sub_resource type="BoxMesh" id="BoxMesh_x1sym"]
+material = ExtResource("2_kjqf2")
+size = Vector3(0.95, 2, 0.9)
+
+[sub_resource type="BoxMesh" id="BoxMesh_a1kb5"]
+material = ExtResource("3_m8a3o")
+size = Vector3(0.96, 0.03, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0d4vv"]
+material = ExtResource("4_d46lg")
+size = Vector3(0.05, 0.28, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_qu6rp"]
+material = ExtResource("4_d46lg")
+size = Vector3(0.05, 0.4, 0.05)
+
+[sub_resource type="BoxMesh" id="BoxMesh_avdcm"]
+material = ExtResource("5_qhay2")
+size = Vector3(0.08, 0.08, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wrvtq"]
+material = ExtResource("6_20kyy")
+size = Vector3(0.08, 0.08, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pd07d"]
+material = ExtResource("7_kbhwn")
+size = Vector3(0.16, 0.2, 0.012)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xxy2q"]
+material = ExtResource("8_ygl5q")
+size = Vector3(0.45, 0.16, 0.35)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gxcv8"]
+size = Vector3(0.95, 2.1, 0.9)
+
+[node name="Fridge" type="StaticBody3D" unique_id=515073316]
+
+[node name="Feet" type="MeshInstance3D" parent="." unique_id=1340787710]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.03, 0)
+mesh = SubResource("BoxMesh_by0by")
+
+[node name="Body" type="MeshInstance3D" parent="." unique_id=1243022096]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.06, 0)
+mesh = SubResource("BoxMesh_x1sym")
+
+[node name="Seam" type="MeshInstance3D" parent="." unique_id=584333575]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0.445)
+mesh = SubResource("BoxMesh_a1kb5")
+
+[node name="HandleTop" type="MeshInstance3D" parent="." unique_id=1913967938]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.36, 1.75, 0.47)
+mesh = SubResource("BoxMesh_0d4vv")
+
+[node name="HandleBottom" type="MeshInstance3D" parent="." unique_id=1008428983]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.36, 1.2, 0.47)
+mesh = SubResource("BoxMesh_qu6rp")
+
+[node name="Magnet" type="MeshInstance3D" parent="." unique_id=200990277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 1.8, 0.455)
+mesh = SubResource("BoxMesh_avdcm")
+
+[node name="Magnet2" type="MeshInstance3D" parent="." unique_id=428814214]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.04, 1.7, 0.455)
+mesh = SubResource("BoxMesh_wrvtq")
+
+[node name="Note" type="MeshInstance3D" parent="." unique_id=774131269]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2, 1.15, 0.455)
+mesh = SubResource("BoxMesh_pd07d")
+
+[node name="Box" type="MeshInstance3D" parent="." unique_id=86044979]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 2.14, 0)
+mesh = SubResource("BoxMesh_xxy2q")
+
+[node name="Hit" type="CollisionShape3D" parent="." unique_id=1870321546]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, 0)
+shape = SubResource("BoxShape3D_gxcv8")

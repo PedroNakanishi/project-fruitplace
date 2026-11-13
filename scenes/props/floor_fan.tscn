@@ -1,0 +1,102 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/gray.tres" id="1_qn37j"]
+[ext_resource type="Material" path="res://assets/materials/chrome.tres" id="2_1nhmn"]
+[ext_resource type="Material" path="res://assets/materials/cage.tres" id="3_t5ej7"]
+[ext_resource type="Script" path="res://scenes/components/spinner.gd" id="4_oblw4"]
+[ext_resource type="Material" path="res://assets/materials/blade.tres" id="5_loq8u"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_gb3f6"]
+material = ExtResource("1_qn37j")
+top_radius = 0.24
+bottom_radius = 0.27
+height = 0.05
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_k0qe3"]
+material = ExtResource("2_1nhmn")
+top_radius = 0.03
+bottom_radius = 0.03
+height = 1.15
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_3ecwo"]
+material = ExtResource("1_qn37j")
+top_radius = 0.09
+bottom_radius = 0.09
+height = 0.2
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wu3wr"]
+material = ExtResource("3_t5ej7")
+top_radius = 0.33
+bottom_radius = 0.33
+height = 0.1
+radial_segments = 12
+rings = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_odpmr"]
+material = ExtResource("5_loq8u")
+size = Vector3(0.26, 0.11, 0.015)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2nhpj"]
+material = ExtResource("5_loq8u")
+size = Vector3(0.26, 0.11, 0.015)
+
+[sub_resource type="BoxMesh" id="BoxMesh_y0ae5"]
+material = ExtResource("5_loq8u")
+size = Vector3(0.26, 0.11, 0.015)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_27cqx"]
+size = Vector3(0.4, 1.5, 0.4)
+
+[node name="FloorFan" type="StaticBody3D" unique_id=1916372280]
+
+[node name="Base" type="MeshInstance3D" parent="." unique_id=1673154728]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+mesh = SubResource("CylinderMesh_gb3f6")
+
+[node name="Pole" type="MeshInstance3D" parent="." unique_id=1213171954]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+mesh = SubResource("CylinderMesh_k0qe3")
+
+[node name="Motor" type="MeshInstance3D" parent="." unique_id=471160691]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.25, -0.08)
+mesh = SubResource("CylinderMesh_3ecwo")
+
+[node name="Cage" type="MeshInstance3D" parent="." unique_id=1841586931]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 1.25, 0.08)
+mesh = SubResource("CylinderMesh_wu3wr")
+
+[node name="Blades" type="Node3D" parent="." unique_id=210623598]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0.08)
+script = ExtResource("4_oblw4")
+axis = Vector3(0, 0, 1)
+speed = 14.0
+
+[node name="Blade" type="Node3D" parent="Blades" unique_id=458929629]
+
+[node name="Mesh" type="MeshInstance3D" parent="Blades/Blade" unique_id=167069252]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0, 0)
+mesh = SubResource("BoxMesh_odpmr")
+
+[node name="Blade2" type="Node3D" parent="Blades" unique_id=1829036186]
+transform = Transform3D(-0.50000006, -0.8660254, 0, 0.8660254, -0.50000006, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Blades/Blade2" unique_id=1446827622]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0, 0)
+mesh = SubResource("BoxMesh_2nhpj")
+
+[node name="Blade3" type="Node3D" parent="Blades" unique_id=620539438]
+transform = Transform3D(-0.4999999, 0.86602545, 0, -0.86602545, -0.4999999, 0, 0, 0, 1, 0, 0, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="Blades/Blade3" unique_id=1866943284]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.15, 0, 0)
+mesh = SubResource("BoxMesh_y0ae5")
+
+[node name="Hit" type="CollisionShape3D" parent="." unique_id=1738573632]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+shape = SubResource("BoxShape3D_27cqx")

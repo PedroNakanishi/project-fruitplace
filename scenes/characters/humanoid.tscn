@@ -1,0 +1,183 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/characters/humanoid.gd" id="1_t0873"]
+[ext_resource type="Material" path="res://assets/materials/white.tres" id="2_ig17y"]
+[ext_resource type="Material" path="res://assets/materials/dark.tres" id="3_5mgmh"]
+[ext_resource type="Material" path="res://assets/materials/straw.tres" id="4_wpd7y"]
+[ext_resource type="Material" path="res://assets/materials/tomato.tres" id="5_jsihi"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ya8ks"]
+material = ExtResource("2_ig17y")
+size = Vector3(0.18, 0.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_y0n0k"]
+material = ExtResource("3_5mgmh")
+size = Vector3(0.19, 0.09, 0.28)
+
+[sub_resource type="BoxMesh" id="BoxMesh_44hyc"]
+material = ExtResource("2_ig17y")
+size = Vector3(0.13, 0.26, 0.16)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0632l"]
+material = ExtResource("2_ig17y")
+size = Vector3(0.11, 0.26, 0.13)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wljfc"]
+material = ExtResource("3_5mgmh")
+size = Vector3(0.05, 0.07, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_fc382"]
+material = ExtResource("2_ig17y")
+size = Vector3(0.18, 0.5, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f8rd4"]
+material = ExtResource("3_5mgmh")
+size = Vector3(0.19, 0.09, 0.28)
+
+[sub_resource type="BoxMesh" id="BoxMesh_j21g0"]
+material = ExtResource("2_ig17y")
+size = Vector3(0.13, 0.26, 0.16)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ggyc8"]
+material = ExtResource("2_ig17y")
+size = Vector3(0.11, 0.26, 0.13)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xm6rj"]
+material = ExtResource("3_5mgmh")
+size = Vector3(0.05, 0.07, 0.02)
+
+[sub_resource type="BoxMesh" id="BoxMesh_srqfw"]
+material = ExtResource("2_ig17y")
+size = Vector3(0.46, 0.12, 0.26)
+
+[sub_resource type="BoxMesh" id="BoxMesh_81f4u"]
+material = ExtResource("2_ig17y")
+size = Vector3(0.46, 0.46, 0.26)
+
+[sub_resource type="BoxMesh" id="BoxMesh_10occ"]
+material = ExtResource("2_ig17y")
+size = Vector3(0.34, 0.32, 0.32)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rpber"]
+material = ExtResource("2_ig17y")
+size = Vector3(0.37, 0.1, 0.35)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bto6f"]
+material = ExtResource("2_ig17y")
+size = Vector3(0.37, 0.24, 0.08)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_sxsf6"]
+material = ExtResource("4_wpd7y")
+top_radius = 0.42
+bottom_radius = 0.42
+height = 0.035
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rcusm"]
+material = ExtResource("4_wpd7y")
+top_radius = 0.19
+bottom_radius = 0.22
+height = 0.16
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_raq7t"]
+material = ExtResource("5_jsihi")
+top_radius = 0.205
+bottom_radius = 0.225
+height = 0.045
+radial_segments = 8
+rings = 1
+
+[node name="Humanoid" type="Node3D" unique_id=618729649]
+script = ExtResource("1_t0873")
+
+[node name="Rig" type="Node3D" parent="." unique_id=903506492]
+
+[node name="LegL" type="Node3D" parent="Rig" unique_id=323314477]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.12, 0.56, 0)
+
+[node name="PantsLeg" type="MeshInstance3D" parent="Rig/LegL" unique_id=477915461]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+mesh = SubResource("BoxMesh_ya8ks")
+
+[node name="Shoe" type="MeshInstance3D" parent="Rig/LegL" unique_id=158629790]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.515, 0.035)
+mesh = SubResource("BoxMesh_y0n0k")
+
+[node name="ArmL" type="Node3D" parent="Rig" unique_id=891563101]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.295, 1.04, 0)
+
+[node name="ShirtSleeve" type="MeshInstance3D" parent="Rig/ArmL" unique_id=335163165]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_44hyc")
+
+[node name="SkinArm" type="MeshInstance3D" parent="Rig/ArmL" unique_id=1075810]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.36, 0)
+mesh = SubResource("BoxMesh_0632l")
+
+[node name="EyeL" type="MeshInstance3D" parent="Rig" unique_id=545848111]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.085, 1.29, 0.165)
+mesh = SubResource("BoxMesh_wljfc")
+
+[node name="LegR" type="Node3D" parent="Rig" unique_id=2084662925]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12, 0.56, 0)
+
+[node name="PantsLeg" type="MeshInstance3D" parent="Rig/LegR" unique_id=1694880566]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+mesh = SubResource("BoxMesh_fc382")
+
+[node name="Shoe" type="MeshInstance3D" parent="Rig/LegR" unique_id=1684260868]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.515, 0.035)
+mesh = SubResource("BoxMesh_f8rd4")
+
+[node name="ArmR" type="Node3D" parent="Rig" unique_id=1944260830]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.295, 1.04, 0)
+
+[node name="ShirtSleeve" type="MeshInstance3D" parent="Rig/ArmR" unique_id=1065320038]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+mesh = SubResource("BoxMesh_j21g0")
+
+[node name="SkinArm" type="MeshInstance3D" parent="Rig/ArmR" unique_id=1295817842]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.36, 0)
+mesh = SubResource("BoxMesh_ggyc8")
+
+[node name="EyeR" type="MeshInstance3D" parent="Rig" unique_id=657135940]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.085, 1.29, 0.165)
+mesh = SubResource("BoxMesh_xm6rj")
+
+[node name="PantsHip" type="MeshInstance3D" parent="Rig" unique_id=537463338]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.56, 0)
+mesh = SubResource("BoxMesh_srqfw")
+
+[node name="ShirtTorso" type="MeshInstance3D" parent="Rig" unique_id=850259538]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
+mesh = SubResource("BoxMesh_81f4u")
+
+[node name="SkinHead" type="MeshInstance3D" parent="Rig" unique_id=1496613337]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.27, 0)
+mesh = SubResource("BoxMesh_10occ")
+
+[node name="HairTop" type="MeshInstance3D" parent="Rig" unique_id=1738985561]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.46, -0.01)
+mesh = SubResource("BoxMesh_rpber")
+
+[node name="HairBack" type="MeshInstance3D" parent="Rig" unique_id=1068948723]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.33, -0.15)
+mesh = SubResource("BoxMesh_bto6f")
+
+[node name="Hat" type="Node3D" parent="Rig" unique_id=656209913]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Brim" type="MeshInstance3D" parent="Rig/Hat" unique_id=556897500]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+mesh = SubResource("CylinderMesh_sxsf6")
+
+[node name="Crown" type="MeshInstance3D" parent="Rig/Hat" unique_id=104902597]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.1, 0)
+mesh = SubResource("CylinderMesh_rcusm")
+
+[node name="Band" type="MeshInstance3D" parent="Rig/Hat" unique_id=1357251256]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.055, 0)
+mesh = SubResource("CylinderMesh_raq7t")

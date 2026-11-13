@@ -1,0 +1,171 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/gingham.tres" id="1_updph"]
+[ext_resource type="Material" path="res://assets/materials/wood.tres" id="2_pt4ar"]
+[ext_resource type="Material" path="res://assets/materials/terracotta.tres" id="3_t81ai"]
+[ext_resource type="Material" path="res://assets/materials/orange.tres" id="4_kqd5t"]
+[ext_resource type="Material" path="res://assets/materials/tomato.tres" id="5_hfhvp"]
+[ext_resource type="Material" path="res://assets/materials/yellow.tres" id="6_nwe25"]
+[ext_resource type="Material" path="res://assets/materials/wood_light.tres" id="7_106rv"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_i7emv"]
+material = ExtResource("1_updph")
+size = Vector3(1.34, 0.2, 0.89)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7axg5"]
+material = ExtResource("2_pt4ar")
+size = Vector3(0.07, 0.62, 0.07)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2ojlk"]
+material = ExtResource("2_pt4ar")
+size = Vector3(0.07, 0.62, 0.07)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3ifmg"]
+material = ExtResource("2_pt4ar")
+size = Vector3(0.07, 0.62, 0.07)
+
+[sub_resource type="BoxMesh" id="BoxMesh_d8yux"]
+material = ExtResource("2_pt4ar")
+size = Vector3(0.07, 0.62, 0.07)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_7k6ik"]
+material = ExtResource("3_t81ai")
+top_radius = 0.2
+bottom_radius = 0.12
+height = 0.08
+radial_segments = 8
+rings = 1
+
+[sub_resource type="SphereMesh" id="SphereMesh_i7bxq"]
+material = ExtResource("4_kqd5t")
+radius = 0.07
+height = 0.14
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_xs18y"]
+material = ExtResource("5_hfhvp")
+radius = 0.07
+height = 0.14
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_a3vj0"]
+material = ExtResource("6_nwe25")
+radius = 0.07
+height = 0.14
+radial_segments = 8
+rings = 4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_qrr4g"]
+material = ExtResource("7_106rv")
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.05
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bp853"]
+material = ExtResource("2_pt4ar")
+top_radius = 0.05
+bottom_radius = 0.08
+height = 0.44
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xtwir"]
+size = Vector3(0.36, 0.48, 0.36)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5nngv"]
+material = ExtResource("7_106rv")
+top_radius = 0.2
+bottom_radius = 0.2
+height = 0.05
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_f0uod"]
+material = ExtResource("2_pt4ar")
+top_radius = 0.05
+bottom_radius = 0.08
+height = 0.44
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4xu43"]
+size = Vector3(0.36, 0.48, 0.36)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0clp2"]
+size = Vector3(1.34, 0.8, 0.89)
+
+[node name="DiningTable" type="StaticBody3D" unique_id=612515710]
+
+[node name="Cloth" type="MeshInstance3D" parent="." unique_id=498145384]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("BoxMesh_i7emv")
+
+[node name="Leg" type="MeshInstance3D" parent="." unique_id=660361521]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.31, -0.33)
+mesh = SubResource("BoxMesh_7axg5")
+
+[node name="Leg2" type="MeshInstance3D" parent="." unique_id=269541627]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.31, 0.33)
+mesh = SubResource("BoxMesh_2ojlk")
+
+[node name="Leg3" type="MeshInstance3D" parent="." unique_id=745845229]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.31, -0.33)
+mesh = SubResource("BoxMesh_3ifmg")
+
+[node name="Leg4" type="MeshInstance3D" parent="." unique_id=1174366690]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.31, 0.33)
+mesh = SubResource("BoxMesh_d8yux")
+
+[node name="Bowl" type="MeshInstance3D" parent="." unique_id=777317870]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.84, 0)
+mesh = SubResource("CylinderMesh_7k6ik")
+
+[node name="Orange" type="MeshInstance3D" parent="." unique_id=1456361023]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.06, 0.92, 0)
+mesh = SubResource("SphereMesh_i7bxq")
+
+[node name="Tomato" type="MeshInstance3D" parent="." unique_id=174447289]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.07, 0.92, 0.04)
+mesh = SubResource("SphereMesh_xs18y")
+
+[node name="Lemon" type="MeshInstance3D" parent="." unique_id=2100818268]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.93, -0.07)
+mesh = SubResource("SphereMesh_a3vj0")
+
+[node name="Stool" type="Node3D" parent="." unique_id=1583962652]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0, 0.82)
+
+[node name="Seat" type="MeshInstance3D" parent="Stool" unique_id=327119233]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46, 0)
+mesh = SubResource("CylinderMesh_qrr4g")
+
+[node name="Leg" type="MeshInstance3D" parent="Stool" unique_id=750773518]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+mesh = SubResource("CylinderMesh_bp853")
+
+[node name="Hit" type="CollisionShape3D" parent="." unique_id=531984165]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25, 0.24, 0.82)
+shape = SubResource("BoxShape3D_xtwir")
+
+[node name="Stool2" type="Node3D" parent="." unique_id=939903556]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.02, 0, 0.1)
+
+[node name="Seat" type="MeshInstance3D" parent="Stool2" unique_id=1662715641]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.46, 0)
+mesh = SubResource("CylinderMesh_5nngv")
+
+[node name="Leg" type="MeshInstance3D" parent="Stool2" unique_id=781825502]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.22, 0)
+mesh = SubResource("CylinderMesh_f0uod")
+
+[node name="Hit2" type="CollisionShape3D" parent="." unique_id=864111461]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.02, 0.24, 0.1)
+shape = SubResource("BoxShape3D_4xu43")
+
+[node name="Hit3" type="CollisionShape3D" parent="." unique_id=1606896637]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("BoxShape3D_0clp2")

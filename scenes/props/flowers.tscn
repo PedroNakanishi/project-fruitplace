@@ -1,0 +1,105 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/crop_leaf.tres" id="1_88g7l"]
+[ext_resource type="Material" path="res://assets/materials/pink.tres" id="2_rwr3y"]
+[ext_resource type="Material" path="res://assets/materials/yellow.tres" id="3_qbyf7"]
+[ext_resource type="Material" path="res://assets/materials/white.tres" id="4_1usgf"]
+[ext_resource type="Material" path="res://assets/materials/tomato.tres" id="5_jb2sl"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_twsrm"]
+material = ExtResource("1_88g7l")
+size = Vector3(0.025, 0.26, 0.025)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bty0h"]
+material = ExtResource("2_rwr3y")
+size = Vector3(0.1, 0.09, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_3krfb"]
+material = ExtResource("1_88g7l")
+size = Vector3(0.025, 0.26, 0.025)
+
+[sub_resource type="BoxMesh" id="BoxMesh_5vb4k"]
+material = ExtResource("3_qbyf7")
+size = Vector3(0.1, 0.09, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_igqs0"]
+material = ExtResource("1_88g7l")
+size = Vector3(0.025, 0.26, 0.025)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uelbw"]
+material = ExtResource("4_1usgf")
+size = Vector3(0.1, 0.09, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_svtyg"]
+material = ExtResource("1_88g7l")
+size = Vector3(0.025, 0.26, 0.025)
+
+[sub_resource type="BoxMesh" id="BoxMesh_88v7a"]
+material = ExtResource("5_jb2sl")
+size = Vector3(0.1, 0.09, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7fhmt"]
+material = ExtResource("1_88g7l")
+size = Vector3(0.025, 0.26, 0.025)
+
+[sub_resource type="BoxMesh" id="BoxMesh_61kgd"]
+material = ExtResource("2_rwr3y")
+size = Vector3(0.1, 0.09, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_moec2"]
+material = ExtResource("1_88g7l")
+size = Vector3(0.025, 0.26, 0.025)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hbjs1"]
+material = ExtResource("3_qbyf7")
+size = Vector3(0.1, 0.09, 0.1)
+
+[node name="Flowers" type="Node3D" unique_id=304675838]
+
+[node name="Stem" type="MeshInstance3D" parent="." unique_id=1308886272]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.13, 0)
+mesh = SubResource("BoxMesh_twsrm")
+
+[node name="Petal" type="MeshInstance3D" parent="." unique_id=1700010479]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3, 0.3, 0)
+mesh = SubResource("BoxMesh_bty0h")
+
+[node name="Stem2" type="MeshInstance3D" parent="." unique_id=1094793723]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09698687, 0.13, 0.20818602)
+mesh = SubResource("BoxMesh_3krfb")
+
+[node name="Petal2" type="MeshInstance3D" parent="." unique_id=300406131]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09698687, 0.3, 0.20818602)
+mesh = SubResource("BoxMesh_5vb4k")
+
+[node name="Stem3" type="MeshInstance3D" parent="." unique_id=1112527355]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23729031, 0.13, -0.13460873)
+mesh = SubResource("BoxMesh_igqs0")
+
+[node name="Petal3" type="MeshInstance3D" parent="." unique_id=1487741990]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.23729031, 0.3, -0.13460873)
+mesh = SubResource("BoxMesh_uelbw")
+
+[node name="Stem4" type="MeshInstance3D" parent="." unique_id=1982189652]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25041384, 0.13, -0.12115082)
+mesh = SubResource("BoxMesh_svtyg")
+
+[node name="Petal4" type="MeshInstance3D" parent="." unique_id=1256086729]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.25041384, 0.3, -0.12115082)
+mesh = SubResource("BoxMesh_88v7a")
+
+[node name="Stem5" type="MeshInstance3D" parent="." unique_id=313448027]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.075377956, 0.13, 0.21294233)
+mesh = SubResource("BoxMesh_7fhmt")
+
+[node name="Petal5" type="MeshInstance3D" parent="." unique_id=869352256]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.075377956, 0.3, 0.21294233)
+mesh = SubResource("BoxMesh_61kgd")
+
+[node name="Stem6" type="MeshInstance3D" parent="." unique_id=1953464451]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.29915166, 0.13, -0.016533246)
+mesh = SubResource("BoxMesh_moec2")
+
+[node name="Petal6" type="MeshInstance3D" parent="." unique_id=97523328]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.29915166, 0.3, -0.016533246)
+mesh = SubResource("BoxMesh_hbjs1")

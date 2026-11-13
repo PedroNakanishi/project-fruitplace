@@ -1,0 +1,272 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/lettuce_light.tres" id="1_2kso8"]
+[ext_resource type="Material" path="res://assets/materials/lettuce.tres" id="2_ejvtf"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_ydcxj"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_6uyin"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nvjhx"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_moxkh"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rselu"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pe7je"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ujrpb"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_uy48q"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_nqrm4"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7c8ld"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_elbjf"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_4ye1p"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vsclj"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vri25"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tgkvv"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2tuq6"]
+material = ExtResource("1_2kso8")
+size = Vector3(0.2, 0.03, 0.2)
+
+[sub_resource type="SphereMesh" id="SphereMesh_a30x3"]
+material = ExtResource("2_ejvtf")
+radius = 0.2
+height = 0.4
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_v5dqd"]
+material = ExtResource("1_2kso8")
+radius = 0.12
+height = 0.24
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_mim3k"]
+material = ExtResource("2_ejvtf")
+radius = 0.2
+height = 0.4
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_doyoy"]
+material = ExtResource("1_2kso8")
+radius = 0.12
+height = 0.24
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_boof3"]
+material = ExtResource("2_ejvtf")
+radius = 0.2
+height = 0.4
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_1wmha"]
+material = ExtResource("1_2kso8")
+radius = 0.12
+height = 0.24
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_qvhp8"]
+material = ExtResource("2_ejvtf")
+radius = 0.2
+height = 0.4
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_ixkc5"]
+material = ExtResource("1_2kso8")
+radius = 0.12
+height = 0.24
+radial_segments = 8
+rings = 4
+
+[node name="Alface" type="Node3D" unique_id=1337828155]
+
+[node name="Ripe" type="Node3D" parent="." unique_id=1130219009]
+
+[node name="Leaf" type="Node3D" parent="Ripe" unique_id=638091642]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -0.35, 0.08, -0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf" unique_id=1160199184]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_ydcxj")
+
+[node name="Leaf2" type="Node3D" parent="Ripe" unique_id=2062956960]
+transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -0.35, 0.08, -0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf2" unique_id=665046029]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_6uyin")
+
+[node name="Leaf3" type="Node3D" parent="Ripe" unique_id=312051954]
+transform = Transform3D(-0.7071068, 0, -0.7071067, 0, 1, 0, 0.7071067, 0, -0.7071068, -0.35, 0.08, -0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf3" unique_id=678593908]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_nvjhx")
+
+[node name="Leaf4" type="Node3D" parent="Ripe" unique_id=19731664]
+transform = Transform3D(0.70710665, 0, -0.7071069, 0, 1, 0, 0.7071069, 0, 0.70710665, -0.35, 0.08, -0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf4" unique_id=266682072]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_moxkh")
+
+[node name="Leaf5" type="Node3D" parent="Ripe" unique_id=1970707460]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -0.35, 0.08, 0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf5" unique_id=1571971303]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_rselu")
+
+[node name="Leaf6" type="Node3D" parent="Ripe" unique_id=1723846835]
+transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -0.35, 0.08, 0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf6" unique_id=2080572797]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_pe7je")
+
+[node name="Leaf7" type="Node3D" parent="Ripe" unique_id=831608086]
+transform = Transform3D(-0.7071068, 0, -0.7071067, 0, 1, 0, 0.7071067, 0, -0.7071068, -0.35, 0.08, 0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf7" unique_id=433751842]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_ujrpb")
+
+[node name="Leaf8" type="Node3D" parent="Ripe" unique_id=688036123]
+transform = Transform3D(0.70710665, 0, -0.7071069, 0, 1, 0, 0.7071069, 0, 0.70710665, -0.35, 0.08, 0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf8" unique_id=189450907]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_uy48q")
+
+[node name="Leaf9" type="Node3D" parent="Ripe" unique_id=1718598393]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 0.35, 0.08, -0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf9" unique_id=138590053]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_nqrm4")
+
+[node name="Leaf10" type="Node3D" parent="Ripe" unique_id=1990119571]
+transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, 0.35, 0.08, -0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf10" unique_id=1646801634]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_7c8ld")
+
+[node name="Leaf11" type="Node3D" parent="Ripe" unique_id=519409763]
+transform = Transform3D(-0.7071068, 0, -0.7071067, 0, 1, 0, 0.7071067, 0, -0.7071068, 0.35, 0.08, -0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf11" unique_id=2003741984]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_elbjf")
+
+[node name="Leaf12" type="Node3D" parent="Ripe" unique_id=1922306354]
+transform = Transform3D(0.70710665, 0, -0.7071069, 0, 1, 0, 0.7071069, 0, 0.70710665, 0.35, 0.08, -0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf12" unique_id=1113840248]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_4ye1p")
+
+[node name="Leaf13" type="Node3D" parent="Ripe" unique_id=1221422427]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, 0.35, 0.08, 0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf13" unique_id=1734267101]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_vsclj")
+
+[node name="Leaf14" type="Node3D" parent="Ripe" unique_id=1612291767]
+transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, 0.35, 0.08, 0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf14" unique_id=997201323]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_vri25")
+
+[node name="Leaf15" type="Node3D" parent="Ripe" unique_id=858434309]
+transform = Transform3D(-0.7071068, 0, -0.7071067, 0, 1, 0, 0.7071067, 0, -0.7071068, 0.35, 0.08, 0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf15" unique_id=756251292]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_tgkvv")
+
+[node name="Leaf16" type="Node3D" parent="Ripe" unique_id=826517916]
+transform = Transform3D(0.70710665, 0, -0.7071069, 0, 1, 0, 0.7071069, 0, 0.70710665, 0.35, 0.08, 0.35)
+
+[node name="Mesh" type="MeshInstance3D" parent="Ripe/Leaf16" unique_id=278700654]
+transform = Transform3D(0.8660254, -0.5, 0, 0.5, 0.8660254, 0, 0, 0, 1, 0.2, 0.06, 0)
+mesh = SubResource("BoxMesh_2tuq6")
+
+[node name="Head" type="MeshInstance3D" parent="." unique_id=678986999]
+transform = Transform3D(1, 0, 0, 0, 0.6, 0, 0, 0, 1, -0.35, 0.08, -0.35)
+mesh = SubResource("SphereMesh_a30x3")
+
+[node name="Heart" type="MeshInstance3D" parent="." unique_id=286614391]
+transform = Transform3D(1, 0, 0, 0, 0.7, 0, 0, 0, 1, -0.35, 0.16, -0.35)
+mesh = SubResource("SphereMesh_v5dqd")
+
+[node name="Head2" type="MeshInstance3D" parent="." unique_id=1792226009]
+transform = Transform3D(1, 0, 0, 0, 0.6, 0, 0, 0, 1, -0.35, 0.08, 0.35)
+mesh = SubResource("SphereMesh_mim3k")
+
+[node name="Heart2" type="MeshInstance3D" parent="." unique_id=2093118732]
+transform = Transform3D(1, 0, 0, 0, 0.7, 0, 0, 0, 1, -0.35, 0.16, 0.35)
+mesh = SubResource("SphereMesh_doyoy")
+
+[node name="Head3" type="MeshInstance3D" parent="." unique_id=1741694686]
+transform = Transform3D(1, 0, 0, 0, 0.6, 0, 0, 0, 1, 0.35, 0.08, -0.35)
+mesh = SubResource("SphereMesh_boof3")
+
+[node name="Heart3" type="MeshInstance3D" parent="." unique_id=760379828]
+transform = Transform3D(1, 0, 0, 0, 0.7, 0, 0, 0, 1, 0.35, 0.16, -0.35)
+mesh = SubResource("SphereMesh_1wmha")
+
+[node name="Head4" type="MeshInstance3D" parent="." unique_id=1409974028]
+transform = Transform3D(1, 0, 0, 0, 0.6, 0, 0, 0, 1, 0.35, 0.08, 0.35)
+mesh = SubResource("SphereMesh_qvhp8")
+
+[node name="Heart4" type="MeshInstance3D" parent="." unique_id=638292553]
+transform = Transform3D(1, 0, 0, 0, 0.7, 0, 0, 0, 1, 0.35, 0.16, 0.35)
+mesh = SubResource("SphereMesh_ixkc5")

@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Material" path="res://assets/materials/leaves.tres" id="1_pxw4a"]
+[ext_resource type="Material" path="res://assets/materials/leaves_light.tres" id="2_y62c1"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_co27k"]
+material = ExtResource("1_pxw4a")
+radius = 0.45
+height = 0.9
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_ypu05"]
+material = ExtResource("2_y62c1")
+radius = 0.34
+height = 0.68
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_h5uqq"]
+material = ExtResource("1_pxw4a")
+radius = 0.3
+height = 0.6
+radial_segments = 8
+rings = 4
+
+[node name="Bush" type="Node3D" unique_id=485983274]
+
+[node name="Leaves" type="MeshInstance3D" parent="." unique_id=2078393018]
+transform = Transform3D(1, 0, 0, 0, 0.8, 0, 0, 0, 1, 0, 0.3, 0)
+mesh = SubResource("SphereMesh_co27k")
+
+[node name="Leaves2" type="MeshInstance3D" parent="." unique_id=637169351]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4, 0.24, 0.1)
+mesh = SubResource("SphereMesh_ypu05")
+
+[node name="Leaves3" type="MeshInstance3D" parent="." unique_id=1996603319]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.38, 0.2, -0.05)
+mesh = SubResource("SphereMesh_h5uqq")
