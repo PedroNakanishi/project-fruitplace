@@ -11,6 +11,9 @@ static var current: MenuLayer
 var is_open := false
 var _cancellable := true
 var _center: CenterContainer
+var _dim: ColorRect
+var _panel: PanelContainer
+var _anim: Tween
 var _title: Label
 var _body: Label
 var _content: VBoxContainer
@@ -20,20 +23,30 @@ func _ready() -> void:
 	current = self
 	set_anchors_preset(PRESET_FULL_RECT)
 	mouse_filter = MOUSE_FILTER_IGNORE
+	theme = UiTheme.make()
+
+	_dim = ColorRect.new()
+	_dim.set_anchors_preset(PRESET_FULL_RECT)
+	_dim.color = Color(0.05, 0.02, 0.08, 0.5)
+	_dim.mouse_filter = MOUSE_FILTER_IGNORE
+	_dim.modulate.a = 0.0
+	_dim.hide()
+	add_child(_dim)
 
 	_center = CenterContainer.new()
 	_center.set_anchors_preset(PRESET_FULL_RECT)
 	_center.mouse_filter = MOUSE_FILTER_IGNORE
 	add_child(_center)
 
-	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(460, 0)
-	panel.add_theme_stylebox_override("panel", _panel_style())
-	_center.add_child(panel)
+	_panel = PanelContainer.new()
+	_panel.custom_minimum_size = Vector2(460, 0)
+	_panel.add_theme_stylebox_override("panel", _panel_style())
+	_panel.resized.connect(func() -> void: _panel.pivot_offset = _panel.size / 2.0)
+	_center.add_child(_panel)
 
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 10)
-	panel.add_child(vb)
+	_panel.add_child(vb)
 
 	_title = Label.new()
 	_title.add_theme_font_size_override("font_size", 24)
@@ -62,6 +75,7 @@ func choose(title: String, body: String, options: Array) -> int:
 		var b := Button.new()
 		b.text = options[i]
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		UiFx.hook(b)
 		b.pressed.connect(func() -> void:
 			Sfx.play(&"ui_select")
 			_picked.emit(i))
@@ -94,6 +108,7 @@ func bills(lines: Array, money: int, note: String) -> Dictionary:
 		cb.button_pressed = budget >= b.cost  # marca o que dá para pagar, em ordem
 		if cb.button_pressed:
 			budget -= b.cost
+		UiFx.hook(cb)
 		cb.toggled.connect(func(_on: bool) -> void:
 			Sfx.play(&"ui_select")
 			refresh.call())
@@ -101,6 +116,7 @@ func bills(lines: Array, money: int, note: String) -> Dictionary:
 		_content.add_child(cb)
 	_content.add_child(total_label)
 	confirm.text = "Confirmar e dormir"
+	UiFx.hook(confirm)
 	confirm.pressed.connect(func() -> void:
 		Sfx.play(&"ui_select")
 		_picked.emit(0))
@@ -137,17 +153,56 @@ func _open(title: String, body: String, cancellable: bool) -> void:
 	_body.visible = body != ""
 	_cancellable = cancellable
 	_center.show()
+	_dim.show()
 	is_open = true
 	EventBus.ui_blocking = true
 	EventBus.interaction_prompt.emit("")
 	Sfx.play(&"ui_open")
+	UiFx.quiet()
 
 
 func _close() -> void:
-	_clear()
-	_center.hide()
 	is_open = false
 	EventBus.ui_blocking = false
+	# Os botões ficam na tela só durante a animação de saída, sem responder.
+	for c in _content.get_children():
+		if c is BaseButton:
+			c.disabled = true
+			c.release_focus()
+	_animate_out()
+
+
+## Entrada: painel cresce com um leve "pulo", o fundo escurece e as opções
+## deslizam uma após a outra.
+func _animate_in() -> void:
+	if _anim:
+		_anim.kill()
+	_panel.modulate.a = 0.0
+	_panel.scale = Vector2(0.85, 0.85)
+	_dim.modulate.a = 0.0
+	_anim = create_tween().set_parallel()
+	_anim.tween_property(_dim, "modulate:a", 1.0, 0.2)
+	_anim.tween_property(_panel, "modulate:a", 1.0, 0.15)
+	_anim.tween_property(_panel, "scale", Vector2.ONE, 0.25).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	var i := 0
+	for c in _content.get_children():
+		if c is Control:
+			c.modulate.a = 0.0
+			_anim.tween_property(c, "modulate:a", 1.0, 0.18).set_delay(0.06 + i * 0.04)
+			i += 1
+
+
+func _animate_out() -> void:
+	if _anim:
+		_anim.kill()
+	_anim = create_tween().set_parallel()
+	_anim.tween_property(_dim, "modulate:a", 0.0, 0.15)
+	_anim.tween_property(_panel, "modulate:a", 0.0, 0.14)
+	_anim.tween_property(_panel, "scale", Vector2(0.92, 0.92), 0.14).set_trans(Tween.TRANS_SINE)
+	_anim.chain().tween_callback(func() -> void:
+		_center.hide()
+		_dim.hide()
+		_clear())
 
 
 func _clear() -> void:
@@ -156,7 +211,9 @@ func _clear() -> void:
 		c.queue_free()
 
 
+## Chamado depois que as opções foram criadas: anima a entrada e foca a primeira.
 func _focus_first() -> void:
+	_animate_in()
 	for c in _content.get_children():
 		if c is BaseButton and not c.disabled:
 			c.grab_focus()

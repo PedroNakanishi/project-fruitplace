@@ -17,6 +17,7 @@ const SHOTS := [
 func _ready() -> void:
 	var args := OS.get_cmdline_user_args()
 	var out_dir := args[0] if args.size() > 0 else OS.get_user_data_dir()
+	Engine.set_meta(&"skip_cinematic", true)
 	var main: Node = load("res://scenes/main/main.tscn").instantiate()
 	add_child(main)
 	TimeManager.running = false

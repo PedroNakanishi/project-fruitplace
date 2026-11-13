@@ -11,6 +11,7 @@ const FALL_LIMIT := -6.0  ## Abaixo disso o jogador caiu do mapa.
 
 var _focus: Interactable
 var _last_prompt := ""
+var _last_target: Interactable
 var _safe_position := Vector3.ZERO
 var _has_safe := false
 
@@ -65,6 +66,9 @@ func _update_focus() -> void:
 					best_d = d
 	_focus = best
 	var prompt := best.prompt if best else ""
+	if best != _last_target:
+		_last_target = best
+		EventBus.interaction_focus.emit(best)
 	if prompt != _last_prompt:
 		_last_prompt = prompt
 		EventBus.interaction_prompt.emit(prompt)

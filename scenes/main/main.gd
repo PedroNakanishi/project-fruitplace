@@ -14,7 +14,25 @@ func _ready() -> void:
 	PlayerStats.player_fainted.connect(func() -> void: run_night(true))
 	TimeManager.faint_time_reached.connect(func() -> void: run_night(true))
 	SceneRouter.load_now(&"house", &"FromStart")
-	EventBus.toast.emit.call_deferred("Dia 1 — o tempo não para!")
+	if _should_play_intro():
+		_play_intro.call_deferred()
+	else:
+		_start_message()
+
+
+## A abertura só toca com janela e fora dos testes (que definem "skip_cinematic").
+func _should_play_intro() -> bool:
+	return DisplayServer.get_name() != "headless" and not Engine.has_meta(&"skip_cinematic")
+
+
+func _play_intro() -> void:
+	var rig := SceneRouter.current_map.get_node_or_null("CameraRig") as Node3D
+	await Cinematic.play(self, Cinematic.INTRO, rig)
+	_start_message()
+
+
+func _start_message() -> void:
+	EventBus.toast.emit("Dia 1 — o tempo não para!")
 	Sfx.play(&"new_day")
 
 
@@ -26,6 +44,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		if p:
 			p.try_interact()
 		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed(&"inventory") and not EventBus.input_locked():
+		show_inventory()
+		get_viewport().set_input_as_handled()
 	elif event.is_action_pressed(&"cycle_seed") and not EventBus.input_locked():
 		var c := GardenState.cycle_seed()
 		if c:
@@ -33,6 +54,21 @@ func _unhandled_input(event: InputEvent) -> void:
 		else:
 			EventBus.toast.emit("Sem sementes na mochila.")
 		get_viewport().set_input_as_handled()
+
+
+## Menu de inventário (tecla I): mochila, caçamba da caminhonete e barraca.
+func show_inventory() -> void:
+	var lines: PackedStringArray = []
+	for c: Array in [[Inventory.BACKPACK, "Mochila"], [Inventory.TRUCK, "Caminhonete"], [Inventory.STALL, "Barraca"]]:
+		var items := Inventory.items(c[0])
+		var head := "%s (%d/%d)" % [c[1], Inventory.total(c[0]), Inventory.CAPACITY[c[0]]] if c[0] != Inventory.BACKPACK else "%s (%d)" % [c[1], Inventory.total(c[0])]
+		lines.append(head)
+		if items.is_empty():
+			lines.append("   vazia")
+		for id: StringName in items:
+			lines.append("   %s ×%d" % [Catalog.item_name(id), items[id]])
+	await menu.choose("Inventário", "
+".join(lines), ["Fechar"])
 
 
 ## Fluxo noturno: disparado ao dormir na cama ou desmaiar.
