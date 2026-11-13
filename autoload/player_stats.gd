@@ -12,12 +12,16 @@ const ENERGY_DRAIN_PER_MIN := 0.05
 const HUNGER_DRAIN_PER_MIN := 0.08
 const RESTED_THRESHOLD := 0.10  ## Dormir acima de 10% dá o buff "Bem descansado".
 const BUFF_RESTED := &"bem_descansado"
+const START_HUNGER := 80.0
+const NIGHT_HUNGER_LOSS := 15.0  ## A noite sem comer.
+const WELL_FED_ABOVE := 50.0  ## Acima disso o dreno de energia cai.
+const STARVING_BELOW := 20.0  ## Abaixo disso o dreno dobra.
 
 const BUFF_NAMES := {BUFF_RESTED: "Bem descansado"}
 
 var max_energy := BASE_MAX_ENERGY
 var energy := BASE_MAX_ENERGY
-var hunger := 80.0
+var hunger := START_HUNGER
 var buffs: Array[StringName] = []
 var _fainted := false
 
@@ -29,8 +33,23 @@ func _ready() -> void:
 func reset() -> void:
 	max_energy = BASE_MAX_ENERGY
 	energy = max_energy
-	hunger = 80.0
+	hunger = START_HUNGER
 	buffs.clear()
+	_fainted = false
+	_emit_all()
+
+
+func to_save() -> Dictionary:
+	return {"max_energy": max_energy, "energy": energy, "hunger": hunger, "buffs": buffs.map(func(b: StringName) -> String: return String(b))}
+
+
+func restore(d: Dictionary) -> void:
+	max_energy = float(d.get("max_energy", BASE_MAX_ENERGY))
+	energy = float(d.get("energy", max_energy))
+	hunger = float(d.get("hunger", START_HUNGER))
+	buffs.clear()
+	for b: Variant in d.get("buffs", []):
+		buffs.append(StringName(str(b)))
 	_fainted = false
 	_emit_all()
 
@@ -43,9 +62,9 @@ func _on_minute(_m: int) -> void:
 ## Fome saciada reduz o dreno; fome baixa dobra; o buff de descanso reduz.
 func drain_multiplier() -> float:
 	var m := 1.0
-	if hunger > 50.0:
+	if hunger > WELL_FED_ABOVE:
 		m *= 0.8
-	elif hunger < 20.0:
+	elif hunger < STARVING_BELOW:
 		m *= 2.0
 	if has_buff(BUFF_RESTED):
 		m *= 0.85
@@ -84,7 +103,7 @@ func start_day(fainted: bool, rested: bool) -> void:
 	if rested:
 		buffs.append(BUFF_RESTED)
 	_fainted = false
-	hunger = maxf(hunger - 15.0, 0.0)  # a noite sem comer
+	hunger = maxf(hunger - NIGHT_HUNGER_LOSS, 0.0)
 	_emit_all()
 
 

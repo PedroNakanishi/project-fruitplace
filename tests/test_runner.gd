@@ -10,6 +10,11 @@ var main: Node
 
 
 func _ready() -> void:
+	# O teste não mexe no save nem nas configurações reais do jogador.
+	SaveGame.save_path = "user://test_save.json"
+	SaveGame.settings_path = "user://test_settings.cfg"
+	SaveGame.delete()
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.settings_path))
 	main = load("res://scenes/main/main.tscn").instantiate()
 	add_child(main)
 	await get_tree().process_frame
@@ -313,4 +318,93 @@ func _run() -> void:
 	check(TimeManager.day == 1 and Economy.money == Economy.START_MONEY and Economy.risk == 0, "recomeçou do dia 1")
 	check(GardenState.is_empty(2) and Inventory.total(Inventory.TRUCK) == 0, "estado zerado")
 	check(not MenuLayer.current.is_open, "nenhum menu sobrando")
+	check(not SaveGame.has_save(), "falência apaga o save")
+
+	await _extras()
+	SaveGame.delete()
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveGame.settings_path))
 	finished = true
+
+
+## Regras que o fluxo do dia não exercita.
+func _extras() -> void:
+	print("== Capacidades")
+	Inventory.reset()
+	check(Inventory.add(Inventory.TRUCK, &"tomate", 50) == Inventory.CAPACITY[Inventory.TRUCK], "caçamba aceita só 40")
+	check(Inventory.add(Inventory.TRUCK, &"alface", 1) == 0, "caçamba cheia não aceita mais nada")
+	check(Inventory.add(Inventory.STALL, &"tomate", 30) == Inventory.CAPACITY[Inventory.STALL], "barraca aceita só 24")
+	check(Inventory.transfer(Inventory.TRUCK, Inventory.STALL) == 0, "transferir para a barraca cheia move 0")
+	Inventory.reset()
+
+	print("== Leilão")
+	var day_before := TimeManager.day
+	TimeManager.day = 2
+	check(Economy.auction_today() == 15 * 60, "terça tem leilão às 15:00")
+	TimeManager.day = 6
+	check(Economy.auction_today() == 11 * 60, "sábado tem leilão às 11:00")
+	TimeManager.day = 3
+	check(Economy.auction_today() == -1, "quarta não tem leilão")
+	TimeManager.day = day_before
+
+	print("== Adubo de crescimento")
+	GardenState.reset()
+	Inventory.reset()
+	Inventory.add(Inventory.BACKPACK, &"npk", 1)
+	check(GardenState.plant(0, Catalog.crop(&"tomate")), "plantou tomate")
+	var slow := GardenState.minutes_left(0)
+	check(GardenState.fertilize(0, Catalog.fertilizer(&"npk")) == "", "adubou com NPK")
+	check(GardenState.minutes_left(0) < slow, "NPK acelera o crescimento (%d → %d min)" % [slow, GardenState.minutes_left(0)])
+	check(GardenState.fertilize(0, Catalog.fertilizer(&"npk")) != "", "não adubar duas vezes")
+	check(GardenState.water(0) == "" and GardenState.minutes_left(0) < slow, "regar também acelera")
+
+	print("== Preços do dia")
+	Economy.start_day(5)
+	var a: float = Economy.price_multiplier[&"tomate"]
+	Economy.start_day(5)
+	check(is_equal_approx(a, Economy.price_multiplier[&"tomate"]), "o preço é fixo dentro do mesmo dia")
+	check(absf(a - 1.0) <= Economy.PRICE_VARIANCE + 0.001, "variação dentro do limite")
+
+	print("== Textos")
+	check(Catalog.description(&"semente_alface") == "Cresce em 2h30.", "semente de alface: 2h30")
+	check(Catalog.description(&"semente_tomate") == "Cresce em 4h.", "semente de tomate: 4h")
+	check(EventBus.key_label(&"interact") == "E", "tecla de interação aparece como E")
+
+	print("== Salvar e continuar")
+	Economy.reset()
+	Inventory.reset()
+	GardenState.reset()
+	TimeManager.reset()
+	PlayerStats.reset()
+	Economy.money = 321
+	Economy.risk = 1
+	Economy.fridge_stocked = false
+	Inventory.add(Inventory.TRUCK, &"mandioca", 7)
+	GardenState.plant(3, Catalog.crop(&"tomate"))
+	GardenState.grow(60)
+	TimeManager.day = 4
+	PlayerStats.hunger = 42.0
+	var seed_before := Economy.run_seed
+	Economy.start_day(4)
+	var mult_before: float = Economy.price_multiplier[&"tomate"]
+	check(SaveGame.save() and SaveGame.has_save(), "salvou o jogo")
+	Economy.money = 1
+	Inventory.reset()
+	GardenState.reset()
+	TimeManager.day = 9
+	PlayerStats.hunger = 5.0
+	check(SaveGame.load_game(), "carregou o save")
+	check(Economy.money == 321 and Economy.risk == 1 and not Economy.fridge_stocked, "economia voltou")
+	check(Inventory.count(Inventory.TRUCK, &"mandioca") == 7, "inventário voltou")
+	check(GardenState.plots[3].crop == &"tomate" and is_equal_approx(GardenState.plots[3].progress, 60.0), "lote voltou com o crescimento")
+	check(TimeManager.day == 4 and TimeManager.clock_text() == "07:30", "dia e hora voltaram")
+	check(is_equal_approx(PlayerStats.hunger, 42.0), "fome voltou")
+	check(Economy.run_seed == seed_before, "semente de preços voltou")
+	check(is_equal_approx(float(Economy.price_multiplier[&"tomate"]), mult_before), "preços do dia seguem o save")
+	FileAccess.open(SaveGame.save_path, FileAccess.WRITE).store_string("{ isto não é json")
+	check(not SaveGame.has_save() and not SaveGame.load_game(), "save corrompido é ignorado")
+	SaveGame.delete()
+
+	print("== Abertura")
+	check(not SaveGame.intro_seen(), "abertura ainda não vista")
+	SaveGame.mark_intro_seen()
+	check(SaveGame.intro_seen(), "abertura lembrada")

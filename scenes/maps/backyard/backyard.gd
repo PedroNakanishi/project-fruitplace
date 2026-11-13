@@ -4,7 +4,6 @@ extends Node3D
 ## plantar (semente selecionada, Q troca) → regar → adubar → colher.
 
 const ACTION_MINUTES := 1
-const TRAVEL_MINUTES := 30
 
 @onready var plots: Node3D = $Garden
 @onready var cargo_bed: Interactable = $Truck/CargoBed
@@ -20,7 +19,7 @@ func _ready() -> void:
 	cargo_bed.interacted.connect(_on_load_truck)
 	driver_door.prompt = "Dirigir até a Feira"
 	driver_door.interacted.connect(_on_drive)
-	door.interacted.connect(func() -> void: SceneRouter.go_to(&"house", &"FromBackyard", 5))
+	door.interacted.connect(func() -> void: SceneRouter.go_to(&"house", &"FromBackyard", SceneRouter.DOOR_MINUTES))
 	dog.interacted.connect(_on_pet_dog)
 
 
@@ -37,7 +36,8 @@ func _on_plot(i: int) -> void:
 				EventBus.toast.emit("Sem sementes. Compre pelo telefone, em casa.")
 				return
 			GardenState.selected_seed = seed.seed_id()
-			GardenState.plant(i, seed)
+			if not GardenState.plant(i, seed):
+				return
 			Sfx.play(&"plant")
 		&"water":
 			var err := GardenState.water(i)
@@ -78,11 +78,11 @@ func _on_load_truck() -> void:
 func _on_drive() -> void:
 	var body := "Carga: %d unidades · na barraca: %d\nGasolina: %d viagens" % [
 		Inventory.total(Inventory.TRUCK), Inventory.total(Inventory.STALL), Economy.fuel_trips]
-	var pick := await MenuLayer.current.choose("Caminhonete", body, ["Viajar para a Feira (%d min)" % TRAVEL_MINUTES, "Cancelar"])
+	var pick := await MenuLayer.current.choose("Caminhonete", body, ["Viajar para a Feira (%d min)" % SceneRouter.TRUCK_TRAVEL_MINUTES, "Cancelar"])
 	if pick != 0:
 		return
 	if not Economy.use_trip():
 		EventBus.toast.emit("Sem gasolina! Pague a conta de Gasolina à noite.")
 		Sfx.play(&"error")
 		return
-	SceneRouter.go_to(&"market", &"FromTruck", TRAVEL_MINUTES)
+	SceneRouter.go_to(&"market", &"FromTruck", SceneRouter.TRUCK_TRAVEL_MINUTES)

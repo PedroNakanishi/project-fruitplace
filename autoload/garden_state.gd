@@ -30,6 +30,27 @@ func reset() -> void:
 	seed_changed.emit(selected_seed)
 
 
+func to_save() -> Dictionary:
+	var list: Array = []
+	for p in plots:
+		list.append({"crop": String(p.crop), "progress": p.progress, "watered": p.watered, "yield_bonus": p.yield_bonus,
+			"growth_bonus": p.growth_bonus, "fertilized": p.fertilized})
+	return {"plots": list, "selected_seed": String(selected_seed)}
+
+
+func restore(d: Dictionary) -> void:
+	reset()
+	var list: Array = d.get("plots", [])
+	for i in mini(list.size(), PLOT_COUNT):
+		var p: Dictionary = list[i]
+		plots[i] = {"crop": StringName(str(p.get("crop", ""))), "progress": float(p.get("progress", 0.0)),
+			"watered": bool(p.get("watered", false)), "yield_bonus": int(p.get("yield_bonus", 0)),
+			"growth_bonus": float(p.get("growth_bonus", 0.0)), "fertilized": bool(p.get("fertilized", false))}
+		plot_changed.emit(i)
+	selected_seed = StringName(str(d.get("selected_seed", DEFAULT_SEED)))
+	seed_changed.emit(selected_seed)
+
+
 ## Culturas com semente na mochila, na ordem do catálogo.
 func available_seeds() -> Array[CropData]:
 	var out: Array[CropData] = []

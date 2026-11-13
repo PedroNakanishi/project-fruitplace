@@ -4,7 +4,6 @@ extends Control
 ## com tecla e avisos (toasts) empilhados. Tudo animado.
 
 const PANEL_BG := Color(0.1, 0.06, 0.12, 0.82)
-const GOLD := Color(1.0, 0.72, 0.3)
 const MONEY_GREEN := Color(0.55, 1.0, 0.55)
 
 var _card: PanelContainer
@@ -51,7 +50,7 @@ func _ready() -> void:
 	add_child(_toasts)
 
 	var hint := Label.new()
-	hint.text = "[I] Inventário    [Q] Trocar semente"
+	hint.text = "[%s] Inventário    [%s] Trocar semente" % [EventBus.key_label(&"inventory"), EventBus.key_label(&"cycle_seed")]
 	hint.add_theme_font_size_override("font_size", 13)
 	hint.add_theme_color_override("font_color", Color(1, 1, 1, 0.6))
 	hint.add_theme_color_override("font_outline_color", Color.BLACK)
@@ -73,6 +72,24 @@ func _ready() -> void:
 	_on_hunger(PlayerStats.hunger)
 	_money_target = Economy.money
 	_money_shown = float(Economy.money)
+
+	# Os textos só são refeitos quando o dado muda.
+	TimeManager.minute_passed.connect(func(_m: int) -> void:
+		_refresh_clock()
+		_refresh_status())
+	TimeManager.day_started.connect(func(_d: int) -> void:
+		_refresh_clock()
+		_refresh_status())
+	Economy.money_changed.connect(_on_money)
+	Economy.risk_changed.connect(func(_r: int) -> void: _refresh_status())
+	Economy.resources_changed.connect(_refresh_resources)
+	PlayerStats.buffs_changed.connect(func(_b: Array[StringName]) -> void: _refresh_status())
+	GardenState.seed_changed.connect(func(_s: StringName) -> void: _refresh_seed())
+	Inventory.changed.connect(func(_c: StringName) -> void: _refresh_seed())
+	_refresh_clock()
+	_refresh_status()
+	_refresh_seed()
+	_refresh_resources()
 
 	# Entrada do HUD: os cartões deslizam da esquerda.
 	_slide_in.call_deferred(_card, Vector2(-40, 0))
@@ -103,10 +120,10 @@ func _build_status_card() -> void:
 	var times := VBoxContainer.new()
 	times.add_theme_constant_override("separation", -2)
 	top.add_child(times)
-	_clock = _label(times, 24, GOLD)
-	_day = _label(times, 13, Color(0.85, 0.85, 0.95))
+	_clock = UiTheme.label(times, 24, UiTheme.GOLD)
+	_day = UiTheme.label(times, 13, Color(0.85, 0.85, 0.95))
 
-	_money = _label(vb, 20, MONEY_GREEN)
+	_money = UiTheme.label(vb, 20, MONEY_GREEN)
 	_money.pivot_offset = Vector2(0, 12)
 	_hunger = _bar(vb, "Fome", Color(1.0, 0.6, 0.2))
 	_energy = _bar(vb, "Energia", Color(0.7, 0.9, 0.25))
@@ -127,8 +144,8 @@ func _build_seed_panel() -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
 	_seed_panel.add_child(row)
-	row.add_child(_keycap("Q"))
-	_seed_label = _label(row, 16, Color(0.9, 1.0, 0.8))
+	row.add_child(_keycap(EventBus.key_label(&"cycle_seed")))
+	_seed_label = UiTheme.label(row, 16, Color(0.9, 1.0, 0.8))
 
 
 func _build_prompt() -> void:
@@ -145,8 +162,8 @@ func _build_prompt() -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 	_prompt_box.add_child(row)
-	row.add_child(_keycap("E"))
-	_prompt_label = _label(row, 19, Color.WHITE)
+	row.add_child(_keycap(EventBus.key_label(&"interact")))
+	_prompt_label = UiTheme.label(row, 19, Color.WHITE)
 
 
 func _build_marker() -> void:
@@ -159,7 +176,7 @@ func _build_marker() -> void:
 
 func _draw_marker() -> void:
 	_marker.draw_colored_polygon(PackedVector2Array([Vector2(-9, -9), Vector2(9, -9), Vector2(0, 5)]), Color(0, 0, 0, 0.55))
-	_marker.draw_colored_polygon(PackedVector2Array([Vector2(-6, -7.5), Vector2(6, -7.5), Vector2(0, 2)]), GOLD)
+	_marker.draw_colored_polygon(PackedVector2Array([Vector2(-6, -7.5), Vector2(6, -7.5), Vector2(0, 2)]), UiTheme.GOLD)
 
 
 func _keycap(text: String) -> PanelContainer:
@@ -184,14 +201,16 @@ func _process(delta: float) -> void:
 	var want := 0.0 if EventBus.cinematic_active else 1.0
 	modulate.a = move_toward(modulate.a, want, delta * 3.0)
 	visible = modulate.a > 0.01
+	_money.text = "R$ %d" % roundi(_money_shown)
+	_update_marker()
+
+
+func _refresh_clock() -> void:
 	_clock.text = TimeManager.clock_text()
 	_day.text = "Dia %d  ·  %s" % [TimeManager.day, TimeManager.weekday_name()]
-	if Economy.money != _money_target:
-		_on_money(Economy.money)
-	_money.text = "R$ %d" % roundi(_money_shown)
-	_refresh_status()
-	_refresh_seed()
-	_update_marker()
+
+
+func _refresh_resources() -> void:
 	_fuel.set_value(Economy.fuel_trips, Economy.TRIPS_PER_TANK)
 	_fuel.text = "%d/%d viagens" % [Economy.fuel_trips, Economy.TRIPS_PER_TANK]
 	_water.set_value(Economy.water_charges, Economy.WATER_CHARGES_PER_DAY)
@@ -220,8 +239,8 @@ func _refresh_status() -> void:
 		if line.begins_with("⚠"):
 			color = Color(1.0, 0.5, 0.45)
 		elif line.begins_with("★"):
-			color = GOLD
-		_label(_status, 14, color).text = line
+			color = UiTheme.GOLD
+		UiTheme.label(_status, 14, color).text = line
 
 
 func _refresh_seed() -> void:
@@ -319,7 +338,7 @@ func _show_toast(text: String) -> void:
 	pill.add_theme_stylebox_override("panel", UiTheme.box(Color(0.1, 0.06, 0.12, 0.88), Color(1.0, 0.72, 0.3, 0.7), 2, 10, 14))
 	pill.size_flags_horizontal = SIZE_SHRINK_CENTER
 	pill.modulate.a = 0.0
-	var l := _label(pill, 20, Color(1.0, 0.92, 0.6))
+	var l := UiTheme.label(pill, 20, Color(1.0, 0.92, 0.6))
 	l.text = text
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_toasts.add_child(pill)
@@ -351,14 +370,6 @@ func _pop(node: Control) -> void:
 	var tw := node.create_tween()
 	tw.tween_property(node, "scale", Vector2(1.12, 1.12), 0.08)
 	tw.tween_property(node, "scale", Vector2.ONE, 0.2).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-
-
-func _label(parent: Node, size: int, color: Color) -> Label:
-	var l := Label.new()
-	l.add_theme_font_size_override("font_size", size)
-	l.add_theme_color_override("font_color", color)
-	parent.add_child(l)
-	return l
 
 
 func _bar(parent: Node, title: String, color: Color) -> StatBar:

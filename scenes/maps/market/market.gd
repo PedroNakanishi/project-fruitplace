@@ -3,9 +3,7 @@ extends Node3D
 ## barracas, placa "Volto logo" e fim do dia.
 
 const CUSTOMER_SCENE := preload("res://scenes/npc/customer.tscn")
-const TRAVEL_MINUTES := 30
 const STOCK_MINUTES := 3
-const OPEN_FROM := 7 * 60
 const OPEN_UNTIL := 22 * 60
 const STREET_HALF := 16.0
 const NEIGHBOR_BUY_CHANCE := 0.3
@@ -38,12 +36,15 @@ func _ready() -> void:
 	driver_door.interacted.connect(_on_driver_door)
 	stall.interacted.connect(_on_stall)
 	spawner.timeout.connect(_on_spawn)
+	service.queue_changed.connect(_update_prompt)
 	Inventory.changed.connect(func(_c: StringName) -> void: _refresh_stock())
 	_refresh_stock()
+	_update_prompt()
 	_on_spawn()
 
 
-func _process(_delta: float) -> void:
+## O texto do balcão muda só quando a fila ou a placa mudam.
+func _update_prompt() -> void:
 	if Economy.stall_away:
 		stall.prompt = "Reabrir a barraca (tirar a placa \"Volto logo\")"
 		return
@@ -94,7 +95,7 @@ func _on_customer_evaluated(c: Customer, stall_id: StringName) -> void:
 func _on_spawn() -> void:
 	spawner.start(randf_range(2.5, 5.5))
 	var t := TimeManager.minutes % (24 * 60)
-	if TimeManager.night_pending or t < OPEN_FROM or t > OPEN_UNTIL:
+	if TimeManager.night_pending or t > OPEN_UNTIL:
 		return
 	spawn_customer(Catalog.CUSTOMERS.pick_random(), randf() < 0.5)
 
@@ -103,6 +104,7 @@ func _on_stall() -> void:
 	if Economy.stall_away:
 		Economy.stall_away = false
 		_refresh_stock()
+		_update_prompt()
 		EventBus.toast.emit("Barraca reaberta!")
 		return
 	service.serve()
@@ -128,7 +130,7 @@ func _on_driver_door() -> void:
 		1:
 			# Sem colaborador, a barraca não vende sozinha.
 			Economy.stall_away = true
-			SceneRouter.go_to(&"backyard", &"FromTruck", TRAVEL_MINUTES)
+			SceneRouter.go_to(&"backyard", &"FromTruck", SceneRouter.TRUCK_TRAVEL_MINUTES)
 
 
 func _end_work_day() -> void:
@@ -140,7 +142,7 @@ func _end_work_day() -> void:
 	Inventory.transfer(Inventory.STALL, Inventory.TRUCK)
 	Economy.work_day_open = false
 	Economy.stall_away = false
-	SceneRouter.go_to(&"backyard", &"FromTruck", TRAVEL_MINUTES)
+	SceneRouter.go_to(&"backyard", &"FromTruck", SceneRouter.TRUCK_TRAVEL_MINUTES)
 
 
 func _refresh_stock() -> void:

@@ -3,6 +3,8 @@ extends Node
 
 signal money_changed(value: int)
 signal risk_changed(value: int)
+## Gasolina ou água mudaram.
+signal resources_changed
 
 const START_MONEY := 150
 const BILLS := [
@@ -41,6 +43,8 @@ var happy_today := 0
 var angry_today := 0
 
 var _rng := RandomNumberGenerator.new()
+## Muda a cada partida: os preços variam por dia, mas não se repetem entre partidas.
+var run_seed := 0
 
 
 func _ready() -> void:
@@ -48,6 +52,7 @@ func _ready() -> void:
 
 
 func reset() -> void:
+	run_seed = randi()
 	money = START_MONEY
 	risk = 0
 	fridge_stocked = true
@@ -56,10 +61,29 @@ func reset() -> void:
 	start_day(1)
 	money_changed.emit(money)
 	risk_changed.emit(risk)
+	resources_changed.emit()
+
+
+func to_save() -> Dictionary:
+	return {"money": money, "risk": risk, "fridge_stocked": fridge_stocked, "water_charges": water_charges,
+		"fuel_trips": fuel_trips, "run_seed": run_seed}
+
+
+func restore(d: Dictionary, day: int) -> void:
+	money = int(d.get("money", START_MONEY))
+	risk = int(d.get("risk", 0))
+	fridge_stocked = bool(d.get("fridge_stocked", true))
+	water_charges = int(d.get("water_charges", WATER_CHARGES_PER_DAY))
+	fuel_trips = int(d.get("fuel_trips", TRIPS_PER_TANK))
+	run_seed = int(d.get("run_seed", 0))
+	start_day(day)
+	money_changed.emit(money)
+	risk_changed.emit(risk)
+	resources_changed.emit()
 
 
 func start_day(day: int) -> void:
-	_rng.seed = hash(day)
+	_rng.seed = hash([run_seed, day])
 	for c: CropData in Catalog.CROPS:
 		price_multiplier[c.id] = 1.0 + _rng.randf_range(-PRICE_VARIANCE, PRICE_VARIANCE)
 	work_day_open = false
@@ -106,6 +130,7 @@ func use_trip() -> bool:
 	if fuel_trips <= 0:
 		return false
 	fuel_trips -= 1
+	resources_changed.emit()
 	return true
 
 
@@ -113,6 +138,7 @@ func use_water() -> bool:
 	if water_charges <= 0:
 		return false
 	water_charges -= 1
+	resources_changed.emit()
 	return true
 
 
@@ -163,4 +189,5 @@ func settle_bills(paid: Dictionary) -> bool:
 				fuel_trips = TRIPS_PER_TANK if ok else 0
 	risk = risk + 1 if unpaid >= UNPAID_LIMIT else 0
 	risk_changed.emit(risk)
+	resources_changed.emit()
 	return risk >= BANKRUPT_AFTER

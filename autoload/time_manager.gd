@@ -12,9 +12,10 @@ const SLEEP_FROM := 19 * 60 + 30  ## 19:30
 const FAINT_AT := 24 * 60 + 2 * 60 + 55  ## 02:55 do dia seguinte
 const NIGHT_FROM := 19 * 60  ## Anoitece às 19:00...
 const NIGHT_UNTIL := 5 * 60 + 30  ## ...e clareia às 05:30.
+const WEEKDAYS := ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"]
 
 ## Segundos reais por minuto de jogo (0.5 s = ~10 min reais por dia).
-@export var seconds_per_minute := 0.5
+var seconds_per_minute := 0.5
 
 var day := 1
 var minutes := DAY_START
@@ -56,6 +57,16 @@ func advance(amount: int) -> void:
 			return
 
 
+## Volta a um dia salvo (sempre de manhã) e avisa quem escuta `day_started`.
+func restore(saved_day: int, saved_minutes: int) -> void:
+	day = saved_day
+	minutes = saved_minutes
+	running = true
+	night_pending = false
+	_acc = 0.0
+	day_started.emit(day)
+
+
 ## Escuro lá fora (para o som ambiente).
 func is_night() -> bool:
 	var m := minutes % (24 * 60)
@@ -78,9 +89,6 @@ func start_new_day() -> void:
 	night_pending = false
 	running = true
 	day_started.emit(day)
-
-
-const WEEKDAYS := ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"]
 
 
 ## 0 = segunda. O dia 1 é uma segunda-feira.

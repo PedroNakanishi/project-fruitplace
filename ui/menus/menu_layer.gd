@@ -6,9 +6,10 @@ extends Control
 
 signal _picked(index: int)
 
-const HEADER_SHADER := preload("res://assets/shaders/menu_header.gdshader")
 const CARD_SIZE := Vector2(150, 200)
 const CARD_COLUMNS := 3
+const CARD_GAP := 10
+const WINDOW_MARGIN := 18
 
 static var current: MenuLayer
 
@@ -44,7 +45,7 @@ func _ready() -> void:
 
 	_panel = PanelContainer.new()
 	_panel.custom_minimum_size = Vector2(460, 0)
-	_panel.add_theme_stylebox_override("panel", _panel_style())
+	_panel.add_theme_stylebox_override("panel", UiTheme.window_style())
 	_panel.resized.connect(func() -> void: _panel.pivot_offset = _panel.size / 2.0)
 	_center.add_child(_panel)
 
@@ -52,23 +53,9 @@ func _ready() -> void:
 	vb.add_theme_constant_override("separation", 10)
 	_panel.add_child(vb)
 
-	# Faixa de título com shader animado.
-	var header := ColorRect.new()
-	header.custom_minimum_size = Vector2(0, 46)
-	header.color = Color.WHITE
-	var hmat := ShaderMaterial.new()
-	hmat.shader = HEADER_SHADER
-	header.material = hmat
+	var header := UiTheme.header("")
 	vb.add_child(header)
-	_title = Label.new()
-	_title.set_anchors_preset(PRESET_FULL_RECT)
-	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_title.add_theme_font_size_override("font_size", 26)
-	_title.add_theme_color_override("font_color", Color(1.0, 0.97, 0.88))
-	_title.add_theme_color_override("font_outline_color", Color(0.25, 0.08, 0.12))
-	_title.add_theme_constant_override("outline_size", 8)
-	header.add_child(_title)
+	_title = header.get_child(0)
 
 	_body = Label.new()
 	_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -110,11 +97,12 @@ func choose_items(title: String, body: String, items: Array, back_label := "Volt
 	if is_open and not _cancellable:
 		return -1
 	_open(title, body, true)
-	_panel.custom_minimum_size.x = 150.0 * mini(items.size(), CARD_COLUMNS) + 12.0 * mini(items.size(), CARD_COLUMNS) + 24.0
+	var cols := mini(items.size(), CARD_COLUMNS)
+	_panel.custom_minimum_size.x = CARD_SIZE.x * cols + CARD_GAP * (cols - 1) + WINDOW_MARGIN * 2.0
 	var grid := GridContainer.new()
 	grid.columns = CARD_COLUMNS
-	grid.add_theme_constant_override("h_separation", 10)
-	grid.add_theme_constant_override("v_separation", 10)
+	grid.add_theme_constant_override("h_separation", CARD_GAP)
+	grid.add_theme_constant_override("v_separation", CARD_GAP)
 	grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_content.add_child(grid)
 	for i in items.size():
@@ -327,13 +315,3 @@ func _focus_first() -> void:
 		if c is BaseButton and not c.disabled:
 			c.grab_focus()
 			return
-
-
-func _panel_style() -> StyleBoxFlat:
-	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.16, 0.09, 0.2, 0.96)
-	s.border_color = Color(1.0, 0.55, 0.2)
-	s.set_border_width_all(3)
-	s.set_corner_radius_all(6)
-	s.set_content_margin_all(18)
-	return s

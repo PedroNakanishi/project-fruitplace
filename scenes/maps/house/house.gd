@@ -13,7 +13,7 @@ func _ready() -> void:
 	bed.interacted.connect(_on_bed)
 	fridge.interacted.connect(_on_fridge)
 	phone.interacted.connect(_on_phone)
-	door.interacted.connect(func() -> void: SceneRouter.go_to(&"backyard", &"FromHouse", 5))
+	door.interacted.connect(func() -> void: SceneRouter.go_to(&"backyard", &"FromHouse", SceneRouter.DOOR_MINUTES))
 
 
 func _on_bed() -> void:
@@ -54,44 +54,26 @@ func _on_phone() -> void:
 		var tab := await MenuLayer.current.choose("Telefone", "Saldo: R$ %d" % Economy.money, ["Sementes", "Adubos", "Desligar"])
 		match tab:
 			0:
-				await _shop_seeds()
+				await _shop("Sementes", Catalog.CROPS.map(func(c: CropData) -> StringName: return c.seed_id()))
 			1:
-				await _shop_fertilizers()
+				await _shop("Adubos", Catalog.FERTILIZERS.map(func(f: FertilizerData) -> StringName: return f.id))
 			_:
 				return
 
 
-func _shop_seeds() -> void:
+## Loja do telefone: cada clique compra 1 unidade de `ids` (itens com preço no Catalog).
+func _shop(title: String, ids: Array) -> void:
 	while not TimeManager.night_pending:
 		var options: Array = []
-		for c: CropData in Catalog.CROPS:
-			var sid := c.seed_id()
-			options.append({"name": Catalog.item_name(sid), "icon": Catalog.icon(sid), "desc": Catalog.description(sid),
-				"price": c.seed_price, "note": "Você tem %d" % Inventory.count(Inventory.BACKPACK, sid)})
-		var i := await MenuLayer.current.choose_items("Sementes", "Saldo: R$ %d · cada clique compra 1" % Economy.money, options)
-		if i < 0 or i >= Catalog.CROPS.size():
+		for item_id: StringName in ids:
+			options.append({"name": Catalog.item_name(item_id), "icon": Catalog.icon(item_id), "desc": Catalog.description(item_id),
+				"price": Catalog.price(item_id), "note": "Você tem %d" % Inventory.count(Inventory.BACKPACK, item_id)})
+		var i := await MenuLayer.current.choose_items(title, "Saldo: R$ %d · cada clique compra 1" % Economy.money, options)
+		if i < 0 or i >= ids.size():
 			return
-		var crop: CropData = Catalog.CROPS[i]
-		if Economy.spend(crop.seed_price):
-			Inventory.add(Inventory.BACKPACK, crop.seed_id(), 1)
-			Sfx.play(&"buy")
-		else:
-			EventBus.toast.emit("Dinheiro insuficiente.")
-			Sfx.play(&"error")
-
-
-func _shop_fertilizers() -> void:
-	while not TimeManager.night_pending:
-		var options: Array = []
-		for f: FertilizerData in Catalog.FERTILIZERS:
-			options.append({"name": f.display_name, "icon": Catalog.icon(f.id), "desc": Catalog.description(f.id),
-				"price": f.price, "note": "Você tem %d" % Inventory.count(Inventory.BACKPACK, f.id)})
-		var i := await MenuLayer.current.choose_items("Adubos", "Saldo: R$ %d · cada clique compra 1" % Economy.money, options)
-		if i < 0 or i >= Catalog.FERTILIZERS.size():
-			return
-		var fert: FertilizerData = Catalog.FERTILIZERS[i]
-		if Economy.spend(fert.price):
-			Inventory.add(Inventory.BACKPACK, fert.id, 1)
+		var bought: StringName = ids[i]
+		if Economy.spend(Catalog.price(bought)):
+			Inventory.add(Inventory.BACKPACK, bought, 1)
 			Sfx.play(&"buy")
 		else:
 			EventBus.toast.emit("Dinheiro insuficiente.")

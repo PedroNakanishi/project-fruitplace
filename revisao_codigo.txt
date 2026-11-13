@@ -1,0 +1,227 @@
+REVISÃO DO CÓDIGO — FruitPlace (branch vertical-slice)
+=====================================================
+Como usar: responda cada pergunta com SIM ou NÃO na linha "R:".
+Depois eu executo tudo que for SIM de uma vez, rodo o test_runner e te aviso.
+"Sugiro" = minha recomendação. Itens marcados [GRANDE] dão mais trabalho.
+Escopo analisado: autoloads, resources, mapas, NPC, jogador, UI, testes, assets.
+
+-----------------------------------------------------
+A) LIMPEZA / CÓDIGO MORTO
+-----------------------------------------------------
+
+1. O arquivo example.txt está vazio e rastreado no git (veio de um commit
+   "Create example.txt"). Apagar? (Sugiro: SIM)
+R:  SIM
+
+2. Os sinais Economy.money_changed e Economy.risk_changed são emitidos mas
+   ninguém escuta (o HUD lê o dinheiro todo quadro). Remover os sinais?
+   (Alternativa na pergunta 14: o HUD passa a usá-los.) (Sugiro: SIM, a não ser que responda SIM na 14)
+R: NAO
+
+3. O sinal EventBus.cinematic_finished é emitido em cinematic.gd mas ninguém
+   escuta (a cena usa o sinal "finished" da própria Cinematic). Remover? (Sugiro: SIM)
+R:  SIM
+
+4. Inventory.to_dict() não é usado em lugar nenhum. Remover? (Se você quiser
+   salvar o jogo no futuro, ele seria útil — ver pergunta 31.) (Sugiro: SIM, se NÃO na 31)
+R: SIM
+
+5. inventory_ui.gd marca o slot com set_meta(&"selected", true), mas essa meta
+   nunca é lida. Remover essa linha? (Sugiro: SIM)
+R: SIM
+
+6. SceneRouter.Style tem BLINDS e FADE (e o shader transition.gdshader tem os
+   ramos 2 e 3), mas o jogo só usa IRIS e PIXELS. Remover os estilos e os
+   trechos do shader que nunca rodam? (Sugiro: SIM)
+R: SIM
+
+7. service_controller.gd tem a constante ANGRY_REFUSES_MARKUP := true, que
+   nunca é falsa (virou um "if" sem sentido). Remover a constante e deixar a
+   regra fixa no código? (Sugiro: SIM)
+R: SIM
+
+8. Em TimeManager, "@export var seconds_per_minute" não faz efeito de editor
+   (é autoload, não tem Inspector) e a constante WEEKDAYS está solta no meio
+   do arquivo. Trocar por "var" simples e mover WEEKDAYS para o topo? (Sugiro: SIM)
+R: SIM
+
+9. market.gd tem OPEN_FROM = 07:00, mas o dia só começa às 07:30, então essa
+   checagem nunca barra nada. Remover OPEN_FROM? (Sugiro: SIM)
+R: SIM
+
+10. O arquivo .mcp.json está versionado com o caminho da SUA máquina e um
+    GODOT_PATH que termina em "Godot.exe.exe" (parece erro de digitação).
+    Corrigir o caminho para Godot.exe? (Sugiro: SIM)
+R: SIM
+
+10b. E colocar .mcp.json no .gitignore (config local não deveria ir pro
+     repositório)? (Sugiro: SIM)
+R: SIM
+
+-----------------------------------------------------
+B) BUGS / COMPORTAMENTOS ERRADOS
+-----------------------------------------------------
+
+11. cinematic.gd: _start_camera() usa a constante INTRO diretamente em vez do
+    roteiro recebido em play(). Se algum dia existir outra cinemática, a
+    câmera calcularia a duração errada. Corrigir para usar o roteiro passado? (Sugiro: SIM)
+R: SIM
+
+12. catalog.gd: a descrição da semente usa divisão inteira
+    ("Cresce em %dh" % (grow_minutes / 60)). O tomate (150 min) aparece como
+    "Cresce em 2h" em vez de 2h30. Mostrar horas e minutos corretos
+    (ex.: "2h30", "4h", "7h")? (Sugiro: SIM)
+R: SIM
+
+13. main.gd: o texto "Deixar 2 contas sem pagar por 2 noites seguidas leva à
+    falência" está escrito na mão, mas as regras vêm de Economy.UNPAID_LIMIT e
+    BANKRUPT_AFTER. Se alguém mudar a constante, o texto mente. Montar o texto
+    a partir das constantes? (Sugiro: SIM)
+R: SIM
+
+13b. main.gd: restart() repete a mensagem "Dia 1 — o tempo não para!" que já
+     existe em _start_message(). Reaproveitar a função? (Sugiro: SIM)
+R: SIM
+
+13c. backyard.gd: o retorno de GardenState.plant() é ignorado — se o plantio
+     falhar por algum motivo, o jogo mesmo assim gasta 1 min e toca o som.
+     Só avançar tempo/som quando a ação realmente aconteceu? (Sugiro: SIM)
+R: SIM
+
+13d. Os preços do dia são sorteados com seed = hash(dia), então TODA partida
+     tem exatamente os mesmos preços em cada dia (e o recomeço após falência
+     também). Quer preços realmente aleatórios a cada partida (mas ainda fixos
+     dentro do mesmo dia)? (Sugiro: SIM, mas é decisão de design sua)
+R: SIM
+
+-----------------------------------------------------
+C) OTIMIZAÇÃO
+-----------------------------------------------------
+
+14. hud.gd: _process() recalcula todo quadro: texto do relógio, texto de dia,
+    dinheiro, lista de status (monta string com join), semente selecionada
+    (varre o catálogo), barras de gasolina e água. Trocar por atualização só
+    quando o valor muda (usando sinais: money_changed, minute_passed, etc.)?
+    Isso reaproveita os sinais da pergunta 2. (Sugiro: SIM)
+R:  SIM
+
+15. garden_state.gd: a cada minuto de jogo, grow() emite plot_changed para
+    TODOS os lotes plantados e cada lote refaz material, escala e prompt. Além
+    disso, Inventory.changed manda os 6 lotes se refazerem a cada compra/coleta.
+    Emitir só quando o estágio visual mudou de verdade (e só atualizar o prompt
+    dos lotes que dependem do inventário)? (Sugiro: SIM)
+R: SIM
+
+16. catalog.gd: crop(), crop_for_seed(), fertilizer(), food() fazem busca
+    linear a cada chamada (e são chamadas várias vezes por quadro no HUD/lotes).
+    Criar um dicionário id -> recurso montado uma vez? (Sugiro: SIM)
+R: SIM
+
+17. humanoid.gd: cada cliente que nasce cria 4 StandardMaterial3D novos (pele,
+    cabelo, camisa, calça). Guardar materiais em cache por cor? (Ganho pequeno.)
+    (Sugiro: NÃO, só se você notar queda de FPS)
+R: NÃO
+
+18. market.gd: _process() monta o texto do prompt da barraca todo quadro.
+    Atualizar só quando a fila muda (join/leave/gave_up)? (Ganho pequeno.)
+    (Sugiro: SIM, é rápido de fazer)
+R: SIM
+
+-----------------------------------------------------
+D) DUPLICAÇÃO / ORGANIZAÇÃO
+-----------------------------------------------------
+
+19. house.gd: _shop_seeds() e _shop_fertilizers() são quase idênticas (mesmo
+    loop, mesma compra). Unificar em uma função _shop(titulo, lista, ...)? (Sugiro: SIM)
+R: SIM
+
+20. TRAVEL_MINUTES = 30 está duplicada em backyard.gd e market.gd, e o custo de
+    porta "5" aparece solto em house.gd e backyard.gd. Centralizar em
+    SceneRouter (TRUCK_TRAVEL_MINUTES, DOOR_MINUTES)? (Sugiro: SIM)
+R: SIM
+
+21. UI: _label() está duplicada em hud.gd e inventory_ui.gd; a faixa de título
+    com shader está duplicada em menu_layer.gd e inventory_ui.gd; menu_layer
+    tem _panel_style() com as mesmas cores de UiTheme.box(); hud.gd redefine
+    GOLD que já existe em UiTheme. Mover esses helpers/constantes para UiTheme
+    (ou um helper compartilhado)? (Sugiro: SIM)
+R: SIM
+
+22. player_stats.gd: valores soltos (hunger inicial 80.0 em dois lugares,
+    "−15" de fome na noite, limites 50/20 do dreno). Virar constantes
+    nomeadas? (Sugiro: SIM)
+R: SIM
+
+23. menu_layer.gd: choose_items() calcula a largura do painel com números
+    soltos (150, 12, 24) em vez de usar CARD_SIZE. Corrigir para derivar de
+    CARD_SIZE? (Sugiro: SIM)
+R: SIM
+
+24. As teclas mostradas no HUD ("[I] Inventário  [Q] Trocar semente",
+    "Fechar [I]", "[E]") são texto fixo, mas o mapa de teclas está em
+    EventBus.INPUT_KEYS. Gerar o texto a partir dele? (Sugiro: NÃO por enquanto,
+    só vale se pretende permitir remapear teclas)
+R: SIM
+
+25. A pasta resources/ mistura classes de dados (crop_data etc.) com código
+    estático (catalog.gd, item_icons.gd). Mover catalog.gd e item_icons.gd para
+    uma pasta própria (ex.: systems/ ou data/)? (Mexe em vários arquivos e uids.)
+    (Sugiro: NÃO, baixa prioridade)
+R: NÃO
+
+-----------------------------------------------------
+E) PROJETO / FERRAMENTAS / TESTES
+-----------------------------------------------------
+
+26. Não existe README nem CLAUDE.md explicando como rodar o jogo, os testes
+    (test_runner, ui_tour, screenshot_tour) e os geradores (tools/). Criar um
+    README curto em português com esses comandos? (Sugiro: SIM)
+R: SIM
+
+27. tools/build_props.gd (861 linhas) gera os props .tscn, que também estão
+    commitados. Os .tscn gerados ainda são editados à mão ou o gerador é a
+    fonte da verdade? Se o gerador for a fonte da verdade, quer que eu adicione
+    um aviso no topo dos arquivos/README para ninguém editar à mão? (Sugiro: SIM)
+R: SIM
+
+28. O test_runner cobre o fluxo de um dia, mas não cobre: falência, plantio com
+    adubo, inventário cheio (caçamba 40 / barraca 24), nem a regra de leilão.
+    Adicionar testes para esses casos? (Sugiro: SIM)
+R: SIM
+
+29. O ícone do projeto ainda é o icon.svg padrão da Godot. Trocar por um ícone
+    do FruitPlace (eu gero um pixel-art simples)? (Sugiro: NÃO, só se quiser)
+R: SIM
+
+-----------------------------------------------------
+F) MELHORIAS MAIORES  [GRANDE]
+-----------------------------------------------------
+
+30. A abertura (cinemática) toca TODA vez que o jogo abre. Lembrar que você já
+    viu (arquivo em user://) e pular nas próximas, com opção de rever? (Sugiro: SIM)
+R: SIM
+
+31. [GRANDE] Não existe save/load: fechar o jogo perde tudo (dia, dinheiro,
+    inventário, lotes). Implementar salvamento automático ao dormir (um save
+    por dia, em user://) + botão "Continuar"? (Sugiro: SIM, mas é tarefa grande
+    e depende de você definir o menu inicial)
+R: SIM
+
+32. [GRANDE] O jogo não tem menu inicial nem menu de pausa (Esc só fecha menus).
+    Criar menu inicial (Novo jogo / Continuar / Sair) e pausa (Esc)? (Sugiro: SIM, caso responda SIM na 31)
+R: SIM
+
+33. Todo texto está escrito direto no código em português. Extrair textos para
+    uma tabela de traduções (en/pt-BR)? (Sugiro: NÃO, as notas do projeto dizem
+    que o jogo é pt-BR)
+R: NÃO
+
+-----------------------------------------------------
+Observações (sem pergunta, só para você saber)
+-----------------------------------------------------
+- Todos os 31 áudios e todas as texturas/materiais estão em uso (verifiquei);
+  não há asset órfão para apagar.
+- Mapa 3 (Feira) você já avisou que será refeito: não mexi nem sugeri mudanças
+  de layout nele; só em lógica genérica (itens 9, 18, 20).
+- Produtos não vendidos não estragam e o dia 1 sempre começa com 6 sementes de
+  tomate: são decisões de design, deixei como estão.

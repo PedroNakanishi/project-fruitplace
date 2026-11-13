@@ -18,13 +18,14 @@ const GENERIC_CROP := "generic"
 
 var _crop_id := &""
 var _model: Node3D
+var _visual_key := ""
 
 
 func _ready() -> void:
 	interactable.interacted.connect(func() -> void: plot_interacted.emit(plot_index))
 	GardenState.plot_changed.connect(_on_plot_changed)
-	GardenState.seed_changed.connect(func(_s: StringName) -> void: refresh())
-	Inventory.changed.connect(func(_c: StringName) -> void: refresh())
+	GardenState.seed_changed.connect(func(_s: StringName) -> void: _refresh_prompt())
+	Inventory.changed.connect(func(_c: StringName) -> void: _refresh_prompt())
 	refresh()
 
 
@@ -33,9 +34,19 @@ func _on_plot_changed(i: int) -> void:
 		refresh()
 
 
-## O prompt diz o que o próximo toque vai fazer.
 func refresh() -> void:
+	_refresh_visual()
+	_refresh_prompt()
+
+
+## Só refaz o modelo quando algo visível mudou (cultura, rega, pronto ou
+## um vigésimo de crescimento), não a cada minuto de jogo.
+func _refresh_visual() -> void:
 	var p: Dictionary = GardenState.plots[plot_index]
+	var key := "%s|%s|%d|%s" % [p.crop, p.watered, int(GardenState.stage(plot_index) * 20.0), GardenState.is_ready(plot_index)]
+	if key == _visual_key:
+		return
+	_visual_key = key
 	var crop := GardenState.crop_of(plot_index)
 	soil.material_override = SOIL_WET if p.watered else SOIL_DRY
 	_show_crop(crop)
@@ -44,6 +55,11 @@ func refresh() -> void:
 		var ripe := _model.get_node_or_null("Ripe") as Node3D
 		if ripe:
 			ripe.visible = GardenState.is_ready(plot_index)
+
+
+## O prompt diz o que o próximo toque vai fazer.
+func _refresh_prompt() -> void:
+	var crop := GardenState.crop_of(plot_index)
 	var pct := int(GardenState.stage(plot_index) * 100.0)
 	match GardenState.next_action(plot_index):
 		&"harvest":
@@ -52,7 +68,7 @@ func refresh() -> void:
 			var seed := GardenState.selected_crop()
 			if seed:
 				var n := Inventory.count(Inventory.BACKPACK, seed.seed_id())
-				interactable.prompt = "Plantar %s (%d)   [Q] trocar" % [seed.display_name.to_lower(), n]
+				interactable.prompt = "Plantar %s (%d)   [%s] trocar" % [seed.display_name.to_lower(), n, EventBus.key_label(&"cycle_seed")]
 			else:
 				interactable.prompt = "Sem sementes"
 		&"water":

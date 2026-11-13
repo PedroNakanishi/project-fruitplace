@@ -26,25 +26,38 @@ const CUSTOMERS: Array = [
 ]
 
 
-static func crop(id: StringName) -> CropData:
+static var _crops := {}
+static var _seeds := {}
+static var _ferts := {}
+static var _foods := {}
+
+
+## Índices id -> recurso, montados uma vez.
+static func _index() -> void:
+	if not _crops.is_empty():
+		return
 	for c: CropData in CROPS:
-		if c.id == id:
-			return c
-	return null
+		_crops[c.id] = c
+		_seeds[c.seed_id()] = c
+	for f: FertilizerData in FERTILIZERS:
+		_ferts[f.id] = f
+	for f: FoodData in FOODS:
+		_foods[f.id] = f
+
+
+static func crop(id: StringName) -> CropData:
+	_index()
+	return _crops.get(id)
 
 
 static func crop_for_seed(seed: StringName) -> CropData:
-	for c: CropData in CROPS:
-		if c.seed_id() == seed:
-			return c
-	return null
+	_index()
+	return _seeds.get(seed)
 
 
 static func fertilizer(id: StringName) -> FertilizerData:
-	for f: FertilizerData in FERTILIZERS:
-		if f.id == id:
-			return f
-	return null
+	_index()
+	return _ferts.get(id)
 
 
 static func is_produce(id: StringName) -> bool:
@@ -65,10 +78,8 @@ static func item_name(id: StringName) -> String:
 
 
 static func food(id: StringName) -> FoodData:
-	for f: FoodData in FOODS:
-		if f.id == id:
-			return f
-	return null
+	_index()
+	return _foods.get(id)
 
 
 ## Tipo do item, para ordenar e rotular no inventário.
@@ -95,7 +106,7 @@ static func description(id: StringName) -> String:
 		return "%s. Rende %d por planta." % [c.category.capitalize(), c.base_yield]
 	c = crop_for_seed(id)
 	if c:
-		return "Cresce em %dh." % (c.grow_minutes / 60)
+		return "Cresce em %s." % _duration(c.grow_minutes)
 	var f := fertilizer(id)
 	if f:
 		var bonus := "+%d unidade na colheita" % f.yield_bonus if f.yield_bonus > 0 else "%d%% mais rápido" % int(f.growth_bonus * 100.0)
@@ -104,6 +115,15 @@ static func description(id: StringName) -> String:
 	if fd:
 		return "+%d de fome · %d min" % [int(fd.hunger_restore), fd.minutes_to_eat]
 	return ""
+
+
+## 150 -> "2h30", 240 -> "4h", 45 -> "45min".
+static func _duration(minutes: int) -> String:
+	var h := minutes / 60
+	var m := minutes % 60
+	if h == 0:
+		return "%dmin" % m
+	return "%dh" % h if m == 0 else "%dh%02d" % [h, m]
 
 
 ## Preço de referência (compra da semente/adubo, venda do produto); -1 se não tem.

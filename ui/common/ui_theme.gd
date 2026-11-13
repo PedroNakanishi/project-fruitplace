@@ -5,6 +5,7 @@ extends RefCounted
 const BG := Color(0.16, 0.09, 0.2, 0.96)
 const ACCENT := Color(1.0, 0.55, 0.2)
 const GOLD := Color(1.0, 0.72, 0.3)
+const HEADER_SHADER := preload("res://assets/shaders/menu_header.gdshader")
 
 
 static func box(bg: Color, border: Color, border_w := 2, margin := 10, radius := 6) -> StyleBoxFlat:
@@ -18,6 +19,42 @@ static func box(bg: Color, border: Color, border_w := 2, margin := 10, radius :=
 	s.content_margin_top = margin - 3
 	s.content_margin_bottom = margin - 3
 	return s
+
+
+## Janela dos menus: fundo roxo escuro com borda laranja.
+static func window_style() -> StyleBoxFlat:
+	var s := box(BG, ACCENT, 3, 18, 8)
+	s.set_content_margin_all(18)
+	return s
+
+
+static func label(parent: Node, size: int, color: Color) -> Label:
+	var l := Label.new()
+	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_color_override("font_color", color)
+	parent.add_child(l)
+	return l
+
+
+## Faixa de título com shader animado; o Label do texto é o primeiro filho.
+static func header(text: String) -> ColorRect:
+	var header := ColorRect.new()
+	header.custom_minimum_size = Vector2(0, 46)
+	header.color = Color.WHITE
+	var mat := ShaderMaterial.new()
+	mat.shader = HEADER_SHADER
+	header.material = mat
+	var title := Label.new()
+	title.text = text
+	title.set_anchors_preset(Control.PRESET_FULL_RECT)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 26)
+	title.add_theme_color_override("font_color", Color(1.0, 0.97, 0.88))
+	title.add_theme_color_override("font_outline_color", Color(0.25, 0.08, 0.12))
+	title.add_theme_constant_override("outline_size", 8)
+	header.add_child(title)
+	return header
 
 
 static func make() -> Theme:

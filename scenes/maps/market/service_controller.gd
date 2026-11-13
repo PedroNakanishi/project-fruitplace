@@ -18,8 +18,8 @@ const DISCOUNT_PRICE := -0.15
 const DISCOUNT_ENERGY := 2.0  ## Ganho baixo.
 const MARKUP_PRICE := 0.30
 const MARKUP_ENERGY := 5.0  ## Perda moderada.
-## Cliente com Raiva não aceita pagar a mais: a opção some do menu.
-const ANGRY_REFUSES_MARKUP := true
+
+signal queue_changed
 
 @export var service_point_path: NodePath
 
@@ -43,6 +43,7 @@ func join(c: Customer) -> void:
 	queue.append(c)
 	c.gave_up.connect(_on_gave_up)
 	c.go_to_queue(_spot(queue.size() - 1))
+	queue_changed.emit()
 
 
 func waiting_count() -> int:
@@ -76,7 +77,8 @@ func serve() -> void:
 		keys.append(&"vender")
 		labels.append("Vender: R$ %d" % _price(base, 0.0))
 		var body := "Cliente quer %d× %s.\nHumor: %s" % [qty, Catalog.item_name(c.wants).to_lower(), c.mood_text()]
-		if ANGRY_REFUSES_MARKUP and c.mood == Customer.Mood.RAIVA:
+		# Cliente com Raiva não aceita pagar a mais: a opção some do menu.
+		if c.mood == Customer.Mood.RAIVA:
 			body += "\nCom raiva, ele não aceita sobrepreço."
 		else:
 			keys.append(&"sobrepreco")
@@ -145,6 +147,7 @@ func _finish(c: Customer, lost: bool) -> void:
 		Economy.record_lost_customer()
 	c.leave()
 	_reflow()
+	queue_changed.emit()
 
 
 ## Escolhe um produto que a barraca tem. Devolve false se está vazia.
@@ -163,6 +166,7 @@ func _on_gave_up(c: Customer) -> void:
 		Economy.record_lost_customer()
 		EventBus.toast.emit("Um cliente cansou de esperar e foi embora.")
 		_reflow()
+		queue_changed.emit()
 
 
 func _spot(i: int) -> Vector3:

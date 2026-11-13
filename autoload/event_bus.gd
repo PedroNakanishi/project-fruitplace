@@ -4,7 +4,6 @@ extends Node
 signal toast(text: String)
 signal interaction_prompt(text: String)  ## "" esconde o prompt.
 signal interaction_focus(target: Node3D)  ## null = nada em foco.
-signal cinematic_finished
 signal sleep_requested
 signal sale_completed(amount: int)
 signal customer_left(happy: bool)
@@ -34,6 +33,12 @@ func _ready() -> void:
 			var ev := InputEventKey.new()
 			ev.physical_keycode = key
 			InputMap.action_add_event(action, ev)
+
+
+## Nome da primeira tecla de uma ação, para mostrar na tela ("E", "I", "Q").
+func key_label(action: StringName) -> String:
+	var keys: Array = INPUT_KEYS.get(action, [])
+	return OS.get_keycode_string(keys[0]) if not keys.is_empty() else "?"
 
 
 ## O jogador não deve andar nem interagir agora.

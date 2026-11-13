@@ -1,7 +1,6 @@
 shader_type canvas_item;
 // Transição entre mapas. `progress` 0 = tela livre, 1 = tela coberta.
-// style 0: íris fechando no jogador; 1: dissolução em blocos (pixel art);
-// 2: persianas; 3: fade simples.
+// style 0: íris fechando no jogador; 1: dissolução em blocos (pixel art).
 
 uniform float progress : hint_range(0.0, 1.0) = 0.0;
 uniform int style = 0;
@@ -21,19 +20,11 @@ void fragment() {
 		float r = mix(max_r, -0.03, progress);
 		float d = length((UV - center) * aspect);
 		m = smoothstep(r - 0.012, r + 0.012, d);
-	} else if (style == 1) {
+	} else {
 		vec2 cell = floor(UV * vec2(cells * aspect.x, cells));
 		float diag = (cell.x / (cells * aspect.x) + cell.y / cells) * 0.5;
 		float h = mix(hash(cell), diag, 0.55);
 		m = 1.0 - step(progress * 1.02, h);
-	} else if (style == 2) {
-		float bars = 10.0;
-		float idx = floor(UV.x * bars);
-		float local = fract(UV.x * bars);
-		float p = clamp(progress * 1.5 - idx / bars * 0.5, 0.0, 1.0);
-		m = 1.0 - step(p, local);
-	} else {
-		m = progress;
 	}
 	// Um leve vinco mais escuro na borda da íris/dissolução.
 	COLOR = vec4(color.rgb, color.a * m);

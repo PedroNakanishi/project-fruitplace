@@ -98,3 +98,16 @@ func transfer(from: StringName, to: StringName, filter := Callable()) -> int:
 
 func to_dict() -> Dictionary:
 	return _items.duplicate(true)
+
+
+## Recarrega o que `to_dict()` devolveu (também aceita chaves em texto, vindas do JSON).
+func restore(d: Dictionary) -> void:
+	_items = {BACKPACK: {}, TRUCK: {}, STALL: {}}
+	for container: Variant in d:
+		var key := StringName(str(container))
+		if not _items.has(key):
+			continue
+		for id: Variant in d[container]:
+			_items[key][StringName(str(id))] = int(d[container][id])
+	for c: StringName in _items:
+		changed.emit(c)

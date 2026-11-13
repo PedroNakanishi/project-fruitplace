@@ -10,9 +10,12 @@ const MAPS := {
 }
 const SHADER := preload("res://assets/shaders/transition.gdshader")
 const FADE_SECONDS := 0.35
+## Custo em minutos de jogo: atravessar uma porta e ir ou voltar da feira.
+const DOOR_MINUTES := 5
+const TRUCK_TRAVEL_MINUTES := 30
 
 ## Estilos do shader de transição.
-enum Style { IRIS, PIXELS, BLINDS, FADE }
+enum Style { IRIS, PIXELS }
 
 ## Definido pela cena Main no _ready.
 var map_slot: Node

@@ -4,7 +4,6 @@ extends Control
 ## Barraca, grade de espaços com ícone e quantidade, painel de detalhes do
 ## item selecionado e barra de capacidade. Abre e fecha com animação.
 
-const HEADER_SHADER := preload("res://assets/shaders/menu_header.gdshader")
 const COLUMNS := 6
 const MIN_SLOTS := 24
 const SLOT_SIZE := Vector2(76, 76)
@@ -57,7 +56,7 @@ func _build() -> void:
 	center.mouse_filter = MOUSE_FILTER_IGNORE
 	add_child(center)
 	_panel = PanelContainer.new()
-	_panel.add_theme_stylebox_override("panel", UiTheme.box(UiTheme.BG, UiTheme.ACCENT, 3, 18, 8))
+	_panel.add_theme_stylebox_override("panel", UiTheme.window_style())
 	_panel.resized.connect(func() -> void: _panel.pivot_offset = _panel.size / 2.0)
 	center.add_child(_panel)
 
@@ -65,22 +64,7 @@ func _build() -> void:
 	root.add_theme_constant_override("separation", 10)
 	_panel.add_child(root)
 
-	var header := ColorRect.new()
-	header.custom_minimum_size = Vector2(0, 46)
-	var hmat := ShaderMaterial.new()
-	hmat.shader = HEADER_SHADER
-	header.material = hmat
-	root.add_child(header)
-	var title := Label.new()
-	title.text = "Inventário"
-	title.set_anchors_preset(PRESET_FULL_RECT)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	title.add_theme_font_size_override("font_size", 26)
-	title.add_theme_color_override("font_color", Color(1.0, 0.97, 0.88))
-	title.add_theme_color_override("font_outline_color", Color(0.25, 0.08, 0.12))
-	title.add_theme_constant_override("outline_size", 8)
-	header.add_child(title)
+	root.add_child(UiTheme.header("Inventário"))
 
 	var tabs := HBoxContainer.new()
 	tabs.add_theme_constant_override("separation", 8)
@@ -121,7 +105,7 @@ func _build() -> void:
 	var dv := VBoxContainer.new()
 	dv.add_theme_constant_override("separation", 6)
 	detail.add_child(dv)
-	_detail_name = _label(dv, 20, UiTheme.GOLD)
+	_detail_name = UiTheme.label(dv, 20, UiTheme.GOLD)
 	_detail_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_detail_icon = TextureRect.new()
 	_detail_icon.custom_minimum_size = Vector2(0, 96)
@@ -129,42 +113,34 @@ func _build() -> void:
 	_detail_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_detail_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	dv.add_child(_detail_icon)
-	_detail_kind = _label(dv, 13, Color(0.7, 0.8, 1.0))
+	_detail_kind = UiTheme.label(dv, 13, Color(0.7, 0.8, 1.0))
 	_detail_kind.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_detail_desc = _label(dv, 14, Color(0.9, 0.88, 0.95))
+	_detail_desc = UiTheme.label(dv, 14, Color(0.9, 0.88, 0.95))
 	_detail_desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_detail_desc.size_flags_vertical = SIZE_EXPAND_FILL
-	_detail_value = _label(dv, 16, Color(0.55, 1.0, 0.55))
-	_detail_qty = _label(dv, 16, Color.WHITE)
+	_detail_value = UiTheme.label(dv, 16, Color(0.55, 1.0, 0.55))
+	_detail_qty = UiTheme.label(dv, 16, Color.WHITE)
 
 	# Rodapé: capacidade e dica.
 	var foot := HBoxContainer.new()
 	foot.add_theme_constant_override("separation", 12)
 	root.add_child(foot)
-	_label(foot, 14, Color(0.85, 0.85, 0.95)).text = "Capacidade"
+	UiTheme.label(foot, 14, Color(0.85, 0.85, 0.95)).text = "Capacidade"
 	_capacity = StatBar.new()
 	_capacity.bar_color = Color(0.4, 0.75, 0.95)
 	_capacity.low_below = -1.0
 	_capacity.size_flags_horizontal = SIZE_EXPAND_FILL
 	foot.add_child(_capacity)
 	var close_btn := Button.new()
-	close_btn.text = "Fechar  [I]"
+	close_btn.text = "Fechar  [%s]" % EventBus.key_label(&"inventory")
 	UiFx.hook(close_btn)
 	close_btn.pressed.connect(func() -> void:
 		Sfx.play(&"ui_cancel")
 		close())
 	foot.add_child(close_btn)
 
-	_empty = _label(left, 14, Color(1, 1, 1, 0.5))
+	_empty = UiTheme.label(left, 14, Color(1, 1, 1, 0.5))
 	_empty.text = ""
-
-
-func _label(parent: Node, size: int, color: Color) -> Label:
-	var l := Label.new()
-	l.add_theme_font_size_override("font_size", size)
-	l.add_theme_color_override("font_color", color)
-	parent.add_child(l)
-	return l
 
 
 # --- abrir / fechar ----------------------------------------------------------
@@ -300,8 +276,6 @@ func _make_slot(entry: Dictionary) -> Control:
 	slot.add_child(qty)
 	slot.focus_entered.connect(_select.bind(id))
 	slot.mouse_entered.connect(_select.bind(id))
-	if id == _selected:
-		slot.set_meta(&"selected", true)
 	return slot
 
 

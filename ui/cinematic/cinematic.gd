@@ -28,6 +28,7 @@ var _done := false
 var _was_running := true
 var _rig: Node3D
 var _cam_end := {}
+var _script := {}
 
 var _black: ColorRect
 var _vignette: ColorRect
@@ -51,6 +52,7 @@ static func play(host: Node, script: Dictionary, rig: Node3D = null) -> void:
 func start(script: Dictionary, rig: Node3D) -> void:
 	layer = 40
 	_rig = rig
+	_script = script
 	EventBus.cinematic_active = true
 	EventBus.interaction_prompt.emit("")
 	_was_running = TimeManager.running
@@ -133,7 +135,7 @@ func _build() -> void:
 	root.add_child(_subtitle)
 
 	_hint = Label.new()
-	_hint.text = "[E] Pular"
+	_hint.text = "[%s] Pular" % EventBus.key_label(&"interact")
 	_hint.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
 	_hint.offset_left = -140
 	_hint.offset_top = -40
@@ -205,7 +207,7 @@ func _start_camera() -> void:
 	cam.size = _cam_end["size"] * 0.5
 	_rig.rotation_degrees.y = _cam_end["yaw"] - 35.0
 	var secs := 1.4
-	for shot: Dictionary in INTRO["shots"]:
+	for shot: Dictionary in _script["shots"]:
 		secs += shot["text"].length() * 0.035 + shot["hold"] + 0.6
 	_cam_tween = create_tween().set_parallel().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 	_cam_tween.tween_property(cam, "size", _cam_end["size"], secs)
@@ -252,5 +254,4 @@ func _cleanup() -> void:
 	EventBus.cinematic_active = false
 	TimeManager.running = _was_running
 	finished.emit()
-	EventBus.cinematic_finished.emit()
 	queue_free()
