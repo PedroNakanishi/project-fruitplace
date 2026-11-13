@@ -8,7 +8,7 @@
 script = ExtResource("1_main")
 
 [node name="GameView" type="SubViewportContainer" parent="."]
-texture_filter = 1
+texture_filter = 2
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -16,12 +16,13 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 stretch = true
-stretch_shrink = 3
+stretch_shrink = 1
 
 [node name="PixelViewport" type="SubViewport" parent="GameView"]
 handle_input_locally = false
-msaa_3d = 0
-size = Vector2i(426, 240)
+msaa_3d = 3
+screen_space_aa = 1
+size = Vector2i(1280, 720)
 render_target_update_mode = 4
 
 [node name="MapSlot" type="Node3D" parent="GameView/PixelViewport"]
