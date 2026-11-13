@@ -40,8 +40,8 @@ func pick(i: int) -> void:
 ## Quantas opções o menu aberto está mostrando.
 func option_count() -> int:
 	var n := 0
-	for c in MenuLayer.current._content.get_children():
-		if c is Button and not c.is_queued_for_deletion():
+	for c in MenuLayer.current._content.find_children("*", "Button", true, false):
+		if not c.is_queued_for_deletion():
 			n += 1
 	return n
 

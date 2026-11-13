@@ -14,8 +14,10 @@ var _money: Label
 var _money_shown := 0.0
 var _money_target := 0
 var _money_tween: Tween
-var _hunger: ProgressBar
-var _energy: ProgressBar
+var _hunger: StatBar
+var _energy: StatBar
+var _fuel: StatBar
+var _water: StatBar
 var _status: VBoxContainer
 var _status_text := ""
 var _seed_panel: PanelContainer
@@ -65,10 +67,10 @@ func _ready() -> void:
 	EventBus.interaction_prompt.connect(_on_prompt)
 	EventBus.interaction_focus.connect(func(t: Node3D) -> void: _focus = t)
 	EventBus.toast.connect(_show_toast)
-	PlayerStats.hunger_changed.connect(func(v: float) -> void: _set_bar(_hunger, v))
+	PlayerStats.hunger_changed.connect(_on_hunger)
 	PlayerStats.energy_changed.connect(_on_energy)
 	_on_energy(PlayerStats.energy, PlayerStats.max_energy)
-	_hunger.value = PlayerStats.hunger
+	_on_hunger(PlayerStats.hunger)
 	_money_target = Economy.money
 	_money_shown = float(Economy.money)
 
@@ -107,7 +109,9 @@ func _build_status_card() -> void:
 	_money = _label(vb, 20, MONEY_GREEN)
 	_money.pivot_offset = Vector2(0, 12)
 	_hunger = _bar(vb, "Fome", Color(1.0, 0.6, 0.2))
-	_energy = _bar(vb, "Energia", Color(0.35, 0.8, 1.0))
+	_energy = _bar(vb, "Energia", Color(0.7, 0.9, 0.25))
+	_fuel = _bar(vb, "Gasolina", Color(0.95, 0.3, 0.25))
+	_water = _bar(vb, "Água", Color(0.3, 0.65, 1.0))
 	_status = VBoxContainer.new()
 	_status.add_theme_constant_override("separation", 3)
 	vb.add_child(_status)
@@ -188,15 +192,16 @@ func _process(delta: float) -> void:
 	_refresh_status()
 	_refresh_seed()
 	_update_marker()
-	_pulse_low(_hunger)
-	_pulse_low(_energy)
+	_fuel.set_value(Economy.fuel_trips, Economy.TRIPS_PER_TANK)
+	_fuel.text = "%d/%d viagens" % [Economy.fuel_trips, Economy.TRIPS_PER_TANK]
+	_water.set_value(Economy.water_charges, Economy.WATER_CHARGES_PER_DAY)
+	_water.text = "%d/%d regas" % [Economy.water_charges, Economy.WATER_CHARGES_PER_DAY]
 
 
 func _refresh_status() -> void:
 	var lines: Array[String] = []
 	for b: StringName in PlayerStats.buffs:
 		lines.append("★ " + PlayerStats.BUFF_NAMES.get(b, String(b)))
-	lines.append("Gasolina: %d viagens  ·  Água: %d regas" % [Economy.fuel_trips, Economy.water_charges])
 	var auction := Economy.auction_today()
 	if auction >= 0 and TimeManager.minutes < auction:
 		lines.append("Leilão de lojas hoje às %02d:%02d" % [auction / 60, auction % 60])
@@ -263,23 +268,13 @@ func _float_text(text: String, color: Color) -> void:
 
 
 func _on_energy(value: float, max_value: float) -> void:
-	_energy.max_value = max_value
-	_set_bar(_energy, value)
+	_energy.set_value(value, max_value)
+	_energy.text = "%d/%d" % [roundi(value), roundi(max_value)]
 
 
-## Barra com enchimento suave.
-func _set_bar(bar: ProgressBar, value: float) -> void:
-	var tw := bar.create_tween()
-	tw.tween_property(bar, "value", value, 0.35).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
-
-
-## Barra quase vazia pisca em vermelho.
-func _pulse_low(bar: ProgressBar) -> void:
-	if bar.value / maxf(bar.max_value, 1.0) < 0.2:
-		var k := 0.5 + 0.5 * sin(Time.get_ticks_msec() / 160.0)
-		bar.modulate = Color.WHITE.lerp(Color(1.6, 0.6, 0.6), k)
-	else:
-		bar.modulate = Color.WHITE
+func _on_hunger(value: float) -> void:
+	_hunger.set_value(value, 100.0)
+	_hunger.text = "%d/100" % roundi(value)
 
 
 # --- prompt, marcador e avisos -------------------------------------------------
@@ -366,18 +361,15 @@ func _label(parent: Node, size: int, color: Color) -> Label:
 	return l
 
 
-func _bar(parent: Node, title: String, color: Color) -> ProgressBar:
+func _bar(parent: Node, title: String, color: Color) -> StatBar:
 	var row := HBoxContainer.new()
 	parent.add_child(row)
 	var l := Label.new()
 	l.text = title
+	l.add_theme_font_size_override("font_size", 14)
 	l.custom_minimum_size.x = 72
 	row.add_child(l)
-	var bar := ProgressBar.new()
-	bar.custom_minimum_size = Vector2(170, 16)
-	bar.show_percentage = false
-	bar.size_flags_vertical = SIZE_SHRINK_CENTER
-	bar.add_theme_stylebox_override("fill", UiTheme.box(color, color.lightened(0.3), 0, 4, 4))
-	bar.add_theme_stylebox_override("background", UiTheme.box(Color(0, 0, 0, 0.5), Color(1, 1, 1, 0.12), 1, 4, 4))
+	var bar := StatBar.new()
+	bar.bar_color = color
 	row.add_child(bar)
 	return bar

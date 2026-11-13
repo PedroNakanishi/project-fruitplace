@@ -35,10 +35,9 @@ func _on_fridge() -> void:
 		return
 	var options: Array = []
 	for f: FoodData in Catalog.FOODS:
-		options.append("%s  (+%d fome, %d min)" % [f.display_name, int(f.hunger_restore), f.minutes_to_eat])
-	options.append("Fechar")
+		options.append({"name": f.display_name, "icon": Catalog.icon(f.id), "desc": Catalog.description(f.id)})
 	var body := "Fome: %d/100" % int(PlayerStats.hunger)
-	var i := await MenuLayer.current.choose("Geladeira", body, options)
+	var i := await MenuLayer.current.choose_items("Geladeira", body, options, "Fechar")
 	if i < 0 or i >= Catalog.FOODS.size():
 		return
 	var food: FoodData = Catalog.FOODS[i]
@@ -66,9 +65,10 @@ func _shop_seeds() -> void:
 	while not TimeManager.night_pending:
 		var options: Array = []
 		for c: CropData in Catalog.CROPS:
-			options.append("%s (%s) — R$ %d · cresce em %dh · tem %d" % [c.display_name, c.category, c.seed_price, c.grow_minutes / 60, Inventory.count(Inventory.BACKPACK, c.seed_id())])
-		options.append("Voltar")
-		var i := await MenuLayer.current.choose("Sementes", "Saldo: R$ %d · cada clique compra 1" % Economy.money, options)
+			var sid := c.seed_id()
+			options.append({"name": Catalog.item_name(sid), "icon": Catalog.icon(sid), "desc": Catalog.description(sid),
+				"price": c.seed_price, "note": "Você tem %d" % Inventory.count(Inventory.BACKPACK, sid)})
+		var i := await MenuLayer.current.choose_items("Sementes", "Saldo: R$ %d · cada clique compra 1" % Economy.money, options)
 		if i < 0 or i >= Catalog.CROPS.size():
 			return
 		var crop: CropData = Catalog.CROPS[i]
@@ -84,10 +84,9 @@ func _shop_fertilizers() -> void:
 	while not TimeManager.night_pending:
 		var options: Array = []
 		for f: FertilizerData in Catalog.FERTILIZERS:
-			var bonus := "+%d unidade" % f.yield_bonus if f.yield_bonus > 0 else "%d%% mais rápido" % int(f.growth_bonus * 100.0)
-			options.append("%s (%s) — R$ %d · %s · tem %d" % [f.display_name, f.rarity, f.price, bonus, Inventory.count(Inventory.BACKPACK, f.id)])
-		options.append("Voltar")
-		var i := await MenuLayer.current.choose("Adubos", "Saldo: R$ %d · cada clique compra 1" % Economy.money, options)
+			options.append({"name": f.display_name, "icon": Catalog.icon(f.id), "desc": Catalog.description(f.id),
+				"price": f.price, "note": "Você tem %d" % Inventory.count(Inventory.BACKPACK, f.id)})
+		var i := await MenuLayer.current.choose_items("Adubos", "Saldo: R$ %d · cada clique compra 1" % Economy.money, options)
 		if i < 0 or i >= Catalog.FERTILIZERS.size():
 			return
 		var fert: FertilizerData = Catalog.FERTILIZERS[i]

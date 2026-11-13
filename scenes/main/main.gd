@@ -5,11 +5,14 @@ extends Node
 @onready var map_slot: Node3D = %MapSlot
 @onready var menu: MenuLayer = %MenuLayer
 
+var inventory_ui: InventoryUI
 var _night_running := false
 
 
 func _ready() -> void:
 	SceneRouter.map_slot = map_slot
+	inventory_ui = InventoryUI.new()
+	$UI.add_child(inventory_ui)
 	EventBus.sleep_requested.connect(func() -> void: run_night(false))
 	PlayerStats.player_fainted.connect(func() -> void: run_night(true))
 	TimeManager.faint_time_reached.connect(func() -> void: run_night(true))
@@ -56,19 +59,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 
 
-## Menu de inventário (tecla I): mochila, caçamba da caminhonete e barraca.
+## Abre a tela de inventário (tecla I ou Tab).
 func show_inventory() -> void:
-	var lines: PackedStringArray = []
-	for c: Array in [[Inventory.BACKPACK, "Mochila"], [Inventory.TRUCK, "Caminhonete"], [Inventory.STALL, "Barraca"]]:
-		var items := Inventory.items(c[0])
-		var head := "%s (%d/%d)" % [c[1], Inventory.total(c[0]), Inventory.CAPACITY[c[0]]] if c[0] != Inventory.BACKPACK else "%s (%d)" % [c[1], Inventory.total(c[0])]
-		lines.append(head)
-		if items.is_empty():
-			lines.append("   vazia")
-		for id: StringName in items:
-			lines.append("   %s ×%d" % [Catalog.item_name(id), items[id]])
-	await menu.choose("Inventário", "
-".join(lines), ["Fechar"])
+	inventory_ui.open()
 
 
 ## Fluxo noturno: disparado ao dormir na cama ou desmaiar.

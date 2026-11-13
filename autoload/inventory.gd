@@ -40,6 +40,20 @@ func items(container: StringName) -> Dictionary:
 	return _items[container].duplicate()
 
 
+## Itens do container como [{id, qty}], ordenados por tipo e nome (para a tela de inventário).
+func entries(container: StringName) -> Array:
+	var list: Array = []
+	for id: StringName in _items[container]:
+		list.append({"id": id, "qty": _items[container][id]})
+	list.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var ka := Catalog.kind(a["id"])
+		var kb := Catalog.kind(b["id"])
+		if ka != kb:
+			return ka < kb
+		return Catalog.item_name(a["id"]) < Catalog.item_name(b["id"]))
+	return list
+
+
 func space(container: StringName) -> int:
 	return CAPACITY[container] - total(container)
 

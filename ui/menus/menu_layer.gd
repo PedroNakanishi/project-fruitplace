@@ -6,6 +6,10 @@ extends Control
 
 signal _picked(index: int)
 
+const HEADER_SHADER := preload("res://assets/shaders/menu_header.gdshader")
+const CARD_SIZE := Vector2(150, 200)
+const CARD_COLUMNS := 3
+
 static var current: MenuLayer
 
 var is_open := false
@@ -48,10 +52,23 @@ func _ready() -> void:
 	vb.add_theme_constant_override("separation", 10)
 	_panel.add_child(vb)
 
+	# Faixa de título com shader animado.
+	var header := ColorRect.new()
+	header.custom_minimum_size = Vector2(0, 46)
+	header.color = Color.WHITE
+	var hmat := ShaderMaterial.new()
+	hmat.shader = HEADER_SHADER
+	header.material = hmat
+	vb.add_child(header)
 	_title = Label.new()
-	_title.add_theme_font_size_override("font_size", 24)
-	_title.add_theme_color_override("font_color", Color(1.0, 0.72, 0.3))
-	vb.add_child(_title)
+	_title.set_anchors_preset(PRESET_FULL_RECT)
+	_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_title.add_theme_font_size_override("font_size", 26)
+	_title.add_theme_color_override("font_color", Color(1.0, 0.97, 0.88))
+	_title.add_theme_color_override("font_outline_color", Color(0.25, 0.08, 0.12))
+	_title.add_theme_constant_override("outline_size", 8)
+	header.add_child(_title)
 
 	_body = Label.new()
 	_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -84,6 +101,97 @@ func choose(title: String, body: String, options: Array) -> int:
 	var result: int = await _picked
 	_close()
 	return result
+
+
+## Menu de itens em cartões: cada item é um dict com `name`, `icon` (Texture2D),
+## e, opcionalmente, `desc`, `price` (>= 0 mostra "R$ n"), `note` e `disabled`.
+## Devolve o índice do item, `items.size()` para "Voltar" ou -1 se fechado (Esc).
+func choose_items(title: String, body: String, items: Array, back_label := "Voltar") -> int:
+	if is_open and not _cancellable:
+		return -1
+	_open(title, body, true)
+	_panel.custom_minimum_size.x = 150.0 * mini(items.size(), CARD_COLUMNS) + 12.0 * mini(items.size(), CARD_COLUMNS) + 24.0
+	var grid := GridContainer.new()
+	grid.columns = CARD_COLUMNS
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 10)
+	grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_content.add_child(grid)
+	for i in items.size():
+		var card := _make_card(items[i])
+		card.pressed.connect(func() -> void:
+			Sfx.play(&"ui_select")
+			_picked.emit(i))
+		grid.add_child(card)
+	var back := Button.new()
+	back.text = back_label
+	UiFx.hook(back)
+	back.pressed.connect(func() -> void:
+		Sfx.play(&"ui_cancel")
+		_picked.emit(items.size()))
+	_content.add_child(back)
+	_focus_first()
+	var result: int = await _picked
+	_close()
+	return result
+
+
+## Cartão: [nome] [imagem] [descrição, se houver] [preço, se houver].
+func _make_card(item: Dictionary) -> Button:
+	var card := Button.new()
+	card.custom_minimum_size = CARD_SIZE
+	card.disabled = item.get("disabled", false)
+	card.clip_contents = true
+	UiFx.hook(card)
+	var margin := MarginContainer.new()
+	margin.set_anchors_preset(PRESET_FULL_RECT)
+	margin.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for side in ["left", "right", "top", "bottom"]:
+		margin.add_theme_constant_override("margin_" + side, 8)
+	card.add_child(margin)
+	var col := VBoxContainer.new()
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	col.add_theme_constant_override("separation", 4)
+	margin.add_child(col)
+
+	col.add_child(_card_label(item.get("name", ""), 15, UiTheme.GOLD, true))
+	var pic := TextureRect.new()
+	pic.texture = item.get("icon")
+	pic.custom_minimum_size = Vector2(0, 56)
+	pic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	pic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	pic.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	pic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	col.add_child(pic)
+	var desc: String = item.get("desc", "")
+	if desc != "":
+		var d := _card_label(desc, 12, Color(0.85, 0.82, 0.9), true)
+		d.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		col.add_child(d)
+	else:
+		var spacer := Control.new()
+		spacer.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		col.add_child(spacer)
+	var note: String = item.get("note", "")
+	if note != "":
+		col.add_child(_card_label(note, 12, Color(0.7, 0.8, 1.0), true))
+	var price: int = item.get("price", -1)
+	if price >= 0:
+		col.add_child(_card_label("R$ %d" % price, 16, Color(0.55, 1.0, 0.55), true))
+	return card
+
+
+func _card_label(text: String, size: int, color: Color, center: bool) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_color_override("font_color", color)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if center:
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	return l
 
 
 ## Tela de contas: uma caixa por conta. Devolve id -> pago (bool).
@@ -152,6 +260,7 @@ func _open(title: String, body: String, cancellable: bool) -> void:
 	_body.text = body
 	_body.visible = body != ""
 	_cancellable = cancellable
+	_panel.custom_minimum_size.x = 460.0
 	_center.show()
 	_dim.show()
 	is_open = true
