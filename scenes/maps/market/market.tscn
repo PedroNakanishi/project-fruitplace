@@ -19,6 +19,8 @@
 [ext_resource type="Script" path="res://scenes/maps/market/service_controller.gd" id="17"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="18"]
 
+[ext_resource type="Script" path="res://scenes/ambient/ambient_world.gd" id="19"]
+
 [sub_resource type="Environment" id="Environment_1"]
 background_mode = 1
 background_color = Color(0.55, 0.82, 0.95, 1)
@@ -227,5 +229,9 @@ service_point_path = NodePath("../Stalls/PlayerStall/ServicePoint")
 
 [node name="FromTruck" type="Marker3D" parent="SpawnPoints"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.5, 0.05, -4.2)
+
+[node name="Ambient" type="Node3D" parent="."]
+script = ExtResource("19")
+layout = "market"
 
 [node name="Player" parent="." instance=ExtResource("18")]
